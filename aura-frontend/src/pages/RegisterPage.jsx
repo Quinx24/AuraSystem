@@ -12,11 +12,13 @@ import AuthInput from "../components/auth/AuthInput";
 import AuthButton from "../components/auth/AuthButton";
 import Divider from "../components/auth/Divider";
 import SocialLogin from "../components/auth/SocialLogin";
-
+import { register } from "../services/authService";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -28,7 +30,7 @@ export default function RegisterPage() {
 
   const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value, type, checked } = e.target;
 
     setFormData({
@@ -83,8 +85,31 @@ export default function RegisterPage() {
     if (Object.keys(newErrors).length > 0) {
       return;
     }
+    
+    try {
 
-    console.log(formData);
+      await register({
+
+        fullName: formData.fullName,
+
+        email: formData.email,
+
+        password: formData.password,
+
+      });
+
+      alert("Register successful!");
+
+      navigate("/login");
+
+    } catch (error) {
+
+      alert(
+        error.response?.data?.message ??
+        "Register failed."
+      );
+
+    }
   };
 
   return (
