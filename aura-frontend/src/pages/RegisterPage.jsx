@@ -100,7 +100,7 @@ export default function RegisterPage() {
 
       alert("Register successful!");
 
-      navigate("/login");
+      navigate("/");
 
     } catch (error) {
 
