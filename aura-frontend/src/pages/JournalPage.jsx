@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { getJournalEntries } from "../services/journalService";
 import { createJournalEntry } from "../services/journalService";
+import { getStreak } from "../services/streakService";
 
 export default function JournalPage() {
 
@@ -26,6 +27,12 @@ export default function JournalPage() {
 
     const [memoryPhoto, setMemoryPhoto] = useState(null);
     const [journals, setJournals] = useState([]);
+
+    const [streak, setStreak] = useState({
+        currentStreak: 0,
+        longestStreak: 0,
+        totalCheckIn: 0
+    });
 
     const handlePhotoChange = (e) => {
         const file = e.target.files[0];
@@ -45,8 +52,24 @@ export default function JournalPage() {
         }
     };
 
+    const loadStreak = async () => {
+        try {
+
+            const data = await getStreak();
+
+            setStreak(data);
+
+        } catch (error) {
+
+            console.error("Error fetching streak:", error);
+
+        }
+    };
+
     useEffect(() => {
         loadJournals();
+
+        loadStreak();
     }, []);
 
     console.log("Journals state:", journals);
@@ -74,6 +97,8 @@ export default function JournalPage() {
                 memoryPhoto
             });
 
+            await loadStreak();
+
             const result = response.data;
 
             console.log(result);
@@ -89,7 +114,7 @@ export default function JournalPage() {
                 error.response?.data?.message ??
                 "Failed to save journal entry. Please try again."
             );
-        
+
         } finally {
             setLoading(false);
         }
@@ -495,11 +520,11 @@ export default function JournalPage() {
                             <div className="mt-4">
 
                                 <div className="text-4xl font-bold">
-                                    12
+                                    {streak.currentStreak}
                                 </div>
 
                                 <div className="text-slate-500">
-                                    days
+                                    {streak.currentStreak === 1 ? "day" : "days"}
                                 </div>
 
                             </div>

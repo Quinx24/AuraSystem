@@ -1,18 +1,40 @@
 import StatisticItem from "./StatisticItem";
+import { useEffect, useState } from "react";
+import { getStreak } from "../../services/streakService";
 
 export default function StatisticsCard() {
 
-    const statistics = {
-
-        streak: 7,
-
+    const [statistics, setStatistics] = useState({
+        currentStreak: 0,
+        longestStreak: 0,
+        totalCheckIn: 0,
         dominantEmotion: "Happy",
-
         totalJournals: 36,
+        completedQuests: 18,
+    });
 
-        completedQuests: 18
+    const loadStatistics = async () => {
+        try {
 
+            const streak = await getStreak();
+
+            setStatistics(prev => ({
+                ...prev,
+                currentStreak: streak.currentStreak,
+                longestStreak: streak.longestStreak,
+                totalCheckIn: streak.totalCheckIn
+            }));
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
     };
+
+    useEffect(() => {
+        loadStatistics();
+    }, []);
 
     return (
 
@@ -81,7 +103,8 @@ export default function StatisticsCard() {
 
                     title="Current Streak"
 
-                    value={`${statistics.streak} Days`}
+                    value={`${statistics.currentStreak} ${statistics.currentStreak === 1 ? "Day" : "Days"
+                        }`}
 
                     bgColor="#FEF3C7"
 
