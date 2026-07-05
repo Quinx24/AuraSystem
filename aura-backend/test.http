@@ -1,0 +1,144 @@
+### Test for creating a journal entry
+POST http://localhost:8080/journal-entries
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4Mjk4MTM2NiwiZXhwIjoxNzgyOTg0OTY2fQ._qGBvkhzW3NTqjwZAyyYPSePV7e1xpaJ5r_qQc1gVD4
+Content-Type: application/json
+
+{
+    "journalContent": "Hôm nay học Validation",
+    "noteToSelf": "Hoàn thành Aura",
+    "tags": ["happy", "healthy", "study"]
+}
+
+### Test for retrieving a journal entry by ID
+GET http://localhost:8080/journal-entries/14
+
+### Test for retrieving all journal entries
+GET http://localhost:8080/journal-entries?page=0&size=2
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4Mjk4MTM2NiwiZXhwIjoxNzgyOTg0OTY2fQ._qGBvkhzW3NTqjwZAyyYPSePV7e1xpaJ5r_qQc1gVD4
+
+### Test for updating a journal entry
+PUT http://localhost:8080/journal-entries/1
+Content-Type: application/json
+
+{
+    "journalContent": "Hôm nay học Spring Boot - Cập nhật",
+    "noteToSelf": "Hoàn thành Aura - Cập nhật",
+    "tags": []
+}
+
+### Test for deleting a journal entry
+DELETE http://localhost:8080/journal-entries/3
+
+### Test for retrieving side-quests by emotion
+GET http://localhost:8080/side-quests/emotion/SAD
+
+### Test for retrieving side-quests
+GET http://localhost:8080/side-quests
+
+### Test for creating a journal entry
+POST http://localhost:8080/journal-entries
+Content-Type: application/json
+
+{
+    "journalContent": "Hôm nay học Validation",
+    "noteToSelf": "Hoàn thành Aura",
+    "tags": ["happy", "healthy", "study"]
+}
+
+### Test for retrieving a journal entry by ID
+GET http://localhost:8080/journal-entries/32
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4Mjk4MTY4OCwiZXhwIjoxNzgyOTg1Mjg4fQ._fLxGRLFwLKSDuif8z5yWtJh8HXwp_Eex-C3NNRSBBQ
+### Test for retrieving all journal entries
+GET http://localhost:8080/journal-entries
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4Mjk4MTY4OCwiZXhwIjoxNzgyOTg1Mjg4fQ._fLxGRLFwLKSDuif8z5yWtJh8HXwp_Eex-C3NNRSBBQ
+
+### Test for updating a journal entry
+PUT http://localhost:8080/journal-entries/32
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4Mjk4MTY4OCwiZXhwIjoxNzgyOTg1Mjg4fQ._fLxGRLFwLKSDuif8z5yWtJh8HXwp_Eex-C3NNRSBBQ
+Content-Type: application/json
+
+{
+    "journalContent": "Hôm nay học Spring Boot - Cập nhật",
+    "noteToSelf": "Hoàn thành Aura - Cập nhật",
+    "tags": []
+}
+
+### Test for deleting a journal entry
+DELETE http://localhost:8080/journal-entries/33
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4Mjk4MTY4OCwiZXhwIjoxNzgyOTg1Mjg4fQ._fLxGRLFwLKSDuif8z5yWtJh8HXwp_Eex-C3NNRSBBQ
+
+### Test for retrieving side-quests by emotion
+GET http://localhost:8080/side-quests/emotion/SAD
+
+### Test for retrieving side-quests
+GET http://localhost:8080/side-quests
+
+### Test for register
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+    "fullName": "Test",
+    "email": "test@gmail.com",
+    "password": "12345678"
+}
+
+### Test for login
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+    "email": "test@gmail.com",
+    "password": "12345678"
+}
+
+### Test for authentication by JWT
+GET http://localhost:8080/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MjczNjkwMywiZXhwIjoxNzgyNzQwNTAzfQ.nAzuajkSkZcoKqpyoYLZTGxKtsu2cTCVxWvxhgP2GmY
+
+### Refresh Token
+POST http://localhost:8080/auth/refresh
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MjczOTQwMiwiZXhwIjoxNzgzMzQ0MjAyfQ.x1LPq0ixWkC0JhJCH2yZ6fz_6qdsd-R60o0auTXE1Lw"
+}
+
+### Logout
+POST http://localhost:8080/auth/logout
+Content-Type: application/json
+
+{
+    "refreshToken":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MjczOTQwMiwiZXhwIjoxNzgzMzQ0MjAyfQ.x1LPq0ixWkC0JhJCH2yZ6fz_6qdsd-R60o0auTXE1Lw"
+}
+
+### Test for creating a side quest for a user
+POST http://localhost:8080/user-side-quests
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4Mjk4NDEwNCwiZXhwIjoxNzgyOTg3NzA0fQ.e0B1cMG62U2o5f1Ca_H6HoOGrfAK_FQ3EPEs7QIqXPg
+Content-Type: application/json
+
+{
+    "sideQuestId": 5
+}
+
+### Test for retrieving all user side quests
+GET http://localhost:8080/user-side-quests
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4Mjk4NDEwNCwiZXhwIjoxNzgyOTg3NzA0fQ.e0B1cMG62U2o5f1Ca_H6HoOGrfAK_FQ3EPEs7QIqXPg
+
+#### Login Test
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+    "email":"test@gmail.com",
+    "password":"12345678"
+}
+
+### Test for completing a user side quest
+PATCH http://localhost:8080/user-side-quests/2/complete
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzAxNTEzMywiZXhwIjoxNzgzMDE4NzMzfQ.A3OiE14A8ZNqEeIhxtkPp7WG_905T7-qUr1SKoj5bqc
+Content-Type: application/json
+
+#### Test for retrieving completed user side quests
+GET http://localhost:8080/user-side-quests/completed
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzA0OTQ1MywiZXhwIjoxNzgzMDUzMDUzfQ.UjKSxLS_ftFygtChZ68-hbH_ntTy0BGV-ZPqsF4bJyw
