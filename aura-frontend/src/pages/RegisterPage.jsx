@@ -30,7 +30,7 @@ export default function RegisterPage() {
 
   const [errors, setErrors] = useState({});
 
-  const handleChange = async (e) => {
+  const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
     setFormData({
@@ -39,7 +39,7 @@ export default function RegisterPage() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = {};
@@ -85,7 +85,7 @@ export default function RegisterPage() {
     if (Object.keys(newErrors).length > 0) {
       return;
     }
-    
+
     try {
 
       await register({
