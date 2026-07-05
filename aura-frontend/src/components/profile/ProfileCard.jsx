@@ -6,7 +6,35 @@ import {
     FiAward
 } from "react-icons/fi";
 
+import { useEffect, useState } from "react";
+import { getLevel } from "../../services/levelService";
+
 export default function ProfileCard() {
+
+    const [level, setLevel] = useState({
+        level: 1,
+        xp: 0,
+        requiredXp: 100,
+        progress: 0,
+    });
+
+    const loadLevel = async () => {
+        try {
+
+            const data = await getLevel();
+
+            setLevel(data);
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+    };
+
+    useEffect(() => {
+        loadLevel();
+    }, []);
 
     const user = {
 
@@ -116,7 +144,7 @@ export default function ProfileCard() {
                             text-gray-500
                         "
                     >
-                        Level 4
+                        Level {level.level}
                     </span>
 
                     <span
@@ -126,7 +154,7 @@ export default function ProfileCard() {
                             text-violet-600
                         "
                     >
-                        420 / 1000 XP
+                        {level.xp} / {level.requiredXp} XP
                     </span>
 
                 </div>
@@ -147,7 +175,7 @@ export default function ProfileCard() {
                             rounded-full
                         "
                         style={{
-                            width: "42%"
+                            width: `${level.progress}%`
                         }}
                     />
 

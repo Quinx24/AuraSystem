@@ -25,11 +25,15 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToOne(
-        mappedBy = "user", 
-        cascade = CascadeType.ALL, 
-        fetch = FetchType.LAZY
-    )
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Streak streak;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Integer level = 1;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Integer xp = 0;
 
 }

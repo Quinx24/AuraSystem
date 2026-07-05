@@ -135,14 +135,18 @@ Content-Type: application/json
 }
 
 ### Test for completing a user side quest
-PATCH http://localhost:8080/user-side-quests/2/complete
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzAxNTEzMywiZXhwIjoxNzgzMDE4NzMzfQ.A3OiE14A8ZNqEeIhxtkPp7WG_905T7-qUr1SKoj5bqc
+PATCH http://localhost:8080/user-side-quests/16/complete
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzI4MjI4NCwiZXhwIjoxNzgzMjg1ODg0fQ.hwC1U9Ho5on3OT2WMcxsa6nYmIbFEpOAqnSfz65VY-A
 Content-Type: application/json
 
 #### Test for retrieving completed user side quests
 GET http://localhost:8080/user-side-quests/completed
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzA0OTQ1MywiZXhwIjoxNzgzMDUzMDUzfQ.UjKSxLS_ftFygtChZ68-hbH_ntTy0BGV-ZPqsF4bJyw
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzI4MjI4NCwiZXhwIjoxNzgzMjg1ODg0fQ.hwC1U9Ho5on3OT2WMcxsa6nYmIbFEpOAqnSfz65VY-A
 
 ###
 GET http://localhost:8080/streak
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzI2ODMzNCwiZXhwIjoxNzgzMjcxOTM0fQ.4tfiEUScpxrys2WvAlt3uBz-NrITMQpvS-NHoACKStE
+
+###
+GET http://localhost:8080/level
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzI4MTQxMywiZXhwIjoxNzgzMjg1MDEzfQ.Y7WKeLjnZvKi4klSC6iI-SFHSiDmrPO7bjBxlSvHuAE

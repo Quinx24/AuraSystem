@@ -23,8 +23,9 @@ import lombok.RequiredArgsConstructor;
 public class SideQuestService {
     private final SideQuestRepository sideQuestRepository;
     private final UserSideQuestRepository userSideQuestRepository;
+    private final LevelService levelService;
 
-    private SideQuestResponse mapToResponse (SideQuest sideQuest) {
+    private SideQuestResponse mapToResponse(SideQuest sideQuest) {
         return SideQuestResponse.builder()
                 .id(sideQuest.getId())
                 .title(sideQuest.getTitle())
@@ -61,8 +62,7 @@ public class SideQuestService {
                 .findByUserAndAssignedDateAndCompleted(
                         user,
                         LocalDate.now(),
-                        false
-                )
+                        false)
                 .stream()
                 .map(userQuest -> UserSideQuestResponse.builder()
                         .id(userQuest.getId())
@@ -82,8 +82,7 @@ public class SideQuestService {
         return userSideQuestRepository
                 .findByUserAndCompleted(
                         user,
-                        true
-                )
+                        true)
                 .stream()
                 .map(userQuest -> UserSideQuestResponse.builder()
                         .id(userQuest.getId())
@@ -98,20 +97,17 @@ public class SideQuestService {
                 .toList();
     }
 
-    public void addQuest(User user, Long sideQuestId)
-    {
+    public void addQuest(User user, Long sideQuestId) {
         SideQuest sideQuest = sideQuestRepository.findById(sideQuestId)
                 .orElseThrow(() -> new AppException(
-                    ErrorCode.SIDE_QUEST_NOT_EXISTED
-                ));
+                        ErrorCode.SIDE_QUEST_NOT_EXISTED));
 
         boolean existed = userSideQuestRepository
                 .existsByUserAndSideQuest(user, sideQuest);
 
         if (existed) {
             throw new AppException(
-                ErrorCode.SIDE_QUEST_ALREADY_ADDED
-            );
+                    ErrorCode.SIDE_QUEST_ALREADY_ADDED);
         }
 
         UserSideQuest userSideQuest = UserSideQuest.builder()
@@ -128,24 +124,24 @@ public class SideQuestService {
         UserSideQuest userSideQuest = userSideQuestRepository
                 .findById(userSideQuestId)
                 .orElseThrow(() -> new AppException(
-                    ErrorCode.USER_SIDE_QUEST_NOT_EXISTED
-                ));
+                        ErrorCode.USER_SIDE_QUEST_NOT_EXISTED));
 
         if (!userSideQuest.getUser().getId().equals(user.getId())) {
             throw new AppException(
-                ErrorCode.UNAUTHORIZED
-            );
+                    ErrorCode.UNAUTHORIZED);
         }
 
         if (userSideQuest.getCompleted()) {
             throw new AppException(
-                ErrorCode.USER_SIDE_QUEST_ALREADY_COMPLETED
-            );
+                    ErrorCode.USER_SIDE_QUEST_ALREADY_COMPLETED);
         }
 
         userSideQuest.setCompleted(true);
         userSideQuest.setCompletedDate(LocalDate.now());
 
         userSideQuestRepository.save(userSideQuest);
+
+        levelService.addXp(
+                userSideQuest.getSideQuest().getXpReward());
     }
 }
