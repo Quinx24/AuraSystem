@@ -1,6 +1,6 @@
 ### Test for creating a journal entry
 POST http://localhost:8080/journal-entries
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4Mjk4MTM2NiwiZXhwIjoxNzgyOTg0OTY2fQ._qGBvkhzW3NTqjwZAyyYPSePV7e1xpaJ5r_qQc1gVD4
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzI2ODMzNCwiZXhwIjoxNzgzMjcxOTM0fQ.4tfiEUScpxrys2WvAlt3uBz-NrITMQpvS-NHoACKStE
 Content-Type: application/json
 
 {
@@ -142,3 +142,7 @@ Content-Type: application/json
 #### Test for retrieving completed user side quests
 GET http://localhost:8080/user-side-quests/completed
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzA0OTQ1MywiZXhwIjoxNzgzMDUzMDUzfQ.UjKSxLS_ftFygtChZ68-hbH_ntTy0BGV-ZPqsF4bJyw
+
+###
+GET http://localhost:8080/streak
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzI2ODMzNCwiZXhwIjoxNzgzMjcxOTM0fQ.4tfiEUScpxrys2WvAlt3uBz-NrITMQpvS-NHoACKStE

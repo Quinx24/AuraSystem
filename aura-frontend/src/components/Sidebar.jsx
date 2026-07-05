@@ -11,7 +11,9 @@ import {
     FiLogOut,
 } from 'react-icons/fi';
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+
+import { logout } from '../services/authService';
 
 const menuItems = [
     {
@@ -57,6 +59,16 @@ const menuItems = [
 ];
 
 export default function Sidebar() {
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+
+        logout();
+
+        navigate("/");
+    };
+
     return (
         <aside className="fixed top-0 left-0 w-[280px] h-screen border-r border-slate-200 bg-white flex flex-col">
 
@@ -103,10 +115,9 @@ export default function Sidebar() {
                             mb-1
                             transition-all
 
-                            ${
-                                isActive
-                                    ? 'bg-violet-100 text-violet-600'
-                                    : 'text-slate-700 hover:bg-slate-100'
+                            ${isActive
+                                ? 'bg-violet-100 text-violet-600'
+                                : 'text-slate-700 hover:bg-slate-100'
                             }
                             `
                         }
@@ -126,7 +137,7 @@ export default function Sidebar() {
             {/* Bottom Menu */}
             <div className="px-4 border-t border-slate-200 pt-4">
 
-                <NavLink
+                {/* <NavLink
                     to="/settings"
                     className={({ isActive }) =>
                         `
@@ -152,12 +163,11 @@ export default function Sidebar() {
                 >
                     <FiSettings />
                     <span>Settings</span>
-                </NavLink>
+                </NavLink> */}
 
-                <NavLink
-                    to="/logout"
-                    className={({ isActive }) =>
-                        `
+                <button
+                    onClick={handleLogout}
+                    className="
                         w-full
                         flex
                         items-center
@@ -167,19 +177,16 @@ export default function Sidebar() {
                         rounded-xl
                         text-sm
                         font-medium
+                        text-slate-700
+                        hover:bg-slate-100
                         transition-all
-
-                        ${
-                            isActive
-                                ? 'bg-violet-100 text-violet-600'
-                                : 'text-slate-700 hover:bg-slate-100'
-                        }
-                        `
-                    }
+                    "
                 >
                     <FiLogOut />
+
                     <span>Logout</span>
-                </NavLink>
+                    
+                </button>
 
             </div>
 

@@ -28,6 +28,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 @RequiredArgsConstructor
 public class JournalEntryService {
@@ -37,6 +39,7 @@ public class JournalEntryService {
     private final EmotionService emotionService;
     private final JournalEmotionRepository journalEmotionRepository;
     private final CurrentUserService currentUserService;
+    private final StreakService streakService;
 
     //Map JournalEntry entity to JournalEntryResponse DTO
     private JournalEntryResponse mapToResponse(JournalEntry entry) {
@@ -79,6 +82,7 @@ public class JournalEntryService {
     }
 
     //Create a new journal entry
+    @Transactional
     public JournalEntryResponse createJournalEntry(JournalEntryCreationRequest request) {
 
         User user = currentUserService.getCurrentUser();
@@ -118,6 +122,8 @@ public class JournalEntryService {
         
         JournalEntry savedEntry = journalEntryRepository.save(newEntry);
 
+        streakService.updateStreak();
+
         emotion.getScores()
                     .forEach((emotionType, score) -> {
 
@@ -133,8 +139,7 @@ public class JournalEntryService {
                         savedEntry.getJournalEmotions()
                                 .add(journalEmotion);
                     });
-
-        
+   
         return mapToResponse(savedEntry);
     }
 
@@ -161,6 +166,7 @@ public class JournalEntryService {
     }
 
     //Update a journal entry by its ID
+    @Transactional
     public JournalEntryResponse updateJournalEntry(Long id, JournalEntryCreationRequest request) {
 
         User user = currentUserService.getCurrentUser();

@@ -7,3 +7,9 @@ export const login = async (data) => {
 export const register = async (data) => {
     return axiosInstance.post("/auth/register", data);
 };
+
+export const logout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+};

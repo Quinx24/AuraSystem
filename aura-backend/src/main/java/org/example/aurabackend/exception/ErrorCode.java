@@ -33,7 +33,11 @@ public enum ErrorCode {
 
     USER_SIDE_QUEST_ALREADY_COMPLETED(1013, "User side-quest already completed"),
 
-    UNAUTHORIZED(1014, "You are not allowed to access this resource");
+    UNAUTHORIZED(1014, "You are not allowed to access this resource"),
+
+    STREAK_NOT_FOUND(1015, "Streak not found"),
+
+    USER_NOT_FOUND(1016, "User not found");
 
     private final int code; // Mã lỗi, được sử dụng để xác định loại lỗi cụ thể
     private final String message; // Thông điệp lỗi, cung cấp mô tả chi tiết về lỗi để người dùng hoặc nhà phát triển có thể hiểu được vấn đề đã xảy ra

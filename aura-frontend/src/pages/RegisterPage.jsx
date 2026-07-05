@@ -334,7 +334,7 @@ export default function RegisterPage() {
                 Already have an account?
 
                 <Link
-                  to="/login"
+                  to="/"
                   className="ml-2 text-violet-600 font-semibold"
                 >
                   Log In
