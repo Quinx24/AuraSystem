@@ -11,6 +11,8 @@ import SideQuestSuggestion from "../components/SideQuestSuggestion";
 import EmotionAnalysisCard from "../components/journal/EmotionAnalysisCard";
 import MoodSummaryCard from "../components/journal/MoodSummaryCard";
 import JournalStatsCard from "../components/journal/JournalStatsCard";
+import EmotionDetails from "../components/journal/EmotionDetails";
+import { formatDate } from "../utils/dateUtils";
 
 export default function EmotionAnalysisPage() {
 
@@ -19,19 +21,6 @@ export default function EmotionAnalysisPage() {
     const [sideQuests, setSideQuests] = useState([]);
 
     const { id } = useParams();
-
-    const formatDate = (dateString) => {
-
-        return new Date(dateString)
-            .toLocaleString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit"
-            });
-
-    };
 
     useEffect(() => {
         const loadData = async () => {
@@ -82,6 +71,15 @@ export default function EmotionAnalysisPage() {
         );
     }
 
+    const wordCount =
+        journal.journalContent.trim().split(/\s+/).length;
+
+    const characterCount =
+        journal.journalContent.length;
+
+    const readingTime =
+        Math.max(1, Math.ceil(wordCount / 200));
+
     const stats = {
 
         wordCount,
@@ -124,69 +122,11 @@ export default function EmotionAnalysisPage() {
 
                     {/* EMOTION DETAILS */}
 
-                    <div className="bg-white rounded-3xl p-6 shadow-sm">
+                    <EmotionDetails 
+                        emotions={top5Emotions}
+                    />
 
-                        <h2 className="text-xl font-semibold mb-6">
-                            Emotion Details
-                        </h2>
-
-                        <div className="grid md:grid-cols-4 lg:grid-cols-5 gap-4">
-
-                            {top5Emotions
-                                .map((emotions) => {
-
-                                    const config =
-                                        emotionConfig[emotions.emotion];
-
-                                    return (
-                                        <div
-                                            key={emotions.emotion}
-                                            className={`
-                                            ${config.bg}
-                                            rounded-3xl
-                                            p-5
-                                            border
-                                            border-gray-100
-                                            min-h-[220px]
-                                        `}
-                                        >
-
-                                            {/* Header */}
-
-                                            <div className="flex items-center gap-3">
-                                                <div className="text-4xl">
-                                                    {config.emoji}
-                                                </div>
-
-                                                <div>
-
-                                                    <h3 className="font-bold text-lg">
-                                                        {config.label}
-                                                    </h3>
-
-                                                    <p className="font-semibold text-gray-700">
-                                                        {(emotions.score * 100).toFixed(0)}%
-                                                    </p>
-
-                                                </div>
-
-                                            </div>
-
-                                            {/* Description */}
-
-                                            <p className="text-gray-600 text-center leading-8 mt-6">
-                                                {config.description}
-                                            </p>
-
-                                        </div>
-
-                                    );
-
-                                })}
-
-                        </div>
-
-                    </div>
+                    {/* SIDE-QUESTS SUGGESTION  */}
 
                     <SideQuestSuggestion
                         sideQuests={sideQuests}
@@ -204,7 +144,7 @@ export default function EmotionAnalysisPage() {
                         emotions={top3Emotions}
                     />
 
-                    <JournalStatsCard 
+                    <JournalStatsCard
                         stats={stats}
                     />
 
