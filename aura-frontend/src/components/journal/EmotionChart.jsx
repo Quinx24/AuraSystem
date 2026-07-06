@@ -1,4 +1,4 @@
-import { emotionConfig } from "../utils/emotionUtils";
+import { emotionConfig } from "../../utils/emotionUtils";
 
 import {
     PieChart,

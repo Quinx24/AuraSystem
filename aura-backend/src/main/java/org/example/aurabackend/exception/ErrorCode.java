@@ -37,7 +37,9 @@ public enum ErrorCode {
 
     STREAK_NOT_FOUND(1015, "Streak not found"),
 
-    USER_NOT_FOUND(1016, "User not found");
+    USER_NOT_FOUND(1016, "User not found"),
+
+    NEW_PASSWORD_MUST_BE_DIFFERENT(1017, "New password must be different from current password");
 
     private final int code; // Mã lỗi, được sử dụng để xác định loại lỗi cụ thể
     private final String message; // Thông điệp lỗi, cung cấp mô tả chi tiết về lỗi để người dùng hoặc nhà phát triển có thể hiểu được vấn đề đã xảy ra

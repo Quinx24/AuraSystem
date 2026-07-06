@@ -150,3 +150,27 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhd
 ###
 GET http://localhost:8080/level
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzI4MTQxMywiZXhwIjoxNzgzMjg1MDEzfQ.Y7WKeLjnZvKi4klSC6iI-SFHSiDmrPO7bjBxlSvHuAE
+
+### Test information of user
+GET http://localhost:8080/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzM0MzE1MSwiZXhwIjoxNzgzMzQ2NzUxfQ.8jPVuQb_my_jP7pwP6WbowmonXshK0xqdi0WZsdongk
+
+### Test Update Profile
+PUT http://localhost:8080/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzMxMjM4OSwiZXhwIjoxNzgzMzE1OTg5fQ.l-12y0qruqahxHH03XISSM2c75L15bANVWjYs-sbv54
+Content-Type: application/json
+
+{
+    "fullName":"Nguyen Van A",
+    "avatarUrl":"https://abc.com/avatar.jpg"
+}
+
+### Test change password
+PUT http://localhost:8080/users/change-password
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzM1NTI4NSwiZXhwIjoxNzgzMzU4ODg1fQ.vrar6qYCiXtqwiFblGsOBa1STkTkOrjmE6HwpbmY0SQ
+Content-Type: application/json
+
+{
+    "currentPassword": "87654321",
+    "newPassword": "12345678"
+}
