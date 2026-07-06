@@ -4,12 +4,11 @@ import {
     addSideQuest
 } from "../services/sideQuestService";
 import { getJournalEntryById } from "../services/journalService";
-
-import EmotionChart from "../components/EmotionChart";
 import { emotionConfig } from "../utils/emotionUtils";
-import EmotionSummary from "../components/EmotionSummary";
+import EmotionSummary from "../components/journal/EmotionSummary";
 import { useParams } from "react-router-dom";
 import SideQuestSuggestion from "../components/SideQuestSuggestion";
+import EmotionAnalysisCard from "../components/journal/EmotionAnalysisCard";
 
 export default function EmotionAnalysisPage() {
 
@@ -107,42 +106,11 @@ export default function EmotionAnalysisPage() {
 
                 <div className="xl:col-span-3 space-y-6">
 
-                    {/* TOP CARD */}
-
-                    <div className="bg-white rounded-3xl p-6 shadow-sm">
-
-                        <div className="grid lg:grid-cols-2 gap-6">
-
-                            <div>
-
-                                <h2 className="text-xl font-semibold mb-4">
-                                    Primary Emotion
-                                </h2>
-
-                                <EmotionSummary
-                                    emotion={journal.primaryEmotion}
-                                    confidence={journal.confidence}
-                                    showDescription={true}
-                                    width="w-72"
-                                />
-
-                            </div>
-
-                            <div className="lg:border-l lg:border-gray-200 lg:pl-8">
-
-                                <h2 className="text-xl font-semibold mb-4">
-                                    Emotion Distribution
-                                </h2>
-
-                                <EmotionChart
-                                    emotions={journal.emotions}
-                                />
-
-                            </div>
-
-                        </div>
-
-                    </div>
+                    <EmotionAnalysisCard
+                        emotion={journal.primaryEmotion}
+                        confidence={journal.confidence}
+                        emotions={journal.emotions}
+                    />
 
                     {/* EMOTION DETAILS */}
 
