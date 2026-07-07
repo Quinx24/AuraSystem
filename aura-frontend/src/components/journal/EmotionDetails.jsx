@@ -15,7 +15,12 @@ export default function EmotionDetails({
                 {emotions.map((item) => {
 
                     const config =
-                        emotionConfig[item.emotion];
+                        emotionConfig[item.emotion] ?? {
+                            bg: "bg-gray-100",
+                            emoji: "❓",
+                            label: item.emotion,
+                            description: "No description available."
+                        };
 
                     return (
                         <div

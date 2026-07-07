@@ -32,7 +32,7 @@ export default function MoodSummaryCard({
                 {emotions.map((item) => {
 
                     const config =
-                        emotionConfig[item.emotion];
+                        emotionConfig[item.emotion]
 
                     return (
 
@@ -40,9 +40,9 @@ export default function MoodSummaryCard({
                             key={item.emotion}
                             className={`
                                 ${config.bg}
-                                px-4
+                                px-3
                                 py-2
-                                rounded-full
+                                rounded-xl
                                 flex
                                 items-center
                                 gap-2

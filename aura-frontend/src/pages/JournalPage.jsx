@@ -16,11 +16,33 @@ import { useNavigate } from "react-router-dom";
 import { getJournalEntries } from "../services/journalService";
 import { createJournalEntry } from "../services/journalService";
 import { getStreak } from "../services/streakService";
+import MemoryCard from "../components/journal/MemoryCard";
+import NoteCard from "../components/journal/NoteCard";
+import { suggestedTags } from "../utils/tagData";
+import TagModal from "../components/journal/TagModal";
 
 export default function JournalPage() {
 
     const [journalContent, setJournalContent] = useState("");
     const [noteToSelf, setNoteToSelf] = useState("");
+
+    const [showTagModal, setShowTagModal] = useState(false);
+    const [searchTag, setSearchTag] = useState("");
+    const [selectedTags, setSelectedTags] = useState([]);
+
+    const handleSelectTag = (tag) => {
+
+        if (selectedTags.includes(tag)) {
+            return;
+        }
+
+        setSelectedTags([
+            ...selectedTags,
+            tag
+        ]);
+
+    };
+
     const [tags, setTags] = useState(["happy", "study", "growth"]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -120,8 +142,6 @@ export default function JournalPage() {
         }
     };
 
-    const [showTagModal, setShowTagModal] = useState(false);
-
     return (
         <>
             <div className="px-8 pb-8">
@@ -213,248 +233,27 @@ export default function JournalPage() {
                     {/* MEMORY + NOTE */}
 
                     <div className="col-span-3 space-y-6">
-                        <div
-                            className="
-                                relative
-                                bg-white
-                                rounded-xl
-                                p-6
-                                border
-                                border-violet-100
-                                h-[370px]
-                                mb-8
-                            "
-                        >
 
-                            <div
-                                className="
-                                    absolute
-                                    -top-3
-                                    left-1/2
-                                    -translate-x-1/2
-                                    w-25
-                                    h-6
-                                    bg-pink-200
-                                    rotate-[-8deg]
-                                    rounded-sm
-                                    opacity-80
-                                    shadow-sm
-                                "
-                            />
+                        <MemoryCard
 
-                            <h3 className="font-semibold mb-4">
-                                Memory Of The Day
-                            </h3>
+                            memoryPhoto={memoryPhoto}
 
-                            <div
-                                className="
-                                    h-56
-                                    bg-gradient-to-br
-                                    from-violet-50
-                                    to-pink-50
-                                    rounded-xl
-                                    overflow-hidden
-                                    mb-4
-                                    border-2
-                                    border-dashed
-                                    border-violet-200
-                                "
-                            >
-                                {memoryPhoto ? (
-                                    <img
-                                        src={memoryPhoto}
-                                        alt="Memory"
-                                        className="w-full h-full object-cover"
-                                    />
-                                ) : (
-                                    <div
-                                        className="
-                                            h-full
-                                            flex
-                                            flex-col
-                                            items-center
-                                            justify-center
-                                            text-slate-400
-                                        "
-                                    >
-                                        <div
-                                            className="
-                                                w-16
-                                                h-16
-                                                rounded-full
-                                                bg-white
-                                                flex
-                                                items-center
-                                                justify-center
-                                                shadow-sm
-                                                mb-4
-                                            "
-                                        >
-                                            <Camera
-                                                size={30}
-                                                className="text-violet-500"
-                                            />
-                                        </div>
+                            mode="edit"
 
-                                        <p className="font-medium text-slate-500">
-                                            No memory yet
-                                        </p>
+                            onPhotoChange={handlePhotoChange}
 
-                                        <p className="text-xs text-slate-400 mt-1">
-                                            Add a photo to remember today
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
+                        />
 
-                            <label
-                                className="
-                                    mx-auto
-                                    w-fit
-                                    px-6
-                                    py-2.5
-                                    flex
-                                    items-center
-                                    gap-2
-                                    rounded-xl
-                                    border
-                                    border-violet-200
-                                    bg-white
-                                    text-violet-600
-                                    cursor-pointer
-                                    hover:bg-violet-50
-                                    transition
-                                "
-                            >
-                                <Camera size={18} />
-                                Add Photo
+                        <NoteCard
 
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden"
-                                    onChange={handlePhotoChange}
-                                />
-                            </label>
-                        </div>
+                            note={noteToSelf}
 
-                        <div
-                            className="
-                                relative
-                                bg-pink-50
-                                rounded-xl
-                                p-6
-                                border
-                                border-violet-100
-                                h-[210px]
-                            "
-                        >
+                            mode="edit"
 
-                            {/* Tape */}
-                            <div
-                                className="
-                                    absolute
-                                    -top-3
-                                    left-1/2
-                                    -translate-x-1/2
-                                    w-20
-                                    h-6
-                                    bg-orange-100
-                                    rotate-[10deg]
-                                    rounded-sm
-                                    opacity-80
-                                    shadow-sm
-                                "
-                            />
+                            onChange={setNoteToSelf}
 
-                            <h3
-                                className="
-                                    font-semibold
-                                    mb-4
-                                    text-slate-700
-                                "
-                            >
-                                Note To Self
-                            </h3>
+                        />
 
-                            {/* Paper */}
-                            <div
-                                className="
-                                    relative
-                                    h-[128px]
-                                    pl-10
-                                    pr-3
-                                    pt-1
-                                    pb-0
-                                    rounded-lg
-                                "
-                                style={{
-                                    backgroundImage:
-                                        "repeating-linear-gradient(transparent, transparent 23px, #E9D5FF 24px)"
-                                }}
-                            >
-
-                                {/* Pink Margin Line */}
-                                <div
-                                    className="
-                                        absolute
-                                        left-6
-                                        top-0
-                                        bottom-0
-                                        w-[2px]
-                                        bg-pink-200
-                                        opacity-60
-                                    "
-                                />
-
-                                {/* Paper Holes */}
-                                <div
-                                    className="
-                                        absolute
-                                        left-[-12px]
-                                        top-2
-                                        bottom-2
-                                        flex
-                                        flex-col
-                                        justify-between
-                                    "
-                                >
-                                    {[...Array(5)].map((_, index) => (
-                                        <div
-                                            key={index}
-                                            className="
-                                                w-4
-                                                h-4
-                                                rounded-full
-                                                bg-white
-                                                border
-                                                border-slate-200
-                                                shadow-sm
-                                            "
-                                        />
-                                    ))}
-                                </div>
-
-                                <textarea
-                                    value={noteToSelf}
-                                    onChange={(e) =>
-                                        setNoteToSelf(e.target.value)
-                                    }
-                                    placeholder="Write a gentle reminder for your future self..."
-                                    className="
-                                        w-full
-                                        h-full
-                                        resize-none
-                                        outline-none
-                                        bg-transparent
-                                        text-[15px]
-                                        text-slate-600
-                                        leading-[24px]
-                                    "
-                                />
-                            </div>
-
-                        </div>
                     </div>
 
                     {/* RIGHT PANEL */}
@@ -620,82 +419,29 @@ export default function JournalPage() {
 
             {
                 showTagModal && (
-                    <div
-                        className="
-                            fixed
-                            inset-0
-                            bg-black/30
-                            flex
-                            items-center
-                            justify-center
-                            z-50
-                        "
-                    >
-                        <div
-                            className="
-                                bg-white
-                                w-[500px]
-                                rounded-3xl
-                                p-6
-                                shadow-xl
-                            "
-                        >
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-2xl font-bold">
-                                    Add Tags
-                                </h2>
 
-                                <button
-                                    onClick={() => setShowTagModal(false)}
-                                >
-                                    <X size={20} />
-                                </button>
-                            </div>
+                    <TagModal
 
-                            <label className="block mb-2 font-medium">
-                                Search or create tags
-                            </label>
+                        searchTag={searchTag}
 
-                            <input
-                                placeholder="Type tag..."
-                                className="
-                                    w-full
-                                    border
-                                    border-slate-200
-                                    rounded-xl
-                                    p-3
-                                    outline-none
-                                "
-                            />
+                        setSearchTag={setSearchTag}
 
-                            <div className="flex justify-end gap-3 mt-6">
-                                <button
-                                    onClick={() => setShowTagModal(false)}
-                                    className="
-                                        px-4
-                                        py-2
-                                        border
-                                        border-slate-300
-                                        rounded-xl
-                                    "
-                                >
-                                    Cancel
-                                </button>
+                        suggestedTags={suggestedTags}
 
-                                <button
-                                    className="
-                                        px-5
-                                        py-2
-                                        bg-violet-600
-                                        text-white
-                                        rounded-xl
-                                    "
-                                >
-                                    Save Tags
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                        selectedTags={selectedTags}
+
+                        handleSelectTag={handleSelectTag}
+                        
+                        onClose={() =>
+                            setShowTagModal(false)
+                        }
+
+                        onSave={() => {
+
+                        }}
+
+                    />
+
                 )
             }
         </>

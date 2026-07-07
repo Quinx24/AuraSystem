@@ -18,7 +18,10 @@ const COLORS = [
     "#A78BFA",
 ];
 
-export default function EmotionChart({ emotions }) {
+export default function EmotionChart({
+    emotions,
+    compact = false
+}) {
     const data = emotions
         .slice(0, 5)
         .map((e) => ({
@@ -30,17 +33,32 @@ export default function EmotionChart({ emotions }) {
         }));
 
     return (
-        <div className="flex items-center justify-center gap-8">
+        <div
+            className={`
+                flex
+                items-center
+                justify-center
+                ${compact ? "gap-4" : "gap-8"}
+            `}
+        >
 
-            <div className="w-[260px] h-[260px]">
-                <ResponsiveContainer width="100%" height={280}>
+            <div
+                className={`
+                    flex-shrink-0
+                    ${compact
+                        ? "w-[180px] h-[180px]"
+                        : "w-[260px] h-[260px]"
+                    }
+                `}
+            >
+                <ResponsiveContainer width="100%" height={compact ? 180 : 280}>
                     <PieChart>
                         <Pie
                             data={data}
                             cx="45%"
                             cy="45%"
-                            innerRadius={60}
-                            outerRadius={90}
+                            innerRadius={compact ? 45 : 60}
+                            outerRadius={compact ? 70 : 90}
                             dataKey="value"
                         >
                             {data.map((entry, index) => (
@@ -59,13 +77,23 @@ export default function EmotionChart({ emotions }) {
 
             </div>
 
-            <div className="space-y-4">
+            <div
+                className={`
+                    flex-1
+                    ${compact ? "space-y-2" : "space-y-4"}
+                `}
+            >
 
                 {data.map((item, index) => (
 
                     <div
                         key={item.emotion}
-                        className="flex items-center justify-between gap-8 min-w-[180px]"
+                        className={`
+                            flex
+                            items-center
+                            justify-between
+                            ${compact ? "gap-4 min-w-[140px]" : "gap-8 min-w-[180px]"}
+                        `}
                     >
 
                         <div className="flex items-center gap-3">
@@ -78,13 +106,23 @@ export default function EmotionChart({ emotions }) {
                                 }}
                             />
 
-                            <span className="font-medium">
+                            <span
+                                className={`
+                                    ${compact ? "text-sm" : ""}
+                                    font-medium
+                                `}
+                            >
                                 {item.label}
                             </span>
 
                         </div>
 
-                        <span className="text-gray-600">
+                        <span
+                            className={`
+                                text-gray-600
+                                ${compact ? "text-sm" : ""}
+                            `}
+                        >
                             {item.value.toFixed(1)}%
                         </span>
 
