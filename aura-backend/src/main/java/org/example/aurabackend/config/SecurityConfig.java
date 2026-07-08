@@ -41,7 +41,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(
                 List.of(
                         "http://localhost:5173",
-                        "https://aurasystem-fe.onrender.com"
+                        "https://aura-system-delta.vercel.app"
                 ));
 
         configuration.setAllowedMethods(
