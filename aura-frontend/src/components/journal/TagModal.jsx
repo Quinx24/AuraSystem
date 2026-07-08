@@ -12,6 +12,8 @@ export default function TagModal({
 
     handleSelectTag,
 
+    handleRemoveTag,
+
     onClose,
 
     onSave
@@ -102,37 +104,42 @@ export default function TagModal({
                 <div className="mt-8">
 
                     <h3 className="font-semibold mb-4">
-
                         Suggested Tags
-
                     </h3>
 
-                    <div className="flex flex-wrap gap-3">
+                    <div
+                        className="
+                            max-h-72
+                            overflow-y-auto
+                            pr-2
+                        "
+                    >
 
-                        {suggestedTags.map((tag) => (
+                        <div className="flex flex-wrap gap-3">
 
-                            <button
+                            {suggestedTags.map((tag) => (
 
-                                key={tag}
+                                <button
+                                    key={tag.id}
+                                    onClick={() => handleSelectTag(tag.name)}
+                                    className="
+                                        px-4
+                                        py-2
+                                        rounded-xl
+                                        bg-violet-50
+                                        text-violet-700
+                                        hover:bg-violet-100
+                                        transition
+                                    "
+                                >
 
-                                onClick={() => handleSelectTag(tag)}
+                                    #{tag.name}
 
-                                className="
-                                    px-4
-                                    py-2
-                                    rounded-xl
-                                    bg-violet-50
-                                    text-violet-700
-                                    hover:bg-violet-100
-                                    transition
-                                "
-                            >
+                                </button>
 
-                                # {tag}
+                            ))}
 
-                            </button>
-
-                        ))}
+                        </div>
 
                     </div>
 
@@ -178,7 +185,7 @@ export default function TagModal({
                                                 gap-2
                                                 px-4
                                                 py-2
-                                                rounded-full
+                                                rounded-xl
                                                 bg-violet-100
                                                 text-violet-700
                                             "
@@ -192,9 +199,11 @@ export default function TagModal({
 
                                             <X
                                                 size={14}
+                                                onClick={() => handleRemoveTag(tag)}
                                                 className="
                                                     cursor-pointer
                                                     hover:text-red-500
+                                                    transition-colors
                                                 "
                                             />
 

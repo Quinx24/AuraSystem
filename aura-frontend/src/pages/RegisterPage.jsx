@@ -2,10 +2,10 @@ import {
   User,
   Mail,
   Lock,
-  Eye,
   Heart,
   Bot,
   Sparkles,
+  BookOpen,
 } from "lucide-react";
 
 import AuthInput from "../components/auth/AuthInput";
@@ -112,32 +112,56 @@ export default function RegisterPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-[#faf7ff] via-white to-[#f8f4ff] flex items-center justify-center px-8 py-10">
+  const features = [
+    {
+      title: "Track your emotions",
+      description: "Understand your feelings better.",
+      icon: Heart,
+      className: "text-pink-500"
+    },
+    {
+      title: "Get AI support",
+      description: "Chat with your emotional companion.",
+      icon: Bot,
+      className: "text-violet-500"
+    },
+    {
+      title: "Build better habits",
+      description: "Small steps, big changes.",
+      icon: Sparkles,
+      className: "text-sky-500"
+    }
+  ];
 
-      <div className="w-full max-w-7xl bg-white rounded-[32px] shadow-xl overflow-hidden grid lg:grid-cols-2">
+  return (
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-[#fbf8ff] via-white to-[#f3edff] px-5 py-8 sm:px-8">
+      <div className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-violet-200/30 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 bottom-10 h-80 w-80 rounded-full bg-pink-200/30 blur-3xl" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-100/40 blur-3xl" />
+
+      <div className="relative grid w-full max-w-7xl animate-fade-in overflow-hidden rounded-[36px] border border-white/70 bg-white/90 shadow-2xl shadow-violet-100/70 backdrop-blur-xl lg:grid-cols-[1.05fr_0.95fr]">
 
         {/* ================= LEFT ================= */}
 
-        <div className="px-16 py-12 flex flex-col justify-center bg-gradient-to-br from-white to-[#faf5ff]">
+        <div className="flex flex-col justify-between gap-8 bg-gradient-to-br from-white via-[#fffbff] to-[#f7f1ff] px-8 py-9 sm:px-12 lg:px-14 lg:py-12">
 
           {/* Logo */}
 
-          <div className="flex items-center gap-4 mb-12">
+          <div className="flex items-center gap-3">
 
             <img
               src="/logo.png"
               alt="Aura"
-              className="w-12 h-12"
+              className="h-12 w-12 rounded-2xl shadow-sm"
             />
 
             <div>
 
-              <h2 className="text-3xl font-bold text-[#221C5A]">
+              <h2 className="text-2xl font-bold text-[#221C5A]">
                 Aura
               </h2>
 
-              <p className="text-gray-500">
+              <p className="text-sm text-gray-500">
                 Your emotional companion
               </p>
 
@@ -145,75 +169,68 @@ export default function RegisterPage() {
 
           </div>
 
-          <h1 className="text-5xl font-bold text-[#1B2559] leading-tight">
-            Create your account
-          </h1>
+          <div>
+            <h1 className="mt-6 text-4xl font-bold leading-tight text-[#1B2559] sm:text-5xl">
+              Create your account
+            </h1>
 
-          <p className="text-gray-500 text-lg mt-5 leading-8">
-            Start your journey to a happier
-            <br />
-            and healthier you 💜
-          </p>
+            <p className="mt-5 max-w-md text-base leading-8 text-gray-500 sm:text-lg">
+              Start your journey to a calmer, healthier mind with small reflections that add up.
+            </p>
+          </div>
 
-          {/* Mascot */}
+          <div className="relative mx-auto w-full max-w-sm">
+            <div className="absolute inset-x-8 bottom-2 h-24 rounded-full bg-violet-200/40 blur-2xl" />
 
-          <img
-            src="/mascot-register.png"
-            alt=""
-            className="w-72 mx-auto my-10"
-          />
+            <div className="relative rounded-[32px] border border-violet-100 bg-white/80 p-5 shadow-xl shadow-violet-100/70">
+              <div className="grid place-items-center rounded-[28px] bg-gradient-to-br from-violet-50 via-white to-emerald-50 p-8">
+                <div className="relative h-40 w-44">
+                  <div className="absolute inset-6 rounded-full bg-violet-100" />
+                  <div className="absolute left-6 top-8 grid h-14 w-14 place-items-center rounded-3xl bg-white text-violet-500 shadow-md">
+                    <BookOpen size={28} />
+                  </div>
+                  <div className="absolute right-6 top-14 grid h-14 w-14 place-items-center rounded-3xl bg-white text-emerald-500 shadow-md">
+                    <Sparkles size={28} />
+                  </div>
+                  <div className="absolute bottom-7 left-16 grid h-16 w-16 place-items-center rounded-full bg-white text-pink-500 shadow-md">
+                    <Heart size={30} />
+                  </div>
+                  <div className="absolute right-11 top-3 h-3 w-3 rounded-full bg-amber-300" />
+                  <div className="absolute bottom-9 right-4 h-4 w-4 rounded-full bg-sky-300" />
+                  <div className="absolute bottom-16 left-4 h-2.5 w-2.5 rounded-full bg-violet-300" />
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Feature */}
 
-          <div className="space-y-6">
+          <div className="space-y-4">
 
-            <div className="flex items-center gap-4">
-              <div className="bg-pink-50 p-3 rounded-full">
-                <Heart className="text-pink-500" />
-              </div>
+            {features.map((feature) => {
+              const Icon = feature.icon;
 
-              <div>
-                <h3 className="font-semibold">
-                  Track your emotions
-                </h3>
+              return (
+                <div
+                  key={feature.title}
+                  className="group flex items-start gap-4 transition duration-200 hover:translate-x-1"
+                >
+                  <div className={`grid h-11 w-11 shrink-0 place-items-center transition duration-200 group-hover:scale-105 ${feature.className}`}>
+                    <Icon size={27} />
+                  </div>
 
-                <p className="text-gray-500 text-sm">
-                  Understand your feelings better.
-                </p>
-              </div>
-            </div>
+                  <div className="pt-0.5">
+                    <h3 className="font-bold text-slate-900 transition duration-200 group-hover:text-violet-600">
+                      {feature.title}
+                    </h3>
 
-            <div className="flex items-center gap-4">
-              <div className="bg-violet-50 p-3 rounded-full">
-                <Bot className="text-violet-500" />
-              </div>
-
-              <div>
-                <h3 className="font-semibold">
-                  Get AI support
-                </h3>
-
-                <p className="text-gray-500 text-sm">
-                  Chat with your emotional companion.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="bg-sky-50 p-3 rounded-full">
-                <Sparkles className="text-sky-500" />
-              </div>
-
-              <div>
-                <h3 className="font-semibold">
-                  Build better habits
-                </h3>
-
-                <p className="text-gray-500 text-sm">
-                  Small steps, big changes.
-                </p>
-              </div>
-            </div>
+                    <p className="mt-1.5 text-sm font-medium text-gray-400">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
 
           </div>
 
@@ -221,12 +238,22 @@ export default function RegisterPage() {
 
         {/* ================= RIGHT ================= */}
 
-        <div className="flex items-center justify-center bg-[#fcfbff] p-12">
+        <div className="flex items-center justify-center bg-[#fcfbff]/90 p-6 sm:p-10 lg:p-12">
 
-          <div className="bg-white rounded-3xl shadow-lg border w-full max-w-md p-10">
+          <div className="w-full max-w-md rounded-[32px] border border-gray-100 bg-white p-7 shadow-xl shadow-violet-100/60 sm:p-9">
+
+            <div className="mb-7 text-center">
+              <h2 className="text-3xl font-bold text-slate-900">
+                Join Aura
+              </h2>
+
+              <p className="mt-2 text-sm font-medium text-gray-500">
+                Create a private space for your thoughts.
+              </p>
+            </div>
 
             <form
-              className="space-y-5"
+              className="space-y-4"
               onSubmit={handleSubmit}
             >
 
@@ -284,22 +311,23 @@ export default function RegisterPage() {
 
               {/* Checkbox */}
 
-              <label className="flex gap-3 text-sm text-gray-500">
+              <label className="flex gap-3 rounded-2xl border border-gray-100 bg-gray-50/70 p-3 text-sm font-medium leading-6 text-gray-500">
 
                 <input
                   type="checkbox"
                   name="agree"
                   checked={formData.agree}
                   onChange={handleChange}
+                  className="mt-1 h-4 w-4 shrink-0 rounded border-gray-300 text-violet-600 accent-violet-600"
                 />
 
                 <span>
                   I agree to the
-                  <span className="text-violet-600">
+                  <span className="cursor-pointer font-semibold text-violet-600 transition hover:text-violet-700">
                     {" "}Terms of Service
                   </span>
                   {" "}and{" "}
-                  <span className="text-violet-600">
+                  <span className="cursor-pointer font-semibold text-violet-600 transition hover:text-violet-700">
                     Privacy Policy
                   </span>
                 </span>
@@ -307,7 +335,7 @@ export default function RegisterPage() {
               </label>
 
               {errors.agree && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm font-medium text-red-500">
                   {errors.agree}
                 </p>
               )}
@@ -335,7 +363,7 @@ export default function RegisterPage() {
 
                 <Link
                   to="/"
-                  className="ml-2 text-violet-600 font-semibold"
+                  className="ml-2 font-semibold text-violet-600 transition hover:text-violet-700 hover:underline"
                 >
                   Log In
                 </Link>

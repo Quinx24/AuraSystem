@@ -2,7 +2,6 @@ package org.example.aurabackend.controller;
 
 import java.util.List;
 
-import org.example.aurabackend.dto.request.AddSideQuestRequest;
 import org.example.aurabackend.dto.response.ApiResponse;
 import org.example.aurabackend.dto.response.SideQuestResponse;
 import org.example.aurabackend.enumeration.Emotion;
@@ -29,10 +28,13 @@ public class SideQuestController {
     }
 
     @GetMapping
-    public ApiResponse<List<SideQuestResponse>> getAll() {
+    public ApiResponse<List<SideQuestResponse>> getAll(
+            @RequestParam(required = false) String mood,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String sort) {
 
         return ApiResponse.<List<SideQuestResponse>>builder()
-                .result(sideQuestService.getAll())
+                .result(sideQuestService.getAll(mood, category, sort))
                 .build();
     }
 

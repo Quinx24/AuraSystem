@@ -1,9 +1,24 @@
 import axiosInstance from "./axiosInstance";
 
-export const getAllSideQuests = async () => {
+export const getAllSideQuests = async (filters = {}) => {
+
+    const params = {};
+
+    if (filters.mood && filters.mood !== "All") {
+        params.mood = filters.mood;
+    }
+
+    if (filters.category && filters.category !== "All") {
+        params.category = filters.category;
+    }
+
+    if (filters.sort && filters.sort !== "newest") {
+        params.sort = filters.sort;
+    }
 
     const response = await axiosInstance.get(
-        "/side-quests"
+        "/side-quests",
+        { params }
     );
 
     return response.data.result;

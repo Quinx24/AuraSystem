@@ -131,7 +131,7 @@ Content-Type: application/json
 
 {
     "email":"test@gmail.com",
-    "password":"12345678"
+    "password":"123"
 }
 
 ### Test for completing a user side quest
@@ -167,10 +167,18 @@ Content-Type: application/json
 
 ### Test change password
 PUT http://localhost:8080/users/change-password
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzM1NTI4NSwiZXhwIjoxNzgzMzU4ODg1fQ.vrar6qYCiXtqwiFblGsOBa1STkTkOrjmE6HwpbmY0SQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzQ4MTk0NCwiZXhwIjoxNzg0MDg2NzQ0fQ.P8NAM4gf4EDPzHt54Ykpv4Q1ODsk2cCvgaCFK5HOitc
 Content-Type: application/json
 
 {
     "currentPassword": "87654321",
     "newPassword": "12345678"
 }
+
+### Test
+GET http://localhost:8080/inspiration-prompts
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzQ4MTk0NCwiZXhwIjoxNzg0MDg2NzQ0fQ.P8NAM4gf4EDPzHt54Ykpv4Q1ODsk2cCvgaCFK5HOitc
+
+###
+GET http://localhost:8080/inspiration-prompts/random?limit=5
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzQ4MTk0NCwiZXhwIjoxNzg0MDg2NzQ0fQ.P8NAM4gf4EDPzHt54Ykpv4Q1ODsk2cCvgaCFK5HOitc

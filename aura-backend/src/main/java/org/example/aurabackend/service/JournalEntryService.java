@@ -41,7 +41,7 @@ public class JournalEntryService {
     private final CurrentUserService currentUserService;
     private final StreakService streakService;
 
-    //Map JournalEntry entity to JournalEntryResponse DTO
+    // Map JournalEntry entity to JournalEntryResponse DTO
     private JournalEntryResponse mapToResponse(JournalEntry entry) {
         return JournalEntryResponse.builder()
                 .id(entry.getId())
@@ -52,64 +52,61 @@ public class JournalEntryService {
                 .createdAt(entry.getCreatedAt())
                 .updatedAt(entry.getUpdatedAt())
                 .tags(
-                    entry.getTags() == null
-                        ? Set.of()
-                        : entry.getTags()
-                            .stream()
-                            .map(Tag::getName)
-                            .collect(Collectors.toSet())   
-                )
+                        entry.getTags() == null
+                                ? Set.of()
+                                : entry.getTags()
+                                        .stream()
+                                        .map(Tag::getName)
+                                        .collect(Collectors.toSet()))
                 .emotions(
-                    entry.getJournalEmotions() == null
-                        ? List.of()
-                        : entry.getJournalEmotions()
-                            .stream()
-                            .sorted(
-                                (a, b) -> Double.compare(
-                                    b.getScore(),
-                                    a.getScore()
-                                )
-                            )
-                            .map(e ->
-                                JournalEmotionResponse.builder()
-                                    .emotion(e.getEmotion())
-                                    .score(e.getScore())
-                                    .build()
-                            )
-                            .toList()
-                )
+                        entry.getJournalEmotions() == null
+                                ? List.of()
+                                : entry.getJournalEmotions()
+                                        .stream()
+                                        .sorted(
+                                                (a, b) -> Double.compare(
+                                                        b.getScore(),
+                                                        a.getScore()))
+                                        .map(e -> JournalEmotionResponse.builder()
+                                                .emotion(e.getEmotion())
+                                                .score(e.getScore())
+                                                .build())
+                                        .toList())
                 .build();
     }
 
-    //Create a new journal entry
+    // Create a new journal entry
     @Transactional
     public JournalEntryResponse createJournalEntry(JournalEntryCreationRequest request) {
 
         User user = currentUserService.getCurrentUser();
 
         EmotionResponse emotion = emotionService.predictEmotion(
-            request.getJournalContent()
-        );
+                request.getJournalContent());
 
         Set<Tag> tags = request.getTags() == null
                 ? Set.of()
-                :request.getTags()
-                    .stream()
-                    .map(tagName -> {
+                : request.getTags()
+                        .stream()
+                        .map(tagName -> {
 
-                        Tag tag = tagRepository.findByName(tagName)
-                                .orElseGet(() ->
-                                    Tag.builder()
-                                        .name(tagName)
-                                        .usedCount(0)
-                                        .build()
-                            );
-                            
-                        tag.setUsedCount(tag.getUsedCount() + 1);
+                            Tag tag = tagRepository.findByName(tagName)
+                                    .orElseGet(() -> Tag.builder()
+                                            .name(tagName)
+                                            .usedCount(0)
+                                            .build());
 
-                        return tagRepository.save(tag);
-                    })
-                    .collect(Collectors.toSet());
+                            Integer usedCount = tag.getUsedCount();
+
+                            if (usedCount == null) {
+                                usedCount = 0;
+                            }
+
+                            tag.setUsedCount(usedCount + 1);
+
+                            return tagRepository.save(tag);
+                        })
+                        .collect(Collectors.toSet());
 
         JournalEntry newEntry = JournalEntry.builder()
                 .journalContent(request.getJournalContent())
@@ -119,41 +116,41 @@ public class JournalEntryService {
                 .tags(tags)
                 .user(user)
                 .build();
-        
+
         JournalEntry savedEntry = journalEntryRepository.save(newEntry);
 
         streakService.updateStreak();
 
         emotion.getScores()
-                    .forEach((emotionType, score) -> {
+                .forEach((emotionType, score) -> {
 
-                        JournalEmotion journalEmotion = 
-                            JournalEmotion.builder()
-                                    .emotion(emotionType)
-                                    .score(score)
-                                    .journalEntry(savedEntry)
-                                    .build();
+                    JournalEmotion journalEmotion = JournalEmotion.builder()
+                            .emotion(emotionType)
+                            .score(score)
+                            .journalEntry(savedEntry)
+                            .build();
 
-                        journalEmotionRepository.save(journalEmotion);
+                    journalEmotionRepository.save(journalEmotion);
 
-                        savedEntry.getJournalEmotions()
-                                .add(journalEmotion);
-                    });
-   
+                    savedEntry.getJournalEmotions()
+                            .add(journalEmotion);
+                });
+
         return mapToResponse(savedEntry);
     }
 
-    //Get a journal entry by its ID
+    // Get a journal entry by its ID
     public JournalEntryResponse getJournalEntryById(Long id) {
 
         User user = currentUserService.getCurrentUser();
 
-        JournalEntry entry = journalEntryRepository.findByIdAndUser(id, user).orElseThrow(() -> new AppException(ErrorCode.JOURNAL_ENTRY_NOT_FOUND));
+        JournalEntry entry = journalEntryRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new AppException(ErrorCode.JOURNAL_ENTRY_NOT_FOUND));
 
         return mapToResponse(entry);
     }
 
-    //Get all journal entries for the current user
+    // Get all journal entries for the current user
     public Page<JournalEntryResponse> getAllEntries(int page, int size) {
 
         User user = currentUserService.getCurrentUser();
@@ -165,20 +162,20 @@ public class JournalEntryService {
         return entries.map(this::mapToResponse);
     }
 
-    //Update a journal entry by its ID
+    // Update a journal entry by its ID
     @Transactional
     public JournalEntryResponse updateJournalEntry(Long id, JournalEntryCreationRequest request) {
 
         User user = currentUserService.getCurrentUser();
-        
-        JournalEntry entry = journalEntryRepository.findByIdAndUser(id, user).orElseThrow(() -> new AppException(ErrorCode.JOURNAL_ENTRY_NOT_FOUND));
+
+        JournalEntry entry = journalEntryRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new AppException(ErrorCode.JOURNAL_ENTRY_NOT_FOUND));
 
         entry.setJournalContent(request.getJournalContent());
         entry.setNoteToSelf(request.getNoteToSelf());
 
         EmotionResponse emotion = emotionService.predictEmotion(
-            request.getJournalContent()
-        );
+                request.getJournalContent());
 
         entry.setPrimaryEmotion(emotion.getEmotion());
         entry.setConfidence(emotion.getConfidence());
@@ -186,24 +183,21 @@ public class JournalEntryService {
         Set<Tag> tags = request.getTags() == null
                 ? Set.of()
                 : request.getTags()
-                    .stream()
-                    .map(tagName -> {
-                        Tag tag = tagRepository.findByName(tagName)
-                                .orElseGet(() ->
-                                    Tag.builder()
-                                        .name(tagName)
-                                        .usedCount(0)
-                                        .build()
-                            );
-                        return tagRepository.save(tag);
-                    })
-                    .collect(Collectors.toSet());
+                        .stream()
+                        .map(tagName -> {
+                            Tag tag = tagRepository.findByName(tagName)
+                                    .orElseGet(() -> Tag.builder()
+                                            .name(tagName)
+                                            .usedCount(0)
+                                            .build());
+                            return tagRepository.save(tag);
+                        })
+                        .collect(Collectors.toSet());
 
         entry.setTags(tags);
 
         journalEmotionRepository.deleteAll(
-            entry.getJournalEmotions()
-        );
+                entry.getJournalEmotions());
 
         entry.getJournalEmotions().clear();
 
@@ -213,10 +207,10 @@ public class JournalEntryService {
                 .forEach((emotionType, score) -> {
 
                     JournalEmotion journalEmotion = JournalEmotion.builder()
-                        .emotion(emotionType)
-                        .score(score)
-                        .journalEntry(updatedEntry)
-                        .build();
+                            .emotion(emotionType)
+                            .score(score)
+                            .journalEntry(updatedEntry)
+                            .build();
 
                     journalEmotionRepository.save(journalEmotion);
 
@@ -228,12 +222,13 @@ public class JournalEntryService {
         return mapToResponse(updatedEntry);
     }
 
-    //Delete a journal entry by its ID
+    // Delete a journal entry by its ID
     public void deleteJournalEntry(Long id) {
 
         User user = currentUserService.getCurrentUser();
-        
-        JournalEntry entry = journalEntryRepository.findByIdAndUser(id, user).orElseThrow(() -> new AppException(ErrorCode.JOURNAL_ENTRY_NOT_FOUND));
+
+        JournalEntry entry = journalEntryRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new AppException(ErrorCode.JOURNAL_ENTRY_NOT_FOUND));
         journalEntryRepository.delete(entry);
     }
 }

@@ -7,16 +7,41 @@ const axiosInstance = axios.create({
     },
 });
 
-axiosInstance.interceptors.request.use((config) => {
-    if (!config.url.startsWith("/auth")) {
-        const token = localStorage.getItem("accessToken");
+// Request Interceptor
+axiosInstance.interceptors.request.use(
+    (config) => {
 
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+        const accessToken = localStorage.getItem("accessToken");
+
+        if (accessToken) {
+            config.headers.Authorization = `Bearer ${accessToken}`;
         }
-    }
 
-    return config;
-});
+        return config;
+    },
+
+    (error) => Promise.reject(error)
+);
+
+// Response Interceptor
+axiosInstance.interceptors.response.use(
+    (response) => response,
+
+    (error) => {
+
+        const status = error.response?.status;
+
+        if (status === 401 || status === 403) {
+
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("user");
+
+            window.location.href = "/";
+        }
+
+        return Promise.reject(error);
+    }
+);
 
 export default axiosInstance;

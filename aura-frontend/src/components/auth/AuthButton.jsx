@@ -13,16 +13,24 @@ export default function AuthButton({
             disabled={disabled}
             className="
                 w-full
-                py-3
-                rounded-xl
+                py-3.5
+                rounded-2xl
                 bg-gradient-to-r
-                from-violet-400
-                to-violet-600
+                from-violet-500
+                via-violet-600
+                to-fuchsia-500
                 text-white
                 font-semibold
-                hover:opacity-90
-                disabled:opacity-50
+                shadow-md
+                shadow-violet-200
                 transition
+                duration-200
+                hover:-translate-y-0.5
+                hover:shadow-lg
+                hover:shadow-violet-200
+                active:translate-y-0
+                disabled:opacity-50
+                disabled:hover:translate-y-0
             "
         >
             {text}

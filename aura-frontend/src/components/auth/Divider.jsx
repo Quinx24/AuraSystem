@@ -3,13 +3,13 @@ export default function Divider() {
 
         <div className="flex items-center gap-4">
 
-            <div className="flex-1 h-px bg-gray-200"></div>
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-gray-200"></div>
 
-            <span className="text-sm text-gray-400">
+            <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">
                 or continue with
             </span>
 
-            <div className="flex-1 h-px bg-gray-200"></div>
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-gray-200"></div>
 
         </div>
 

@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getJournalEntries } from "../../services/journalService";
 import { emotionValue } from "../../utils/emotionChartUtils";
+import { emotionConfig } from "../../utils/emotionUtils";
 import EmotionDot from "./EmotionDot";
 import MoodStatistics from "./MoodStatistics";
 
@@ -11,7 +12,33 @@ import {
     XAxis,
     YAxis,
     CartesianGrid,
+    Tooltip,
 } from "recharts";
+
+function MoodTooltip({ active, payload }) {
+    if (!active || !payload?.length) {
+        return null;
+    }
+
+    const data = payload[0].payload;
+    const config = emotionConfig[data.emotion];
+
+    return (
+        <div className="rounded-2xl border border-gray-100 bg-white px-4 py-3 shadow-md">
+            <p className="text-sm font-bold text-slate-900">
+                {data.day}
+            </p>
+
+            <p className="mt-1 text-sm font-medium text-gray-500">
+                Emotion: {config?.label ?? "No journal"}
+            </p>
+
+            <p className="mt-1 text-sm font-medium text-gray-500">
+                Journals: {data.journalCount ?? 0}
+            </p>
+        </div>
+    );
+}
 
 export default function MoodSummaryChart() {
 
@@ -50,7 +77,7 @@ export default function MoodSummaryChart() {
 
     };
 
-    const loadChart = async () => {
+    const loadChart = useCallback(async () => {
 
         const response = await getJournalEntries(
             0,
@@ -91,7 +118,11 @@ export default function MoodSummaryChart() {
 
                 journal.createdAt.substring(0, 10);
 
-            grouped[date] = journal;
+            if (!grouped[date]) {
+                grouped[date] = [];
+            }
+
+            grouped[date].push(journal);
 
         });
 
@@ -99,7 +130,8 @@ export default function MoodSummaryChart() {
 
         const result = last7Days.map(day => {
 
-            const journal = grouped[day.key];
+            const journalsByDay = grouped[day.key] ?? [];
+            const journal = journalsByDay[journalsByDay.length - 1];
 
             if (!journal) {
 
@@ -109,7 +141,9 @@ export default function MoodSummaryChart() {
 
                     emotion: null,
 
-                    value: null
+                    value: null,
+
+                    journalCount: 0
 
                 };
 
@@ -121,38 +155,26 @@ export default function MoodSummaryChart() {
 
                 emotion: journal.primaryEmotion,
 
-                value: emotionValue[journal.primaryEmotion]
+                value: emotionValue[journal.primaryEmotion],
+
+                journalCount: journalsByDay.length
 
             };
 
         });
 
-        console.log(result);
-
         setChartData(result);
-
-        console.table(result);
-
-        journals.forEach(journal => {
-
-            console.log(journal.primaryEmotion);
-
-        });
-
-
-    };
-
-    useEffect(() => {
-
-        loadChart();
 
     }, []);
 
     useEffect(() => {
 
-        console.log(chartData);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        loadChart();
 
-    }, [chartData]);
+    }, [loadChart]);
+
+    const hasChartData = chartData.some((item) => item.value !== null);
 
     return (
 
@@ -164,108 +186,107 @@ export default function MoodSummaryChart() {
                 border-gray-100
                 shadow-sm
                 p-6
+                transition
+                duration-300
+                hover:shadow-md
             "
         >
 
             <div className="flex items-end gap-2 mb-6">
 
-                <h2
-                    className="
-                        text-xl
-                        font-bold
-                        text-gray-900
-                    "
-                >
+                <h2 className="text-xl font-bold text-gray-900">
                     Mood Summary
                 </h2>
 
-                <span
-                    className="
-                        text-sm
-                        text-gray-400
-                    "
-                >
+                <span className="text-sm text-gray-400">
                     (This Week)
                 </span>
 
             </div>
 
-            <ResponsiveContainer
-                width="100%"
-                height={250}
-            >
-
-                <LineChart
-                    data={chartData}
-                    margin={{
-                        top: 40,
-                        right: 20,
-                        left: 20,
-                        bottom: 10
-                    }}
+            {hasChartData ? (
+                <ResponsiveContainer
+                    width="100%"
+                    height={250}
                 >
 
-                    <CartesianGrid
-
-                        horizontal={false}
-
-                        vertical={false}
-
-                    />
-
-                    <XAxis
-
-                        dataKey="day"
-
-                        axisLine={false}
-
-                        tickLine={false}
-
-                        tickMargin={15}
-
-                        tick={{
-                            fontSize: 13,
-                            fill: "#6B7280"
+                    <LineChart
+                        data={chartData}
+                        margin={{
+                            top: 40,
+                            right: 20,
+                            left: 20,
+                            bottom: 10
                         }}
+                    >
 
-                    />
+                        <CartesianGrid
+                            horizontal={false}
+                            vertical={false}
+                        />
 
-                    <YAxis
+                        <XAxis
+                            dataKey="day"
+                            axisLine={false}
+                            tickLine={false}
+                            tickMargin={15}
+                            tick={{
+                                fontSize: 13,
+                                fill: "#6B7280"
+                            }}
+                        />
 
-                        hide
+                        <YAxis
+                            hide
+                            domain={[0, 7]}
+                        />
 
-                        domain={[0, 7]}
+                        <Tooltip
+                            content={<MoodTooltip />}
+                            cursor={{
+                                stroke: "#EDE9FE",
+                                strokeWidth: 2
+                            }}
+                        />
 
-                    />
+                        <Line
+                            type="natural"
+                            dataKey="value"
+                            connectNulls
+                            stroke="#7C3AED"
+                            strokeWidth={4}
+                            dot={<EmotionDot />}
+                            activeDot={{
+                                r: 7,
+                                fill: "#7C3AED",
+                                stroke: "#FFFFFF",
+                                strokeWidth: 3
+                            }}
+                            isAnimationActive={true}
+                            animationDuration={900}
+                        />
 
-                    <Line
+                    </LineChart>
 
-                        type="natural"
+                </ResponsiveContainer>
+            ) : (
+                <div className="flex h-[250px] flex-col items-center justify-center rounded-3xl border border-dashed border-violet-100 bg-violet-50/50 text-center">
+                    <div className="grid h-14 w-14 place-items-center rounded-2xl bg-white text-2xl shadow-sm">
+                        ☁️
+                    </div>
 
-                        dataKey="value"
+                    <p className="mt-4 font-bold text-slate-900">
+                        No mood data yet
+                    </p>
 
-                        connectNulls
-
-                        stroke="#7C3AED"
-
-                        strokeWidth={3}
-
-                        dot={<EmotionDot />}
-
-                        activeDot={false}
-
-                        isAnimationActive={true}
-
-                    />
-
-                </LineChart>
-
-            </ResponsiveContainer>
+                    <p className="mt-1 text-sm font-medium text-gray-500">
+                        Write a journal to start your weekly summary.
+                    </p>
+                </div>
+            )}
 
             <MoodStatistics
-
                 emotionSummary={emotionSummary}
-
             />
 
         </div>
