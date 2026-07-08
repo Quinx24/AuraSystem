@@ -11,14 +11,16 @@ from transformers import (
 
 app = FastAPI()
 
+MODEL_NAME = "hwynwin/aura-phobert-v1"
+
 print("Loading PhoBERT...")
 
 tokenizer = AutoTokenizer.from_pretrained(
-    "./aura-phobert-v1"
+    MODEL_NAME
 )
 
 model = AutoModelForSequenceClassification.from_pretrained(
-    "./aura-phobert-v1"
+    MODEL_NAME
 )
 
 model.eval()
