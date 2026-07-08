@@ -13,17 +13,25 @@ app = FastAPI()
 
 MODEL_NAME = "hwynwin/aura-phobert-v1"
 
-print("Loading PhoBERT...")
+tokenizer = None
+model = None
 
-tokenizer = AutoTokenizer.from_pretrained(
-    MODEL_NAME
-)
 
-model = AutoModelForSequenceClassification.from_pretrained(
-    MODEL_NAME
-)
+@app.on_event("startup")
+def load_model():
+    global tokenizer, model
 
-model.eval()
+    print("Loading tokenizer...")
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    print("Tokenizer loaded!")
+
+    print("Loading model...")
+    model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
+    print("Model loaded!")
+
+    model.eval()
+    print("Ready!")
+
 
 id2label = {
     0: "NEUTRAL",
@@ -35,13 +43,16 @@ id2label = {
     6: "ANXIETY"
 }
 
+
 class JournalRequest(BaseModel):
     text: str
 
 
 @app.get("/")
 def home():
-    return {"message": "Aura Emotion Service Running"}
+    return {
+        "message": "Aura Emotion Service Running"
+    }
 
 
 @app.post("/predict")
@@ -61,9 +72,8 @@ def predict(data: JournalRequest):
     probs = F.softmax(outputs.logits, dim=1)[0]
 
     pred_id = torch.argmax(probs).item()
-
     confidence = probs[pred_id].item()
-    
+
     scores = {
         id2label[i]: round(float(probs[i]), 4)
         for i in range(len(id2label))
