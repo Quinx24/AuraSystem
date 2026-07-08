@@ -280,6 +280,7 @@ export default function ChangePasswordModal({
 
         if (!open) {
 
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             resetForm();
         }
 
@@ -289,11 +290,11 @@ export default function ChangePasswordModal({
 
     return (
 
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
+        <div className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
 
-            <div className="bg-white rounded-3xl w-full max-w-xl p-8">
+            <div className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-3xl bg-white p-5 md:p-8">
 
-                <h2 className="text-3xl font-bold">
+                <h2 className="text-2xl font-bold md:text-3xl">
                     Change Password
                 </h2>
 
@@ -581,7 +582,7 @@ export default function ChangePasswordModal({
 
                 </div>
 
-                <div className="flex justify-end gap-4 mt-10">
+                <div className="mt-8 flex flex-col justify-end gap-3 sm:mt-10 sm:flex-row sm:gap-4">
 
                     <button
                         disabled={loading}
@@ -593,7 +594,8 @@ export default function ChangePasswordModal({
 
                         }}
                         className="
-                            px-8
+                            px-6
+                            md:px-8
                             py-3
                             rounded-xl
                             border
@@ -612,7 +614,8 @@ export default function ChangePasswordModal({
                         onClick={handleSave}
                         disabled={loading}
                         className="
-                            px-8
+                            px-6
+                            md:px-8
                             py-3
                             rounded-xl
                             bg-violet-600

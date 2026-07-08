@@ -1,18 +1,10 @@
-import { formatDate } from "../../utils/dateUtils";
-
 export default function JournalCard({
     journal
 }) {
 
     const {
 
-        journalContent,
-
-        noteToSelf,
-
-        memoryPhoto,
-
-        tags
+        journalContent
 
     } = journal;
 
@@ -25,23 +17,27 @@ export default function JournalCard({
                 rounded-3xl
                 border
                 border-violet-100
-                p-6
+                p-4
+                md:p-6
                 shadow-sm
             "
         >
 
-            <h2 className="text-2xl font-semibold mb-6">
+            <h2 className="mb-5 text-xl font-semibold md:mb-6 md:text-2xl">
                 Journal Entry
             </h2>
 
             <div
                 className="
                     w-full
-                    h-[505px]
+                    h-[360px]
+                    md:h-[440px]
+                    xl:h-[505px]
                     overflow-y-auto
                     leading-10
                     font-serif
-                    text-lg
+                    text-base
+                    md:text-lg
                     text-slate-700
                     whitespace-pre-wrap
                     mt-3

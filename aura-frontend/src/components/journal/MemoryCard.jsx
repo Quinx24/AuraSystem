@@ -11,11 +11,14 @@ export default function MemoryCard({
                 relative
                 bg-white
                 rounded-xl
-                p-6
+                p-4
+                md:p-6
                 border
                 border-violet-100
-                h-[370px]
-                mb-8
+                min-h-[320px]
+                md:min-h-[370px]
+                mb-6
+                md:mb-8
             "
         >
 
@@ -41,7 +44,8 @@ export default function MemoryCard({
 
             <div
                 className="
-                    h-56
+                    h-48
+                    md:h-56
                     bg-gradient-to-br
                     from-violet-50
                     to-pink-50
@@ -57,7 +61,7 @@ export default function MemoryCard({
                     <img
                         src={memoryPhoto}
                         alt="Memory"
-                        className="w-full h-full object-cover"
+                        className="h-full w-full max-w-full object-cover"
                     />
                 ) : (
                     <div

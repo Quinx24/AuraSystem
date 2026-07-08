@@ -2,12 +2,8 @@ import {
     FiHome,
     FiEdit3,
     FiCalendar,
-    FiMessageCircle,
     FiTarget,
-    FiBarChart2,
-    FiBell,
     FiUser,
-    FiSettings,
     FiLogOut,
 } from 'react-icons/fi';
 
@@ -70,7 +66,7 @@ export default function Sidebar() {
     };
 
     return (
-        <aside className="fixed top-0 left-0 w-[280px] h-screen border-r border-slate-200 bg-white flex flex-col">
+        <aside className="fixed top-0 left-0 hidden h-screen w-[280px] flex-col border-r border-slate-200 bg-white xl:flex">
 
             {/* Logo */}
             <div className="px-6 pt-8 pb-6">

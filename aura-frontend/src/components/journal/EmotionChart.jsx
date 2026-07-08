@@ -36,8 +36,10 @@ export default function EmotionChart({
         <div
             className={`
                 flex
+                flex-col
                 items-center
                 justify-center
+                md:flex-row
                 ${compact ? "gap-4" : "gap-8"}
             `}
         >
@@ -46,8 +48,8 @@ export default function EmotionChart({
                 className={`
                     flex-shrink-0
                     ${compact
-                        ? "w-[180px] h-[180px]"
-                        : "w-[260px] h-[260px]"
+                        ? "h-[160px] w-[160px] sm:h-[180px] sm:w-[180px]"
+                        : "h-[200px] w-[200px] sm:h-[240px] sm:w-[240px] xl:h-[260px] xl:w-[260px]"
                     }
                 `}
             >
@@ -92,7 +94,7 @@ export default function EmotionChart({
                             flex
                             items-center
                             justify-between
-                            ${compact ? "gap-4 min-w-[140px]" : "gap-8 min-w-[180px]"}
+                            ${compact ? "gap-4 min-w-0 sm:min-w-[140px]" : "gap-4 min-w-0 sm:gap-8 sm:min-w-[180px]"}
                         `}
                     >
 

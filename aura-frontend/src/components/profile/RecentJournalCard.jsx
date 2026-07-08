@@ -66,11 +66,12 @@ export default function RecentJournalCard() {
                 border
                 border-gray-100
                 shadow-sm
-                p-6
+                p-4
+                md:p-6
             "
         >
 
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
                 <div>
 
@@ -111,8 +112,11 @@ export default function RecentJournalCard() {
                 className="
                     mt-6
                     grid
-                    grid-cols-3
-                    gap-5
+                    grid-cols-1
+                    gap-4
+                    md:grid-cols-2
+                    xl:grid-cols-3
+                    xl:gap-5
                 "
             >
 

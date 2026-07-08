@@ -223,7 +223,7 @@ export default function SideQuestPage() {
 
             <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
                 <div>
-                    <h1 className="text-4xl font-bold text-slate-900">
+                    <h1 className="text-2xl font-bold text-slate-900 md:text-3xl xl:text-4xl">
                         Side-Quests
                     </h1>
 
@@ -264,7 +264,7 @@ export default function SideQuestPage() {
                 </div>
             </div>
 
-            <div className="flex items-center gap-10 border-b border-gray-200">
+            <div className="flex items-center gap-5 overflow-x-auto border-b border-gray-200 md:gap-10">
                 <button
                     onClick={() => setActiveTab("recommended")}
                     className={`
@@ -335,9 +335,9 @@ export default function SideQuestPage() {
                 </button>
             </div>
 
-            <div className="grid grid-cols-12 gap-6">
-                <div className="col-span-12 xl:col-span-9">
-                    <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
+                <div className="min-w-0 xl:col-span-9">
+                    <div className="rounded-3xl border border-gray-100 bg-white p-4 shadow-sm md:p-6">
                         <h3 className="font-semibold text-lg mb-5 text-slate-900">
                             Filter by Mood
                         </h3>
@@ -398,12 +398,12 @@ export default function SideQuestPage() {
                             ))}
                         </div>
 
-                        <div className="flex items-center justify-between mt-8 mb-5">
+                        <div className="mt-8 mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                             <h3 className="text-lg font-semibold">
                                 Filter by Category
                             </h3>
 
-                            <div className="flex items-center gap-2">
+                            <div className="flex flex-wrap items-center gap-2">
                                 <span className="text-gray-500">
                                     Sort by
                                 </span>

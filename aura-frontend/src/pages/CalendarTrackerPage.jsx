@@ -94,7 +94,7 @@ export default function CalendarTrackerPage() {
         cells.push(
             <div
                 key={`empty-${i}`}
-                className="h-28 border border-gray-100"
+                className="h-16 border border-gray-100 sm:h-20 xl:h-28"
             />
         );
 
@@ -116,13 +116,16 @@ export default function CalendarTrackerPage() {
             <div
                 key={day}
                 className={`
-                        h-28
+                        h-16
+                        sm:h-20
+                        xl:h-28
                         border
                         border-gray-100
                         cursor-pointer
                         hover:bg-violet-50
                         transition
-                        p-3
+                        p-2
+                        md:p-3
                         ${isCurrentMonth &&
                         day === today.getDate()
                         ? "bg-violet-100"
@@ -143,7 +146,7 @@ export default function CalendarTrackerPage() {
                 }}
             >
 
-                <div className="font-semibold">
+                <div className="text-xs font-semibold md:text-base">
                     {day}
                 </div>
 
@@ -151,9 +154,9 @@ export default function CalendarTrackerPage() {
 
                     entry && (
 
-                        <div className="flex justify-center items-center h-13">
+                        <div className="flex h-10 items-center justify-center md:h-13">
 
-                            <span className="text-4xl">
+                            <span className="text-2xl md:text-3xl xl:text-4xl">
 
                                 {
                                     emotionConfig[
@@ -179,13 +182,13 @@ export default function CalendarTrackerPage() {
 
         <div className="space-y-6">
 
-            <h1 className="text-4xl font-bold">
+            <h1 className="text-2xl font-bold md:text-3xl xl:text-4xl">
                 Calendar Tracker
             </h1>
 
-            <div className="grid grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-4">
 
-                <div className="col-span-3 bg-white rounded-3xl p-6 shadow-sm">
+                <div className="min-w-0 rounded-3xl bg-white p-4 shadow-sm md:p-6 xl:col-span-3">
 
                     <div
                         className="
@@ -221,7 +224,7 @@ export default function CalendarTrackerPage() {
                             ←
                         </button>
 
-                        <h2 className="text-3xl font-bold">
+                        <h2 className="text-xl font-bold md:text-2xl xl:text-3xl">
 
                             {monthName}
                             {" "}
@@ -256,7 +259,7 @@ export default function CalendarTrackerPage() {
 
                     </div>
 
-                    <div className="grid grid-cols-7 text-center font-semibold mb-2">
+                    <div className="mb-2 grid grid-cols-7 text-center text-xs font-semibold md:text-base">
 
                         <div>Sun</div>
                         <div>Mon</div>
@@ -276,9 +279,9 @@ export default function CalendarTrackerPage() {
 
                 </div>
 
-                <div className="space-y-6">
+                <div className="min-w-0 space-y-6">
 
-                    <div className="bg-violet-50 rounded-3xl p-6 shadow-sm">
+                    <div className="rounded-3xl bg-violet-50 p-4 shadow-sm md:p-6">
 
                         <h2 className="font-bold text-xl mb-6">
                             Mood Legend
@@ -297,7 +300,7 @@ export default function CalendarTrackerPage() {
                                     "
                                 >
 
-                                    <span className="text-3xl">
+                                    <span className="text-2xl md:text-3xl">
                                         {config.emoji}
                                     </span>
 
@@ -312,7 +315,7 @@ export default function CalendarTrackerPage() {
 
                     </div>
 
-                    <div className="bg-white rounded-3xl p-10 shadow-sm">
+                    <div className="rounded-3xl bg-white p-6 shadow-sm md:p-10">
 
                         <p className="font-semibold leading-8">
                             Click on any date
@@ -320,7 +323,7 @@ export default function CalendarTrackerPage() {
                             and reflections.
                         </p>
 
-                        <div className="text-6xl text-center mt-6">
+                        <div className="mt-6 text-center text-4xl md:text-6xl">
                             ☁️
                         </div>
 

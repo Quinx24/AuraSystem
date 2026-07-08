@@ -11,13 +11,17 @@ export default function MainLayout() {
 
       <main
         className="
-          ml-[280px]
+          xl:ml-[280px]
           min-h-screen
-          p-8
+          p-4
+          md:p-6
+          xl:p-8
         "
       >
 
-        <Outlet />
+        <div className="mx-auto w-full max-w-[1600px]">
+          <Outlet />
+        </div>
 
       </main>
 

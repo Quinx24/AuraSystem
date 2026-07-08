@@ -193,17 +193,17 @@ export default function JournalPage() {
 
     return (
         <>
-            <div className="px-8 pb-8">
-                <div className="flex justify-between items-center mb-7">
+            <div className="w-full pb-4 md:pb-6 xl:pb-8">
+                <div className="mb-6 flex flex-col gap-4 md:mb-7 md:flex-row md:items-center md:justify-between">
                     <div className="-mt-2">
-                        <h1 className="text-4xl font-bold text-slate-900">Emotion Journal</h1>
-                        <p className="mt-3 text-xl text-slate-500">Write freely. Reflect deepy. Grow mindfully.</p>
+                        <h1 className="text-2xl font-bold text-slate-900 md:text-3xl xl:text-4xl">Emotion Journal</h1>
+                        <p className="mt-2 text-base text-slate-500 md:mt-3 md:text-lg xl:text-xl">Write freely. Reflect deepy. Grow mindfully.</p>
                     </div>
 
                     <button
                         onClick={handleSaveJournal}
                         disabled={isSaving || isInitialLoading}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-[#A78BFA] text-white rounded-lg font-medium hover:bg-[#9575F5] transition disabled:cursor-not-allowed disabled:opacity-70"
+                        className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#A78BFA] px-5 py-2.5 font-medium text-white transition hover:bg-[#9575F5] disabled:cursor-not-allowed disabled:opacity-70 md:w-auto"
                     >
                         {isSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
                         {isSaving ? "Analyzing Emotion..." : "Save Entry"}
@@ -211,18 +211,18 @@ export default function JournalPage() {
                 </div>
 
                 {isInitialLoading ? (
-                    <div className="flex min-h-[620px] items-center justify-center rounded-3xl border border-violet-100 bg-white text-violet-600 shadow-sm">
+                    <div className="flex min-h-[420px] items-center justify-center rounded-3xl border border-violet-100 bg-white text-violet-600 shadow-sm md:min-h-[540px] xl:min-h-[620px]">
                         <Loader2 size={24} className="animate-spin" />
                     </div>
                 ) : (
-                    <div className="grid grid-cols-12 gap-6">
-                        <div className="col-span-9 space-y-6">
-                            <div className="grid grid-cols-9 gap-6">
-                                <div className="col-span-6">
+                    <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
+                        <div className="min-w-0 space-y-6 xl:col-span-9">
+                            <div className="grid grid-cols-1 gap-6 lg:grid-cols-9">
+                                <div className="min-w-0 lg:col-span-6">
                                     <JournalEditor journalContent={journalContent} setJournalContent={setJournalContent} />
                                 </div>
 
-                                <div className="col-span-3 space-y-6">
+                                <div className="min-w-0 space-y-6 lg:col-span-3">
                                     <MemoryCard memoryPhoto={memoryPhotoPreview} mode="edit" onPhotoChange={handlePhotoChange} />
                                     <NoteCard note={noteToSelf} mode="edit" onChange={setNoteToSelf} />
                                 </div>

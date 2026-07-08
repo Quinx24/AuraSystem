@@ -8,7 +8,7 @@ export default function MoodSummaryCard({
 }) {
     return (
 
-        <div className="bg-white rounded-3xl p-6 shadow-sm">
+        <div className="rounded-3xl bg-white p-4 shadow-sm md:p-6">
 
             <h2 className="font-semibold text-lg mb-4">
                 Mood Summary

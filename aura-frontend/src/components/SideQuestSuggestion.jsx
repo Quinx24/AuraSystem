@@ -30,7 +30,7 @@ export default function SideQuestSuggestion({
     };
 
     return (
-        <div className="bg-white rounded-3xl p-6 shadow-sm">
+        <div className="rounded-3xl bg-white p-4 shadow-sm md:p-6">
 
             <h2 className="text-xl font-semibold mb-6">
                 Suggested Side Quests
@@ -55,6 +55,8 @@ export default function SideQuestSuggestion({
                             key={quest.id}
                             className="
                                 flex
+                                flex-col
+                                md:flex-row
                                 items-center
                                 gap-4
                                 p-4
@@ -68,6 +70,7 @@ export default function SideQuestSuggestion({
                                 className={`
                                     w-12
                                     h-12
+                                    shrink-0
                                     rounded-full
                                     flex
                                     items-center
@@ -84,7 +87,7 @@ export default function SideQuestSuggestion({
                             </div>
 
 
-                            <div className="flex-1">
+                            <div className="min-w-0 flex-1 text-center md:text-left">
 
                                 <h3 className="font-semibold mb-1">
                                     {quest.title}
@@ -103,7 +106,8 @@ export default function SideQuestSuggestion({
                                         className="
                                             flex
                                             items-center
-                                            gap-4
+                                            gap-2
+                                            md:gap-4
                                             px-4
                                             py-3
                                             rounded-xl
@@ -148,7 +152,8 @@ export default function SideQuestSuggestion({
                                         className="
                                             flex
                                             items-center
-                                            gap-4
+                                            gap-2
+                                            md:gap-4
                                             px-4
                                             py-3
                                             rounded-xl

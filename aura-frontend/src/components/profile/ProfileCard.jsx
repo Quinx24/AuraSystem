@@ -60,6 +60,7 @@ export default function ProfileCard() {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         loadUser();
         loadLevel();
     }, []);
@@ -73,7 +74,8 @@ export default function ProfileCard() {
                     border
                     border-gray-100
                     shadow-sm
-                    p-8
+                    p-5
+                    md:p-8
                     transition-all
                     duration-300
                     hover:shadow-lg
@@ -88,8 +90,10 @@ export default function ProfileCard() {
                         className="
                             block
                             mx-auto
-                            w-36
-                            h-36
+                            h-28
+                            w-28
+                            md:h-36
+                            md:w-36
                             rounded-full
                             object-cover
                             border-4
@@ -101,7 +105,8 @@ export default function ProfileCard() {
 
                 <h2
                     className="
-                        text-3xl
+                        text-2xl
+                        md:text-3xl
                         font-bold
                         text-center
                         mt-6

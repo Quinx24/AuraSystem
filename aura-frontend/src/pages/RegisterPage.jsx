@@ -143,7 +143,7 @@ export default function RegisterPage() {
 
         {/* ================= LEFT ================= */}
 
-        <div className="flex flex-col justify-between gap-8 bg-gradient-to-br from-white via-[#fffbff] to-[#f7f1ff] px-8 py-9 sm:px-12 lg:px-14 lg:py-12">
+        <div className="flex flex-col justify-between gap-6 bg-gradient-to-br from-white via-[#fffbff] to-[#f7f1ff] px-6 py-8 sm:px-10 md:gap-8 lg:px-14 lg:py-12">
 
           {/* Logo */}
 
@@ -170,7 +170,7 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <h1 className="mt-6 text-4xl font-bold leading-tight text-[#1B2559] sm:text-5xl">
+            <h1 className="mt-6 text-3xl font-bold leading-tight text-[#1B2559] md:text-4xl xl:text-5xl">
               Create your account
             </h1>
 
@@ -183,7 +183,7 @@ export default function RegisterPage() {
             <div className="absolute inset-x-8 bottom-2 h-24 rounded-full bg-violet-200/40 blur-2xl" />
 
             <div className="relative rounded-[32px] border border-violet-100 bg-white/80 p-5 shadow-xl shadow-violet-100/70">
-              <div className="grid place-items-center rounded-[28px] bg-gradient-to-br from-violet-50 via-white to-emerald-50 p-8">
+              <div className="grid place-items-center rounded-[28px] bg-gradient-to-br from-violet-50 via-white to-emerald-50 p-5 md:p-8">
                 <div className="relative h-40 w-44">
                   <div className="absolute inset-6 rounded-full bg-violet-100" />
                   <div className="absolute left-6 top-8 grid h-14 w-14 place-items-center rounded-3xl bg-white text-violet-500 shadow-md">

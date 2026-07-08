@@ -138,7 +138,7 @@ export default function DashboardPage() {
         <div className="space-y-8">
             <div className="animate-in fade-in duration-300">
 
-                <h1 className="text-4xl font-bold text-slate-900">
+                <h1 className="text-2xl font-bold text-slate-900 md:text-3xl xl:text-4xl">
                     {getGreeting()}{userName ? `, ${userName}` : ""} 👋
                 </h1>
 
@@ -148,7 +148,7 @@ export default function DashboardPage() {
 
             </div>
 
-            <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 {stats.map((stat) => {
                     const Icon = stat.icon;
 
@@ -177,26 +177,26 @@ export default function DashboardPage() {
                 })}
             </div>
 
-            <div className="grid grid-cols-12 gap-6">
-                <div className="col-span-12 xl:col-span-4">
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
+                <div className="min-w-0 xl:col-span-4">
 
                     <TodayMoodCard />
 
                 </div>
 
-                <div className="col-span-12 xl:col-span-8">
+                <div className="min-w-0 xl:col-span-8">
 
                     <MoodSummaryChart />
 
                 </div>
 
-                <div className="col-span-12 xl:col-span-7">
+                <div className="min-w-0 xl:col-span-7">
 
                     <CalendarPreview />
 
                 </div>
 
-                <div className="col-span-12 xl:col-span-5">
+                <div className="min-w-0 xl:col-span-5">
 
                     <SideQuestPreview />
 

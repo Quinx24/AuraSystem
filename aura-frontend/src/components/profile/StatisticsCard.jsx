@@ -33,6 +33,7 @@ export default function StatisticsCard() {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         loadStatistics();
     }, []);
 
@@ -45,7 +46,8 @@ export default function StatisticsCard() {
                 border
                 border-gray-100
                 shadow-sm
-                p-6
+                p-4
+                md:p-6
             "
         >
 
@@ -93,8 +95,11 @@ export default function StatisticsCard() {
             <div
                 className="
                     grid
-                    grid-cols-4
-                    gap-5
+                    grid-cols-1
+                    gap-4
+                    sm:grid-cols-2
+                    xl:grid-cols-4
+                    xl:gap-5
                 "
             >
                 <StatisticItem

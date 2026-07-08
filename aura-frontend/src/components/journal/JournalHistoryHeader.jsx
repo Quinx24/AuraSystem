@@ -30,7 +30,9 @@ export default function JournalHistoryHeader({
 
             <h1
                 className="
-                    text-4xl
+                    text-2xl
+                    md:text-3xl
+                    xl:text-4xl
                     font-bold
                     text-slate-900
                 "

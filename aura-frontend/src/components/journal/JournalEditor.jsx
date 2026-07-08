@@ -9,11 +9,12 @@ export default function JournalEditor({
                 rounded-3xl
                 border
                 border-violet-100
-                p-6
+                p-4
+                md:p-6
                 shadow-sm
             "
         >
-            <h2 className="text-2xl font-semibold mb-6">
+            <h2 className="mb-5 text-xl font-semibold md:mb-6 md:text-2xl">
                 Today's Journal
             </h2>
 
@@ -25,13 +26,16 @@ export default function JournalEditor({
                 placeholder="Write about your day..."
                 className="
                     w-full
-                    h-[500px]
+                    h-[360px]
+                    md:h-[440px]
+                    xl:h-[500px]
                     resize-none
                     outline-none
                     overflow-y-auto
                     leading-10
                     font-serif
-                    text-lg
+                    text-base
+                    md:text-lg
                     text-slate-700
                 "
                 style={{

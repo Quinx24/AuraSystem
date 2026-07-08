@@ -14,8 +14,10 @@ export default function CompletedQuestCard({
                 bg-white 
                 rounded-3xl 
                 shadow-sm 
-                p-6
-                h-[400px]
+                p-4
+                md:p-6
+                min-h-[360px]
+                md:min-h-[400px]
                 flex
                 flex-col
             "
@@ -51,7 +53,8 @@ export default function CompletedQuestCard({
                                     rounded-2xl
                                     border
                                     border-violet-100
-                                    p-5
+                                    p-4
+                                    md:p-5
                                 "
                             >
 

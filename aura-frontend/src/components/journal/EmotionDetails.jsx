@@ -4,13 +4,13 @@ export default function EmotionDetails({
     emotions
 }) {
     return (
-        <div className="bg-white rounded-3xl p-6 shadow-sm">
+        <div className="rounded-3xl bg-white p-4 shadow-sm md:p-6">
 
             <h2 className="text-xl font-semibold mb-6">
                 Emotion Details
             </h2>
 
-            <div className="grid md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
 
                 {emotions.map((item) => {
 
@@ -31,13 +31,14 @@ export default function EmotionDetails({
                                 p-5
                                 border
                                 border-gray-100
-                                min-h-[220px]
+                                min-h-[180px]
+                                md:min-h-[220px]
                             `}
                         >
 
                             <div className="flex items-center gap-3">
 
-                                <div className="text-4xl">
+                                <div className="text-3xl md:text-4xl">
                                     {config.emoji}
                                 </div>
 

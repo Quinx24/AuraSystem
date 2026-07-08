@@ -10,7 +10,7 @@ export default function RightPanel({
     onRefresh
 }) {
     return (
-        <div className="col-span-3 space-y-6">
+        <div className="min-w-0 space-y-6 xl:col-span-3">
             <div
                 className="
                     bg-white

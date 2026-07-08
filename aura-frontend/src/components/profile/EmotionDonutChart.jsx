@@ -42,9 +42,9 @@ export default function EmotionDonutChart({ summary }) {
     );
 
     return (
-        <div className="flex items-center justify-center gap-8">
+        <div className="flex flex-col items-center justify-center gap-6 xl:flex-row xl:gap-8">
 
-            <div className="w-[260px] h-[260px]">
+            <div className="h-[220px] w-[220px] sm:h-[240px] sm:w-[240px] xl:h-[260px] xl:w-[260px]">
                 <ResponsiveContainer width="100%" height={280}>
                     <PieChart>
                         <Pie
@@ -105,7 +105,7 @@ export default function EmotionDonutChart({ summary }) {
 
                     <div
                         key={item.emotion}
-                        className="flex items-center justify-between gap-8 min-w-[180px]"
+                        className="flex min-w-0 items-center justify-between gap-6 sm:min-w-[180px] xl:gap-8"
                     >
 
                         <div className="flex items-center gap-3">

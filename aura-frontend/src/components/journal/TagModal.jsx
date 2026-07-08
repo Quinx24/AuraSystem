@@ -31,16 +31,19 @@ export default function TagModal({
                 items-center
                 justify-center
                 z-50
+                p-4
             "
         >
 
             <div
                 className="
-                    w-[600px]
+                    w-full
+                    max-w-[600px]
                     bg-white
                     rounded-3xl
                     shadow-xl
-                    p-8
+                    p-5
+                    md:p-8
                 "
             >
 
@@ -48,7 +51,7 @@ export default function TagModal({
 
                 <div className="flex justify-between items-center mb-8">
 
-                    <h2 className="text-3xl font-bold">
+                    <h2 className="text-2xl font-bold md:text-3xl">
                         Add Tags
                     </h2>
 

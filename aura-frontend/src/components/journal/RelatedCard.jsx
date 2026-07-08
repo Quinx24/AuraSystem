@@ -11,7 +11,7 @@ export default function RelatedCard() {
 
     return (
 
-        <div className="bg-white rounded-3xl shadow-sm p-3 h-[330px]">
+        <div className="min-h-[300px] rounded-3xl bg-white p-3 shadow-sm md:min-h-[330px]">
 
             <h2 className="text-xl font-semibold mb-5 px-3 mt-2">
                 Related
@@ -35,7 +35,7 @@ export default function RelatedCard() {
 
                     <div className="flex items-center gap-3">
 
-                        <div className="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-100">
 
                             <BookOpen
                                 size={18}
@@ -44,7 +44,7 @@ export default function RelatedCard() {
 
                         </div>
 
-                        <div className="px-2">
+                        <div className="min-w-0 px-2">
 
                             <h3 className="font-medium">
                                 Emotion Journal
@@ -81,7 +81,7 @@ export default function RelatedCard() {
 
                     <div className="flex items-center gap-3">
 
-                        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100">
 
                             <CalendarDays
                                 size={18}
@@ -90,7 +90,7 @@ export default function RelatedCard() {
 
                         </div>
 
-                        <div className="px-2">
+                        <div className="min-w-0 px-2">
 
                             <h3 className="font-medium">
                                 Calendar Tracker
@@ -127,7 +127,7 @@ export default function RelatedCard() {
 
                     <div className="flex items-center gap-3">
 
-                        <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100">
 
                             <Target
                                 size={18}
@@ -136,7 +136,7 @@ export default function RelatedCard() {
 
                         </div>
 
-                        <div className="px-2">
+                        <div className="min-w-0 px-2">
 
                             <h3 className="font-medium">
                                 Side-Quests

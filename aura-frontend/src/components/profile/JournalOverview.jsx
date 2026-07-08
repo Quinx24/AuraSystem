@@ -42,6 +42,7 @@ export default function JournalOverview() {
 
     useEffect(() => {
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         loadSummary();
 
     }, []);
@@ -82,12 +83,14 @@ export default function JournalOverview() {
                 className="
                     mt-8
                     grid
-                    grid-cols-12
-                    gap-8
+                    grid-cols-1
+                    gap-6
+                    xl:grid-cols-12
+                    xl:gap-8
                 "
             >
 
-                <div className="col-span-7">
+                <div className="min-w-0 xl:col-span-7">
 
                     <div className="space-y-6">
 
@@ -137,7 +140,7 @@ export default function JournalOverview() {
 
                 </div>
 
-                <div className="col-span-5">
+                <div className="min-w-0 xl:col-span-5">
 
                     <EmotionDonutChart
 

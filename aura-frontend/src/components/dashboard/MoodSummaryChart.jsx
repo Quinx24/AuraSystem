@@ -270,7 +270,7 @@ export default function MoodSummaryChart() {
 
                 </ResponsiveContainer>
             ) : (
-                <div className="flex h-[250px] flex-col items-center justify-center rounded-3xl border border-dashed border-violet-100 bg-violet-50/50 text-center">
+                <div className="flex h-[220px] flex-col items-center justify-center rounded-3xl border border-dashed border-violet-100 bg-violet-50/50 text-center md:h-[250px]">
                     <div className="grid h-14 w-14 place-items-center rounded-2xl bg-white text-2xl shadow-sm">
                         ☁️
                     </div>

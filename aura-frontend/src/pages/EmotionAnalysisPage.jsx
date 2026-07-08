@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
 import {
-    getSideQuestByEmotion,
-    addSideQuest
+    getSideQuestByEmotion
 } from "../services/sideQuestService";
 import { getJournalEntryById } from "../services/journalService";
-import { emotionConfig } from "../utils/emotionUtils";
-import EmotionSummary from "../components/journal/EmotionSummary";
 import { useParams } from "react-router-dom";
 import SideQuestSuggestion from "../components/SideQuestSuggestion";
 import EmotionAnalysisCard from "../components/journal/EmotionAnalysisCard";
 import MoodSummaryCard from "../components/journal/MoodSummaryCard";
 import JournalStatsCard from "../components/journal/JournalStatsCard";
 import EmotionDetails from "../components/journal/EmotionDetails";
-import { formatDate } from "../utils/dateUtils";
 
 export default function EmotionAnalysisPage() {
 
@@ -47,7 +43,7 @@ export default function EmotionAnalysisPage() {
 
     if (!journal) {
         return (
-            <div className="h-screen flex flex-col items-center justify-center">
+            <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
                 <div
                     className="
                     w-16
@@ -104,7 +100,7 @@ export default function EmotionAnalysisPage() {
     return (
         <div className="space-y-6">
 
-            <h1 className="text-4xl font-bold">
+            <h1 className="text-2xl font-bold md:text-3xl xl:text-4xl">
                 Emotion Analysis Results
             </h1>
 

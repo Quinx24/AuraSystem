@@ -140,17 +140,17 @@ Tomorrow I want to continue improving the Calendar Tracker and connect it with t
 
             />
 
-            <div className="grid grid-cols-12 gap-6">
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
 
                 {/* LEFT */}
 
-                <div className="col-span-9 space-y-6">
+                <div className="min-w-0 space-y-6 xl:col-span-9">
 
                     {/* Journal + Memory */}
 
-                    <div className="grid grid-cols-9 gap-6">
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-9">
 
-                        <div className="col-span-6">
+                        <div className="min-w-0 lg:col-span-6">
 
                             <JournalCard
                                 journal={journal}
@@ -158,7 +158,7 @@ Tomorrow I want to continue improving the Calendar Tracker and connect it with t
 
                         </div>
 
-                        <div className="col-span-3 space-y-6">
+                        <div className="min-w-0 space-y-6 lg:col-span-3">
 
                             <MemoryCard
                                 memoryPhoto={journal.memoryPhoto}
@@ -174,9 +174,9 @@ Tomorrow I want to continue improving the Calendar Tracker and connect it with t
 
                     </div>
 
-                    <div className="grid grid-cols-6 gap-6">
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-6">
 
-                        <div className="col-span-3">
+                        <div className="min-w-0 lg:col-span-3">
 
                             <EmotionChartCard
                                 emotions={journal.emotions}
@@ -184,7 +184,7 @@ Tomorrow I want to continue improving the Calendar Tracker and connect it with t
 
                         </div>
 
-                        <div className="col-span-3">
+                        <div className="min-w-0 lg:col-span-3">
 
                             <CompletedQuestCard
                                 quests={completedQuests}
@@ -202,7 +202,7 @@ Tomorrow I want to continue improving the Calendar Tracker and connect it with t
 
                 {/* RIGHT */}
 
-                <div className="col-span-3 space-y-6">
+                <div className="min-w-0 space-y-6 xl:col-span-3">
 
                     <MoodSummaryCard
                         emotion={journal.primaryEmotion}

@@ -101,7 +101,7 @@ export default function TodayMoodCard() {
 
             <div className="flex flex-col items-center mt-8">
 
-                <div className="grid h-24 w-24 place-items-center rounded-full bg-violet-50 text-6xl shadow-inner">
+                <div className="grid h-20 w-20 place-items-center rounded-full bg-violet-50 text-5xl shadow-inner md:h-24 md:w-24 md:text-6xl">
                     {config?.emoji ?? "☁️"}
                 </div>
 

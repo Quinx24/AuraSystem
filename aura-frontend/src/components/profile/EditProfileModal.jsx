@@ -26,6 +26,7 @@ export default function EditProfileModal({
 
         if (user) {
 
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setForm({
                 fullName: user.fullName || "",
                 avatarUrl: user.avatarUrl || ""
@@ -67,7 +68,8 @@ export default function EditProfileModal({
                 items-center
                 justify-center
                 z-50
-                p-6
+                p-4
+                md:p-6
             "
         >
             <div
@@ -79,18 +81,24 @@ export default function EditProfileModal({
                     max-w-5xl
                     overflow-hidden
                     flex
+                    max-h-[90vh]
+                    flex-col
+                    overflow-y-auto
+                    lg:flex-row
                     animate-fade-in
                 "
             >
 
                 <div
                     className="
-                        w-[320px]
+                        w-full
+                        lg:w-[320px]
                         bg-gradient-to-b
                         from-violet-600
                         to-purple-700
                         text-white
-                        p-8
+                        p-6
+                        md:p-8
                         flex
                         flex-col
                         items-center
@@ -183,13 +191,16 @@ export default function EditProfileModal({
                 <div
                     className="
                         flex-1
-                        p-10
+                        p-5
+                        md:p-10
                     "
                 >
 
                     <h2
                         className="
-                            text-4xl
+                            text-2xl
+                            md:text-3xl
+                            xl:text-4xl
                             font-bold
                             text-gray-900
                         "
@@ -338,12 +349,13 @@ export default function EditProfileModal({
 
                     </div>
 
-                    <div className="flex justify-end gap-4 mt-8">
+                    <div className="mt-8 flex flex-col justify-end gap-3 sm:flex-row sm:gap-4">
 
                         <button
                             onClick={onClose}
                             className="
-                                px-8
+                                px-6
+                                md:px-8
                                 py-3
                                 rounded-xl
                                 border
@@ -359,7 +371,8 @@ export default function EditProfileModal({
                         <button
                             onClick={handleSave}
                             className="
-                                px-8
+                                px-6
+                                md:px-8
                                 py-3
                                 rounded-xl
                                 bg-gradient-to-r

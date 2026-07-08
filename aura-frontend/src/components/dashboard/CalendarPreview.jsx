@@ -96,7 +96,7 @@ export default function CalendarPreview() {
         cells.push(
             <div
                 key={`empty-${i}`}
-                className="h-14 border border-gray-100 bg-gray-50/40"
+                className="h-12 border border-gray-100 bg-gray-50/40 sm:h-14"
             />
         );
 
@@ -132,7 +132,8 @@ export default function CalendarPreview() {
                     }
                 }}
                 className={`
-                    h-14
+                    h-12
+                    sm:h-14
                     border
                     border-gray-100
                     p-1

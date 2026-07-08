@@ -25,15 +25,15 @@ export default function EmotionSummary({
 
             )}
 
-            <div className="flex items-center gap-6">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-6">
 
-                <div className="text-7xl">
+                <div className="text-5xl md:text-6xl xl:text-7xl">
                     {config?.emoji}
                 </div>
 
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
 
-                    <h3 className="text-4xl font-bold text-purple-600 mb-6">
+                    <h3 className="mb-4 text-2xl font-bold text-purple-600 md:text-3xl xl:mb-6 xl:text-4xl">
                         {config?.label}
                     </h3>
 
@@ -42,7 +42,7 @@ export default function EmotionSummary({
                     </p>
 
                     <div
-                        className={`mt-4 ${width} bg-gray-200 rounded-full h-3`}
+                        className={`mt-4 max-w-full ${width} bg-gray-200 rounded-full h-3`}
                     >
 
                         <div
@@ -56,7 +56,7 @@ export default function EmotionSummary({
 
                     {showDescription && (
 
-                        <p className="text-gray-600 mt-8 leading-7 max-w-md">
+                        <p className="mt-6 max-w-md text-gray-600 leading-7 md:mt-8">
                             {config?.description}
                         </p>
 

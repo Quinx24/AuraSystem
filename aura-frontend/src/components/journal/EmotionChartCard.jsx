@@ -6,7 +6,7 @@ export default function EmotionChartCard({
 
     return (
 
-        <div className="bg-white rounded-3xl shadow-sm p-6 h-[400px] flex flex-col">
+        <div className="flex min-h-[360px] flex-col rounded-3xl bg-white p-4 shadow-sm md:min-h-[400px] md:p-6">
 
             <h2 className="text-xl font-semibold mb-6">
                 Emotion Distribution

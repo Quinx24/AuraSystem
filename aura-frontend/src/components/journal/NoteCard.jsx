@@ -11,10 +11,11 @@ export default function NoteCard({
                 relative
                 bg-pink-50
                 rounded-xl
-                p-6
+                p-4
+                md:p-6
                 border
                 border-violet-100
-                h-[210px]
+                min-h-[210px]
             "
         >
 

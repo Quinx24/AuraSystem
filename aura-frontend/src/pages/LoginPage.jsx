@@ -5,7 +5,7 @@ import Divider from "../components/auth/Divider";
 import SocialLogin from "../components/auth/SocialLogin";
 
 import { useState } from "react";
-import { BookOpen, Heart, Lock, Mail, Sparkles, Sprout } from "lucide-react";
+import { BookOpen, Heart, Lock, Mail, Sprout } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../services/userService";
 
@@ -85,7 +85,7 @@ export default function LoginPage() {
             <div className="relative grid w-full max-w-6xl animate-fade-in overflow-hidden rounded-[36px] border border-white/70 bg-white/90 shadow-2xl shadow-violet-100/70 backdrop-blur-xl lg:grid-cols-[1.05fr_0.95fr]">
 
                 {/* Left */}
-                <div className="flex flex-col justify-between gap-10 bg-gradient-to-br from-white via-[#fffbff] to-[#f7f1ff] px-8 py-9 sm:px-12 lg:px-14 lg:py-12">
+                <div className="flex flex-col justify-between gap-6 bg-gradient-to-br from-white via-[#fffbff] to-[#f7f1ff] px-6 py-8 sm:px-10 md:gap-8 lg:px-14 lg:py-12 xl:gap-10">
 
                     {/* Logo */}
                     <div className="flex items-center gap-3">
@@ -105,7 +105,7 @@ export default function LoginPage() {
                     </div>
 
                     <div>
-                        <h1 className="mt-6 text-4xl font-bold leading-tight text-[#1B2559] sm:text-5xl">
+                        <h1 className="mt-6 text-3xl font-bold leading-tight text-[#1B2559] md:text-4xl xl:text-5xl">
                             Welcome back 👋
                         </h1>
 
@@ -118,7 +118,7 @@ export default function LoginPage() {
                         <div className="absolute inset-x-8 bottom-2 h-24 rounded-full bg-violet-200/40 blur-2xl" />
 
                         <div className="relative rounded-[32px] border border-violet-100 bg-white/80 p-5 shadow-xl shadow-violet-100/70">
-                            <div className="grid place-items-center rounded-[28px] bg-gradient-to-br from-violet-50 via-white to-pink-50 p-8">
+                            <div className="grid place-items-center rounded-[28px] bg-gradient-to-br from-violet-50 via-white to-pink-50 p-5 md:p-8">
                                 <div className="relative h-44 w-44">
                                     <div className="absolute inset-7 rounded-full bg-violet-100" />
                                     <div className="absolute left-7 top-9 grid h-14 w-14 place-items-center rounded-3xl bg-white text-violet-500 shadow-md">
