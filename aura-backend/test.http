@@ -1,6 +1,6 @@
 ### Test for creating a journal entry
 POST http://localhost:8080/journal-entries
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzI2ODMzNCwiZXhwIjoxNzgzMjcxOTM0fQ.4tfiEUScpxrys2WvAlt3uBz-NrITMQpvS-NHoACKStE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1eWVuQGdtYWlsLmNvbSIsImlhdCI6MTc4MzUxMDYyMiwiZXhwIjoxNzgzNTE0MjIyfQ.yjbHEH6JNOZSYFTowUcpIYSGw6NVoeEAUH6Z0JT0sIc
 Content-Type: application/json
 
 {
@@ -14,7 +14,7 @@ GET http://localhost:8080/journal-entries/14
 
 ### Test for retrieving all journal entries
 GET http://localhost:8080/journal-entries?page=0&size=2
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4Mjk4MTM2NiwiZXhwIjoxNzgyOTg0OTY2fQ._qGBvkhzW3NTqjwZAyyYPSePV7e1xpaJ5r_qQc1gVD4
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1eWVuQGdtYWlsLmNvbSIsImlhdCI6MTc4MzUxMDYyMiwiZXhwIjoxNzgzNTE0MjIyfQ.yjbHEH6JNOZSYFTowUcpIYSGw6NVoeEAUH6Z0JT0sIc
 
 ### Test for updating a journal entry
 PUT http://localhost:8080/journal-entries/1
@@ -78,8 +78,8 @@ POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
-    "fullName": "Test",
-    "email": "test@gmail.com",
+    "fullName": "Hoàng Uyên",
+    "email": "uyen@gmail.com",
     "password": "12345678"
 }
 
@@ -88,7 +88,7 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-    "email": "test@gmail.com",
+    "email": "uyen@gmail.com",
     "password": "12345678"
 }
 

@@ -17,7 +17,6 @@ import org.example.aurabackend.service.JournalEntryService;
 import org.example.aurabackend.dto.request.JournalEntryCreationRequest;
 import org.example.aurabackend.dto.response.ApiResponse;
 import org.example.aurabackend.dto.response.JournalEntryResponse;
-import java.util.List;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import lombok.RequiredArgsConstructor;
