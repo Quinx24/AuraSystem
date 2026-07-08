@@ -12,7 +12,7 @@ public class EmotionService {
 
     public EmotionResponse predictEmotion(String text) {
 
-        String url = "http://localhost:8000/predict";
+        String url = "https://aurasystem-production.up.railway.app/predict";
 
         EmotionRequest request = new EmotionRequest(text);
 
