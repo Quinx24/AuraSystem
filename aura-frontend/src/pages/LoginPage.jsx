@@ -64,7 +64,7 @@ export default function LoginPage() {
                 JSON.stringify(user)
             );
 
-            navigate("/journal");
+            navigate("/dashboard");
 
         } catch (error) {
 
