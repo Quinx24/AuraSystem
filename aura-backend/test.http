@@ -74,7 +74,7 @@ GET http://localhost:8080/side-quests/emotion/SAD
 GET http://localhost:8080/side-quests
 
 ### Test for register
-POST http://localhost:8080/auth/register
+POST https://aurasystem-production-5536.up.railway.app/auth/register
 Content-Type: application/json
 
 {
@@ -84,7 +84,7 @@ Content-Type: application/json
 }
 
 ### Test for login
-POST http://localhost:8080/auth/login
+POST https://aurasystem-production-5536.up.railway.app/auth/login
 Content-Type: application/json
 
 {
