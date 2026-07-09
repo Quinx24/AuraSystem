@@ -194,7 +194,7 @@ export default function LoginPage() {
                 {/* Right */}
                 <div className="flex items-center justify-center bg-[#fcfbff]/90 p-6 sm:p-10">
 
-                    <div className="w-full max-w-md rounded-[32px] border border-gray-100 bg-white p-7 shadow-xl shadow-violet-100/60 sm:p-9">
+                    <div className="w-full max-w-md rounded-[32px] border border-gray-100 bg-white p-8 shadow-xl shadow-violet-100/60 sm:p-10">
                         <div className="mb-8 text-center">
                             <h2 className="text-3xl font-bold text-slate-900">
                                 {selectedRole === "USER" ? "Log in to Aura" : "Admin Sign In"}
@@ -210,7 +210,7 @@ export default function LoginPage() {
                         <RoleSwitch selectedRole={selectedRole} onRoleChange={setSelectedRole} />
 
                         <form
-                            className="space-y-5"
+                            className="space-y-6"
                             onSubmit={handleSubmit}
                         >
 
@@ -247,7 +247,7 @@ export default function LoginPage() {
                                 <label className="flex items-center gap-2 font-medium text-gray-500">
                                     <input
                                         type="checkbox"
-                                        className="h-4 w-4 rounded border-gray-300 text-violet-600 accent-violet-600"
+                                        className="h-4 w-4 rounded border-gray-300 text-violet-600 accent-violet-600 focus:ring-violet-500"
                                     />
                                     Remember me
                                 </label>

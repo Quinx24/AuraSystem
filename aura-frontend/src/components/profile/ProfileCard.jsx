@@ -37,9 +37,7 @@ export default function ProfileCard() {
     const loadUser = async () => {
         try {
             const response = await getCurrentUser();
-
             setUser(response.data.result);
-
         } catch (error) {
             console.error(error);
         }
@@ -47,15 +45,10 @@ export default function ProfileCard() {
 
     const loadLevel = async () => {
         try {
-
             const data = await getLevel();
-
             setLevel(data);
-
         } catch (error) {
-
             console.error(error);
-
         }
     };
 
@@ -74,32 +67,39 @@ export default function ProfileCard() {
                     border
                     border-gray-100
                     shadow-sm
-                    p-5
+                    p-6
                     md:p-8
                     transition-all
                     duration-300
-                    hover:shadow-lg
+                    hover:shadow-md
                 "
             >
 
                 <div className="flex justify-center">
 
-                    <img
-                        src={avatarUrl}
-                        alt="Profile Avatar"
-                        className="
-                            block
-                            mx-auto
-                            h-28
-                            w-28
-                            md:h-36
-                            md:w-36
-                            rounded-full
-                            object-cover
-                            border-4
-                            border-violet-100
-                        "
-                    />
+                    <div className="relative">
+                        <img
+                            src={avatarUrl}
+                            alt="Profile Avatar"
+                            className="
+                                block
+                                mx-auto
+                                h-32
+                                w-32
+                                md:h-40
+                                md:w-40
+                                rounded-full
+                                object-cover
+                                border-4
+                                border-white
+                                shadow-lg
+                                shadow-violet-100
+                            "
+                        />
+                        <div className="absolute -bottom-2 -right-2 grid h-10 w-10 place-items-center rounded-full bg-violet-500 text-white shadow-md">
+                            <span className="text-lg">✨</span>
+                        </div>
+                    </div>
 
                 </div>
 
@@ -109,6 +109,7 @@ export default function ProfileCard() {
                         md:text-3xl
                         font-bold
                         text-center
+                        text-slate-900
                         mt-6
                     "
                 >
@@ -117,16 +118,17 @@ export default function ProfileCard() {
 
                 <p
                     className="
-                        mt-4
+                        mt-3
                         mx-auto
                         w-fit
                         px-4
-                        py-2
+                        py-1.5
                         rounded-full
-                        bg-violet-50
-                        text-violet-600
+                        bg-gradient-to-r from-violet-50 to-violet-100
+                        text-violet-700
                         text-sm
                         font-semibold
+                        border border-violet-200
                     "
                 >
                     Soul Explorer
@@ -134,12 +136,13 @@ export default function ProfileCard() {
 
                 <div className="mt-6">
 
-                    <div className="flex justify-between mb-2">
+                    <div className="flex justify-between items-center mb-2">
 
                         <span
                             className="
                                 text-sm
-                                text-gray-500
+                                font-medium
+                                text-gray-600
                             "
                         >
                             Level {level.level}
@@ -159,7 +162,7 @@ export default function ProfileCard() {
 
                     <div
                         className="
-                            h-3
+                            h-2.5
                             bg-gray-100
                             rounded-full
                             overflow-hidden
@@ -169,8 +172,9 @@ export default function ProfileCard() {
                         <div
                             className="
                                 h-full
-                                bg-violet-500
+                                bg-gradient-to-r from-violet-500 to-violet-600
                                 rounded-full
+                                transition-all duration-500
                             "
                             style={{
                                 width: `${level.progress}%`
@@ -188,38 +192,38 @@ export default function ProfileCard() {
                     "
                 />
 
-                <div className="space-y-5">
+                <div className="space-y-4">
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
 
                         <div
                             className="
-                                w-10
-                                h-10
+                                w-11
+                                h-11
                                 rounded-xl
                                 bg-violet-50
                                 flex
                                 items-center
                                 justify-center
+                                text-violet-600
                             "
                         >
 
                             <FiMail
                                 className="
-                                    text-violet-600
                                     text-lg
                                 "
                             />
 
                         </div>
 
-                        <div>
+                        <div className="flex-1">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">
                                 Email
                             </p>
 
-                            <p className="font-medium">
+                            <p className="font-medium text-slate-700">
                                 {user.email}
                             </p>
 
@@ -227,36 +231,36 @@ export default function ProfileCard() {
 
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
 
                         <div
                             className="
-                                w-10
-                                h-10
+                                w-11
+                                h-11
                                 rounded-xl
                                 bg-violet-50
                                 flex
                                 items-center
                                 justify-center
+                                text-violet-600
                             "
                         >
 
                             <FiCalendar
                                 className="
-                                    text-violet-500
                                     text-lg
                                 "
                             />
 
                         </div>
 
-                        <div>
+                        <div className="flex-1">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">
                                 Joined Date
                             </p>
 
-                            <p className="font-medium">
+                            <p className="font-medium text-slate-700">
                                 {user.createdAt
                                     ? new Date(user.createdAt).toLocaleDateString(
                                         "en-US",
@@ -273,36 +277,36 @@ export default function ProfileCard() {
 
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
 
                         <div
                             className="
-                                w-10
-                                h-10
+                                w-11
+                                h-11
                                 rounded-xl
                                 bg-violet-50
                                 flex
                                 items-center
                                 justify-center
+                                text-violet-600
                             "
                         >
 
                             <FiAward
                                 className="
-                                    text-violet-500
                                     text-lg
                                 "
                             />
 
                         </div>
 
-                        <div>
+                        <div className="flex-1">
 
-                            <p className="text-sm text-gray-400">
+                            <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">
                                 Membership
                             </p>
 
-                            <p className="font-medium">
+                            <p className="font-medium text-slate-700">
                                 Free User
                             </p>
 
@@ -313,7 +317,7 @@ export default function ProfileCard() {
                 </div>
 
 
-                <div className="mt-10 space-y-4">
+                <div className="mt-8 space-y-3">
 
                     <button
                         onClick={() => setEditing(true)}
@@ -321,11 +325,14 @@ export default function ProfileCard() {
                             w-full
                             py-3
                             rounded-xl
-                            bg-violet-600
+                            bg-gradient-to-r from-violet-600 to-violet-700
                             text-white
                             font-semibold
-                            hover:bg-violet-700
-                            transition
+                            hover:from-violet-700
+                            hover:to-violet-800
+                            transition-all duration-200
+                            shadow-md
+                            shadow-violet-200
                         "
                     >
                         Edit Profile
@@ -338,11 +345,12 @@ export default function ProfileCard() {
                             py-3
                             rounded-xl
                             border
-                            border-violet-300
-                            text-violet-600
+                            border-violet-200
+                            text-violet-700
                             font-semibold
                             hover:bg-violet-50
-                            transition
+                            hover:border-violet-300
+                            transition-all duration-200
                         "
                     >
                         Change Password

@@ -219,37 +219,37 @@ export default function SideQuestPage() {
 
     return (
 
-        <div className="space-y-6">
+        <div className="space-y-8">
 
             <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 md:text-3xl xl:text-4xl">
-                        Side-Quests
+                    <h1 className="text-3xl font-bold text-slate-900 md:text-4xl xl:text-5xl">
+                        Side Quests
                     </h1>
 
-                    <div className="flex items-center gap-2 mt-2 text-gray-500">
+                    <div className="flex items-center gap-2 mt-3 text-gray-500">
                         <span>Home</span>
                         <span>&gt;</span>
-                        <span>Side-Quests</span>
+                        <span>Side Quests</span>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                     {stats.map((stat) => {
                         const Icon = stat.icon;
 
                         return (
                             <div
                                 key={stat.label}
-                                className="min-w-[140px] rounded-2xl border border-violet-100 bg-white px-4 py-3 shadow-sm"
+                                className="min-w-[140px] rounded-2xl border border-violet-100 bg-white px-5 py-4 shadow-sm transition-all duration-300 hover:shadow-md"
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className={`grid h-9 w-9 place-items-center rounded-xl ${stat.className}`}>
-                                        <Icon size={18} />
+                                    <div className={`grid h-10 w-10 place-items-center rounded-xl ${stat.className}`}>
+                                        <Icon size={20} />
                                     </div>
 
                                     <div>
-                                        <div className="text-lg font-bold text-slate-900">
+                                        <div className="text-xl font-bold text-slate-900">
                                             {stat.value}
                                         </div>
 
@@ -264,7 +264,7 @@ export default function SideQuestPage() {
                 </div>
             </div>
 
-            <div className="flex items-center gap-5 overflow-x-auto border-b border-gray-200 md:gap-10">
+            <div className="flex items-center gap-6 overflow-x-auto border-b border-gray-200 md:gap-12">
                 <button
                     onClick={() => setActiveTab("recommended")}
                     className={`
@@ -279,7 +279,7 @@ export default function SideQuestPage() {
                     `}
                 >
                     <span className="inline-flex items-center gap-2">
-                        <Sparkles size={17} />
+                        <Sparkles size={18} />
                         Recommended
                     </span>
 
@@ -302,7 +302,7 @@ export default function SideQuestPage() {
                     `}
                 >
                     <span className="inline-flex items-center gap-2">
-                        <Target size={17} />
+                        <Target size={18} />
                         My Quests ({todayQuest.length})
                     </span>
 
@@ -325,7 +325,7 @@ export default function SideQuestPage() {
                     `}
                 >
                     <span className="inline-flex items-center gap-2">
-                        <CheckCircle2 size={17} />
+                        <CheckCircle2 size={18} />
                         Completed ({completedQuest.length})
                     </span>
 
@@ -335,10 +335,10 @@ export default function SideQuestPage() {
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
+            <div className="grid grid-cols-1 gap-8 xl:grid-cols-12">
                 <div className="min-w-0 xl:col-span-9">
-                    <div className="rounded-3xl border border-gray-100 bg-white p-4 shadow-sm md:p-6">
-                        <h3 className="font-semibold text-lg mb-5 text-slate-900">
+                    <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm md:p-8">
+                        <h3 className="font-semibold text-lg mb-6 text-slate-900">
                             Filter by Mood
                         </h3>
 
@@ -350,17 +350,17 @@ export default function SideQuestPage() {
                                     items-center
                                     gap-2
                                     px-5
-                                    py-2
+                                    py-2.5
                                     rounded-xl
                                     border
                                     font-medium
                                     shadow-sm
-                                    transition
+                                    transition-all
                                     duration-200
                                     hover:-translate-y-0.5
                                     ${selectedMood === ALL_FILTER
-                                        ? "border-purple-500 bg-purple-50 text-purple-600"
-                                        : "border-gray-200 bg-white text-slate-700 hover:bg-purple-50 hover:border-purple-300"
+                                        ? "border-violet-500 bg-violet-50 text-violet-600"
+                                        : "border-gray-200 bg-white text-slate-700 hover:bg-violet-50 hover:border-violet-300"
                                     }
                                 `}
                             >
@@ -376,17 +376,17 @@ export default function SideQuestPage() {
                                         items-center
                                         gap-2
                                         px-5
-                                        py-2
+                                        py-2.5
                                         rounded-xl
                                         border
                                         font-medium
                                         shadow-sm
-                                        transition
+                                        transition-all
                                         duration-200
                                         hover:-translate-y-0.5
                                         ${selectedMood === emotion
-                                            ? "border-purple-500 bg-purple-50 text-purple-600"
-                                            : "border-gray-200 bg-white hover:bg-purple-50 hover:border-purple-300"
+                                            ? "border-violet-500 bg-violet-50 text-violet-600"
+                                            : "border-gray-200 bg-white hover:bg-violet-50 hover:border-violet-300"
                                         }
                                     `}
                                 >
@@ -398,8 +398,8 @@ export default function SideQuestPage() {
                             ))}
                         </div>
 
-                        <div className="mt-8 mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                            <h3 className="text-lg font-semibold">
+                        <div className="mt-8 mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                            <h3 className="text-lg font-semibold text-slate-900">
                                 Filter by Category
                             </h3>
 
@@ -411,7 +411,7 @@ export default function SideQuestPage() {
                                 <select
                                     value={selectedSort}
                                     onChange={(event) => setSelectedSort(event.target.value)}
-                                    className="border border-gray-200 rounded-xl px-3 py-2 outline-none bg-white transition duration-200 hover:border-purple-300 focus:border-purple-500 focus:bg-purple-50"
+                                    className="border border-gray-200 rounded-xl px-3 py-2.5 outline-none bg-white transition-all duration-200 hover:border-violet-300 focus:border-violet-500 focus:bg-violet-50"
                                 >
                                     {sortOptions.map((option) => (
                                         <option
@@ -425,7 +425,7 @@ export default function SideQuestPage() {
 
                                 <button
                                     onClick={handleClearFilters}
-                                    className="rounded-xl border border-gray-200 bg-white px-4 py-2 font-medium text-slate-600 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-purple-300 hover:bg-purple-50 hover:text-purple-600"
+                                    className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 font-medium text-slate-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-300 hover:bg-violet-50 hover:text-violet-600"
                                 >
                                     Clear Filters
                                 </button>
@@ -437,17 +437,17 @@ export default function SideQuestPage() {
                                 onClick={() => setSelectedCategory(ALL_FILTER)}
                                 className={`
                                     px-5
-                                    py-2
+                                    py-2.5
                                     rounded-xl
                                     border
                                     font-medium
                                     shadow-sm
-                                    transition
+                                    transition-all
                                     duration-200
                                     hover:-translate-y-0.5
                                     ${selectedCategory === ALL_FILTER
-                                        ? "border-purple-500 bg-purple-50 text-purple-600"
-                                        : "border-gray-200 bg-white text-slate-700 hover:bg-purple-50 hover:border-purple-300"
+                                        ? "border-violet-500 bg-violet-50 text-violet-600"
+                                        : "border-gray-200 bg-white text-slate-700 hover:bg-violet-50 hover:border-violet-300"
                                     }
                                 `}
                             >
@@ -466,17 +466,17 @@ export default function SideQuestPage() {
                                             items-center
                                             gap-2
                                             px-5
-                                            py-2
+                                            py-2.5
                                             rounded-xl
                                             border
                                             font-medium
                                             shadow-sm
-                                            transition
+                                            transition-all
                                             duration-200
                                             hover:-translate-y-0.5
                                             ${selectedCategory === category
-                                                ? "border-purple-500 bg-purple-50 text-purple-600"
-                                                : "border-gray-200 bg-white hover:bg-purple-50 hover:border-purple-300"
+                                                ? "border-violet-500 bg-violet-50 text-violet-600"
+                                                : "border-gray-200 bg-white hover:bg-violet-50 hover:border-violet-300"
                                             }
                                         `}
                                     >
@@ -487,7 +487,7 @@ export default function SideQuestPage() {
                             })}
                         </div>
 
-                        <div className="space-y-6 mt-6">
+                        <div className="space-y-6 mt-8">
                             {activeTab === "recommended" && isLoadingQuests &&
                                 Array.from({ length: 3 }).map((_, index) => (
                                     <div

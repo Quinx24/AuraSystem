@@ -12,6 +12,7 @@ import AuthInput from "../components/auth/AuthInput";
 import AuthButton from "../components/auth/AuthButton";
 import Divider from "../components/auth/Divider";
 import SocialLogin from "../components/auth/SocialLogin";
+import Toast from "../components/auth/Toast";
 import { register } from "../services/authService";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -29,6 +30,7 @@ export default function RegisterPage() {
   });
 
   const [errors, setErrors] = useState({});
+  const [toast, setToast] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -98,16 +100,21 @@ export default function RegisterPage() {
 
       });
 
-      alert("Register successful!");
+      setToast({
+        message: "Register successful! Redirecting to login...",
+        type: "success"
+      });
 
-      navigate("/");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
 
     } catch (error) {
 
-      alert(
-        error.response?.data?.message ??
-        "Register failed."
-      );
+      setToast({
+        message: error.response?.data?.message ?? "Register failed. Please try again.",
+        type: "error"
+      });
 
     }
   };
@@ -143,7 +150,7 @@ export default function RegisterPage() {
 
         {/* ================= LEFT ================= */}
 
-        <div className="flex flex-col justify-between gap-6 bg-gradient-to-br from-white via-[#fffbff] to-[#f7f1ff] px-6 py-8 sm:px-10 md:gap-8 lg:px-14 lg:py-12">
+        <div className="flex flex-col justify-between gap-6 bg-gradient-to-br from-white via-[#fffbff] to-[#f7f1ff] px-6 py-8 sm:px-10 md:gap-8 lg:px-14 lg:py-12 xl:gap-10">
 
           {/* Logo */}
 
@@ -240,9 +247,9 @@ export default function RegisterPage() {
 
         <div className="flex items-center justify-center bg-[#fcfbff]/90 p-6 sm:p-10 lg:p-12">
 
-          <div className="w-full max-w-md rounded-[32px] border border-gray-100 bg-white p-7 shadow-xl shadow-violet-100/60 sm:p-9">
+          <div className="w-full max-w-md rounded-[32px] border border-gray-100 bg-white p-8 shadow-xl shadow-violet-100/60 sm:p-10">
 
-            <div className="mb-7 text-center">
+            <div className="mb-8 text-center">
               <h2 className="text-3xl font-bold text-slate-900">
                 Join Aura
               </h2>
@@ -253,7 +260,7 @@ export default function RegisterPage() {
             </div>
 
             <form
-              className="space-y-4"
+              className="space-y-5"
               onSubmit={handleSubmit}
             >
 
@@ -318,7 +325,7 @@ export default function RegisterPage() {
                   name="agree"
                   checked={formData.agree}
                   onChange={handleChange}
-                  className="mt-1 h-4 w-4 shrink-0 rounded border-gray-300 text-violet-600 accent-violet-600"
+                  className="mt-1 h-4 w-4 shrink-0 rounded border-gray-300 text-violet-600 accent-violet-600 focus:ring-violet-500"
                 />
 
                 <span>
@@ -377,6 +384,15 @@ export default function RegisterPage() {
         </div>
 
       </div>
+
+      {/* Toast */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
 
     </div>
   );

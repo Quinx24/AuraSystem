@@ -4,6 +4,7 @@ import {
 } from "../services/sideQuestService";
 import { getJournalEntryById } from "../services/journalService";
 import { useParams } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 import SideQuestSuggestion from "../components/SideQuestSuggestion";
 import EmotionAnalysisCard from "../components/journal/EmotionAnalysisCard";
 import MoodSummaryCard from "../components/journal/MoodSummaryCard";
@@ -44,19 +45,11 @@ export default function EmotionAnalysisPage() {
     if (!journal) {
         return (
             <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
-                <div
-                    className="
-                    w-16
-                    h-16
-                    border-4
-                    border-purple-200
-                    border-t-purple-600
-                    rounded-full
-                    animate-spin
-                "
-                />
+                <div className="grid h-16 w-16 place-items-center rounded-full bg-violet-100 text-violet-600">
+                    <Loader2 size={32} className="animate-spin" />
+                </div>
 
-                <h2 className="mt-6 text-2xl font-bold">
+                <h2 className="mt-6 text-2xl font-bold text-slate-900">
                     Analyzing your emotions...
                 </h2>
 
@@ -98,17 +91,17 @@ export default function EmotionAnalysisPage() {
     const top3Emotions = sortedEmotions.slice(0, 3);
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
 
-            <h1 className="text-2xl font-bold md:text-3xl xl:text-4xl">
+            <h1 className="text-3xl font-bold text-slate-900 md:text-4xl xl:text-5xl">
                 Emotion Analysis Results
             </h1>
 
-            <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
 
                 {/* LEFT */}
 
-                <div className="xl:col-span-3 space-y-6">
+                <div className="xl:col-span-3 space-y-8">
 
                     <EmotionAnalysisCard
                         emotion={journal.primaryEmotion}
@@ -132,7 +125,7 @@ export default function EmotionAnalysisPage() {
 
                 {/* RIGHT SIDEBAR */}
 
-                <div className="space-y-6">
+                <div className="space-y-8">
 
                     <MoodSummaryCard
                         emotion={journal.primaryEmotion}

@@ -1,4 +1,5 @@
 import RecentJournalItem from "./RecentJournalItem";
+import { BookOpen } from "lucide-react";
 
 export default function RecentJournalCard() {
 
@@ -66,33 +67,53 @@ export default function RecentJournalCard() {
                 border
                 border-gray-100
                 shadow-sm
-                p-4
-                md:p-6
+                p-6
+                md:p-8
             "
         >
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
-                <div>
+                <div className="flex items-center gap-3">
 
-                    <h2
+                    <div
                         className="
-                            text-xl
-                            font-bold
+                            w-11
+                            h-11
+                            rounded-xl
+                            bg-gradient-to-br from-violet-100 to-violet-50
+                            flex
+                            items-center
+                            justify-center
+                            text-violet-600
                         "
                     >
-                        Recent Journals
-                    </h2>
+                        <BookOpen size={22} />
+                    </div>
 
-                    <p
-                        className="
-                            text-sm
-                            text-gray-400
-                            mt-1
-                        "
-                    >
-                        Your latest emotional memories
-                    </p>
+                    <div>
+
+                        <h2
+                            className="
+                                text-xl
+                                font-bold
+                                text-slate-900
+                            "
+                        >
+                            Recent Journals
+                        </h2>
+
+                        <p
+                            className="
+                                text-sm
+                                text-gray-500
+                                mt-0.5
+                            "
+                        >
+                            Your latest emotional memories
+                        </p>
+
+                    </div>
 
                 </div>
 
@@ -100,7 +121,9 @@ export default function RecentJournalCard() {
                     className="
                         text-violet-600
                         font-semibold
+                        hover:text-violet-700
                         hover:underline
+                        transition-colors
                     "
                 >
                     View All →
@@ -110,7 +133,7 @@ export default function RecentJournalCard() {
 
             <div
                 className="
-                    mt-6
+                    mt-8
                     grid
                     grid-cols-1
                     gap-4
@@ -123,7 +146,6 @@ export default function RecentJournalCard() {
                 {
 
                     journals.map((journal) => (
-
                         <RecentJournalItem
 
                             key={journal.id}

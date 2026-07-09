@@ -1,6 +1,7 @@
 import StatisticItem from "./StatisticItem";
 import { useEffect, useState } from "react";
 import { getStreak } from "../../services/streakService";
+import { BarChart3 } from "lucide-react";
 
 export default function StatisticsCard() {
 
@@ -15,20 +16,15 @@ export default function StatisticsCard() {
 
     const loadStatistics = async () => {
         try {
-
             const streak = await getStreak();
-
             setStatistics(prev => ({
                 ...prev,
                 currentStreak: streak.currentStreak,
                 longestStreak: streak.longestStreak,
                 totalCheckIn: streak.totalCheckIn
             }));
-
         } catch (error) {
-
             console.error(error);
-
         }
     };
 
@@ -46,25 +42,26 @@ export default function StatisticsCard() {
                 border
                 border-gray-100
                 shadow-sm
-                p-4
-                md:p-6
+                p-6
+                md:p-8
             "
         >
 
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-8">
 
                 <div
                     className="
-                        w-10
-                        h-10
+                        w-11
+                        h-11
                         rounded-xl
-                        bg-violet-100
+                        bg-gradient-to-br from-violet-100 to-violet-50
                         flex
                         items-center
                         justify-center
+                        text-violet-600
                     "
                 >
-                    📊
+                    <BarChart3 size={22} />
                 </div>
 
                 <div>
@@ -73,7 +70,7 @@ export default function StatisticsCard() {
                         className="
                             text-xl
                             font-bold
-                            text-gray-900
+                            text-slate-900
                         "
                     >
                         My Statistics
@@ -82,7 +79,8 @@ export default function StatisticsCard() {
                     <p
                         className="
                             text-sm
-                            text-gray-400
+                            text-gray-500
+                            mt-0.5
                         "
                     >
                         Your emotional journey at a glance

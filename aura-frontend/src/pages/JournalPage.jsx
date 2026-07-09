@@ -193,17 +193,17 @@ export default function JournalPage() {
 
     return (
         <>
-            <div className="w-full pb-4 md:pb-6 xl:pb-8">
-                <div className="mb-6 flex flex-col gap-4 md:mb-7 md:flex-row md:items-center md:justify-between">
+            <div className="w-full pb-6 md:pb-8 xl:pb-10">
+                <div className="mb-8 flex flex-col gap-4 md:mb-10 md:flex-row md:items-center md:justify-between">
                     <div className="-mt-2">
-                        <h1 className="text-2xl font-bold text-slate-900 md:text-3xl xl:text-4xl">Emotion Journal</h1>
-                        <p className="mt-2 text-base text-slate-500 md:mt-3 md:text-lg xl:text-xl">Write freely. Reflect deepy. Grow mindfully.</p>
+                        <h1 className="text-3xl font-bold text-slate-900 md:text-4xl xl:text-5xl">Emotion Journal</h1>
+                        <p className="mt-3 text-base text-slate-500 md:mt-4 md:text-lg xl:text-xl">Write freely. Reflect deeply. Grow mindfully.</p>
                     </div>
 
                     <button
                         onClick={handleSaveJournal}
                         disabled={isSaving || isInitialLoading}
-                        className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#A78BFA] px-5 py-2.5 font-medium text-white transition hover:bg-[#9575F5] disabled:cursor-not-allowed disabled:opacity-70 md:w-auto"
+                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-violet-700 px-6 py-3 font-semibold text-white transition-all duration-200 hover:from-violet-700 hover:to-violet-800 disabled:cursor-not-allowed disabled:opacity-70 disabled:shadow-none md:w-auto shadow-md shadow-violet-200"
                     >
                         {isSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
                         {isSaving ? "Analyzing Emotion..." : "Save Entry"}
@@ -215,9 +215,9 @@ export default function JournalPage() {
                         <Loader2 size={24} className="animate-spin" />
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
-                        <div className="min-w-0 space-y-6 xl:col-span-9">
-                            <div className="grid grid-cols-1 gap-6 lg:grid-cols-9">
+                    <div className="grid grid-cols-1 gap-8 xl:grid-cols-12">
+                        <div className="min-w-0 space-y-8 xl:col-span-9">
+                            <div className="grid grid-cols-1 gap-8 lg:grid-cols-9">
                                 <div className="min-w-0 lg:col-span-6">
                                     <JournalEditor journalContent={journalContent} setJournalContent={setJournalContent} />
                                 </div>

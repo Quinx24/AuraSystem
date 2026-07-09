@@ -138,36 +138,36 @@ export default function DashboardPage() {
         <div className="space-y-8">
             <div className="animate-in fade-in duration-300">
 
-                <h1 className="text-2xl font-bold text-slate-900 md:text-3xl xl:text-4xl">
+                <h1 className="text-3xl font-bold text-slate-900 md:text-4xl xl:text-5xl">
                     {getGreeting()}{userName ? `, ${userName}` : ""} 👋
                 </h1>
 
-                <p className="text-gray-500 mt-2">
+                <p className="mt-3 text-base text-gray-500 md:text-lg">
                     Let's take care of your mind today.
                 </p>
 
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
                 {stats.map((stat) => {
                     const Icon = stat.icon;
 
                     return (
                         <div
                             key={stat.label}
-                            className="rounded-3xl border border-gray-100 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md"
+                            className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
                         >
                             <div className="flex items-center gap-4">
-                                <div className={`grid h-11 w-11 place-items-center rounded-2xl ${stat.className}`}>
-                                    <Icon size={20} />
+                                <div className={`grid h-12 w-12 place-items-center rounded-2xl ${stat.className}`}>
+                                    <Icon size={22} />
                                 </div>
 
                                 <div>
-                                    <p className="text-2xl font-bold text-slate-900 tabular-nums">
+                                    <p className="text-3xl font-bold text-slate-900 tabular-nums">
                                         <AnimatedValue value={stat.value} />
                                     </p>
 
-                                    <p className="text-sm font-medium text-gray-500">
+                                    <p className="text-sm font-medium text-gray-500 mt-1">
                                         {stat.label}
                                     </p>
                                 </div>
@@ -177,7 +177,7 @@ export default function DashboardPage() {
                 })}
             </div>
 
-            <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
+            <div className="grid grid-cols-1 gap-8 xl:grid-cols-12">
                 <div className="min-w-0 xl:col-span-4">
 
                     <TodayMoodCard />
