@@ -185,6 +185,10 @@ export default function SideQuestPage() {
 
     }, [fetchSideQuests, selectedMood, selectedCategory, selectedSort]);
 
+    const addedQuestIds = new Set(
+        [...todayQuest, ...completedQuest].map((quest) => quest.sideQuestId)
+    );
+
     const currentQuests =
         activeTab === "recommended"
             ? quests
@@ -520,6 +524,7 @@ export default function SideQuestPage() {
                                         key={quest.id}
                                         quest={quest}
                                         type="recommended"
+                                        isAdded={addedQuestIds.has(quest.id)}
                                         onAdd={handleAddSideQuest}
                                     />
                                 ))}

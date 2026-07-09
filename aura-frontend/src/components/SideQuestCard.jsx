@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
     CheckCircle,
     Clock,
@@ -11,10 +10,10 @@ import { categoryConfig } from "../utils/sideQuestCategoryUtils";
 export default function SideQuestCard({
     quest,
     type = "recommended",
+    isAdded = false,
     onComplete,
     onAdd,
 }) {
-    const [isAdded, setIsAdded] = useState(false);
 
     const config = categoryConfig[quest.category];
 
@@ -238,11 +237,7 @@ export default function SideQuestCard({
                         type === "recommended" && (
                             <button
                                 disabled={isAdded}
-                                onClick={async () => {
-                                    if (!onAdd) return;
-                                    await onAdd(quest.id);
-                                    setIsAdded(true);
-                                }}
+                                onClick={() => onAdd?.(quest.id)}
                                 className={
                                     `
                                     inline-flex
