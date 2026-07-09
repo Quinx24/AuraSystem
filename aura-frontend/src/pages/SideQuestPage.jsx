@@ -2,6 +2,7 @@ import { emotionConfig } from "../utils/emotionUtils";
 import { categoryConfig } from "../utils/sideQuestCategoryUtils";
 import { getAllSideQuests } from "../api/sideQuestApi";
 import { useCallback, useEffect, useRef, useState } from "react";
+import PageIntroduction from "../components/PageIntroduction";
 import {
     getTodayQuest,
     completeQuest,
@@ -17,6 +18,7 @@ import {
     Target
 } from "lucide-react";
 import SideQuestCard from "../components/SideQuestCard";
+import { usePageMeta } from "../contexts/PageMetaContext";
 
 const ALL_FILTER = "All";
 
@@ -159,12 +161,17 @@ export default function SideQuestPage() {
         setSelectedSort(DEFAULT_SORT);
     };
 
-    useEffect(() => {
+    const { setPage } = usePageMeta();
 
+    useEffect(() => {
+        setPage({ title: "Side Quests", breadcrumb: ["Home", "Side Quests"] });
+        return () => setPage({});
+    }, []);
+
+    useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         loadTodayQuest();
         loadCompletedQuest();
-
     }, [loadTodayQuest, loadCompletedQuest]);
 
     useEffect(() => {
@@ -220,21 +227,12 @@ export default function SideQuestPage() {
     return (
 
         <div className="space-y-8">
+            <PageIntroduction />
 
-            <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold text-slate-900 md:text-4xl xl:text-5xl">
-                        Side Quests
-                    </h1>
+            <div className="flex flex-col gap-5">
+                {/* page meta set via context */}
 
-                    <div className="flex items-center gap-2 mt-3 text-gray-500">
-                        <span>Home</span>
-                        <span>&gt;</span>
-                        <span>Side Quests</span>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {stats.map((stat) => {
                         const Icon = stat.icon;
 

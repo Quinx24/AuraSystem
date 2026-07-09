@@ -1,14 +1,19 @@
 import { Calendar, Filter, Search } from "lucide-react";
-import PageHeader from "../components/PageHeader";
+import { useEffect } from "react";
+import { usePageMeta } from "../../contexts/PageMetaContext";
+import PageIntroduction from "../../components/PageIntroduction";
 import TablePlaceholder from "../components/TablePlaceholder";
 
 export default function JournalManagementPage() {
+    const { setPage } = usePageMeta();
+
+    useEffect(() => {
+        setPage({ title: "Journal Entries", breadcrumb: ["Admin", "Journal Entries"] });
+        return () => setPage({});
+    }, []);
     return (
         <div>
-            <PageHeader
-                title="Journal Entries"
-                description="Browse and manage user journal entries"
-            />
+            <PageIntroduction />
 
             <div className="mb-6 flex flex-col gap-3 sm:flex-row">
                 <div className="relative flex-1">

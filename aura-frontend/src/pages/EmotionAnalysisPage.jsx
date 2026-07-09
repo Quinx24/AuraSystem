@@ -5,11 +5,13 @@ import {
 import { getJournalEntryById } from "../services/journalService";
 import { useParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
+import PageIntroduction from "../components/PageIntroduction";
 import SideQuestSuggestion from "../components/SideQuestSuggestion";
 import EmotionAnalysisCard from "../components/journal/EmotionAnalysisCard";
 import MoodSummaryCard from "../components/journal/MoodSummaryCard";
 import JournalStatsCard from "../components/journal/JournalStatsCard";
 import EmotionDetails from "../components/journal/EmotionDetails";
+import { usePageMeta } from "../contexts/PageMetaContext";
 
 export default function EmotionAnalysisPage() {
 
@@ -19,27 +21,29 @@ export default function EmotionAnalysisPage() {
 
     const { id } = useParams();
 
+    const { setPage } = usePageMeta();
+
+    useEffect(() => {
+        setPage({ title: "Emotion Analysis Results", breadcrumb: ["Home", "Emotion Analysis"] });
+        return () => setPage({});
+    }, [id]);
+
     useEffect(() => {
         const loadData = async () => {
             try {
                 const response = await getJournalEntryById(id);
 
-                const journalData = response.data.result
+                const journalData = response.data.result;
                 setJournal(journalData);
 
-                const sideQuestResponse =
-                    await getSideQuestByEmotion(
-                        journalData.primaryEmotion
-                    );
-
+                const sideQuestResponse = await getSideQuestByEmotion(journalData.primaryEmotion);
                 setSideQuests(sideQuestResponse.data.result);
-
             } catch (error) {
                 console.error(error);
             }
         };
 
-        loadData();
+        if (id) loadData();
     }, [id]);
 
     if (!journal) {
@@ -92,11 +96,7 @@ export default function EmotionAnalysisPage() {
 
     return (
         <div className="space-y-8">
-
-            <h1 className="text-3xl font-bold text-slate-900 md:text-4xl xl:text-5xl">
-                Emotion Analysis Results
-            </h1>
-
+            <PageIntroduction />
             <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
 
                 {/* LEFT */}

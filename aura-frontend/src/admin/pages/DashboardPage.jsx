@@ -1,4 +1,5 @@
 import { BookOpen, Target, Users, Smile } from "lucide-react";
+import PageIntroduction from "../../components/PageIntroduction";
 import StatCard from "../components/StatCard";
 import ChartPlaceholder from "../components/ChartPlaceholder";
 
@@ -7,12 +8,7 @@ const activityItems = Array.from({ length: 5 });
 export default function DashboardPage() {
     return (
         <div>
-            <div className="mb-6">
-                <h2 className="text-2xl font-bold text-slate-900">Dashboard</h2>
-                <p className="mt-1 text-sm text-slate-500">
-                    Overview of the Aura platform
-                </p>
-            </div>
+            <PageIntroduction />
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
                 <StatCard icon={Users} label="Total Users" value="—" />

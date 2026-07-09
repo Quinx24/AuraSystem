@@ -1,15 +1,21 @@
 import { BookOpen, Smile, Target, Users } from "lucide-react";
+import PageIntroduction from "../../components/PageIntroduction";
 import StatCard from "../components/StatCard";
 import ChartPlaceholder from "../components/ChartPlaceholder";
-import PageHeader from "../components/PageHeader";
+import { useEffect } from "react";
+import { usePageMeta } from "../../contexts/PageMetaContext";
 
 export default function StatisticsPage() {
+    const { setPage } = usePageMeta();
+
+    useEffect(() => {
+        setPage({ title: "Statistics", breadcrumb: ["Admin", "Statistics"] });
+        return () => setPage({});
+    }, []);
+
     return (
         <div>
-            <PageHeader
-                title="Statistics"
-                description="Platform analytics and insights"
-            />
+            <PageIntroduction />
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
                 <StatCard icon={Users} label="Total Users" value="—" />

@@ -1,13 +1,24 @@
 import { Plus } from "lucide-react";
-import PageHeader from "../components/PageHeader";
+import { useEffect } from "react";
+import { usePageMeta } from "../../contexts/PageMetaContext";
+import PageIntroduction from "../../components/PageIntroduction";
 import TablePlaceholder from "../components/TablePlaceholder";
 
 export default function SideQuestManagementPage() {
+    const { setPage } = usePageMeta();
+
+    useEffect(() => {
+        setPage({
+            title: "Side Quests",
+            breadcrumb: ["Admin", "Side Quests"],
+        });
+
+        return () => setPage({});
+    }, []);
+
     return (
         <div>
-            <PageHeader
-                title="Side Quests"
-                description="Create and manage side quests"
+            <PageIntroduction
                 actions={
                     <button
                         type="button"
@@ -18,7 +29,6 @@ export default function SideQuestManagementPage() {
                     </button>
                 }
             />
-
             <TablePlaceholder
                 columns={["Title", "Category", "Difficulty", "Status"]}
             />

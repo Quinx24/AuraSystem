@@ -1,14 +1,20 @@
 import { Filter, Search } from "lucide-react";
-import PageHeader from "../components/PageHeader";
+import { useEffect } from "react";
+import { usePageMeta } from "../../contexts/PageMetaContext";
+import PageIntroduction from "../../components/PageIntroduction";
 import TablePlaceholder from "../components/TablePlaceholder";
 
 export default function UsersPage() {
+    const { setPage } = usePageMeta();
+
+    useEffect(() => {
+        setPage({ title: "Users", breadcrumb: ["Admin", "Users"] });
+        return () => setPage({});
+    }, []);
+
     return (
         <div>
-            <PageHeader
-                title="Users"
-                description="Manage and monitor user accounts"
-            />
+            <PageIntroduction />
 
             <div className="mb-6 flex flex-col gap-3 sm:flex-row">
                 <div className="relative flex-1">

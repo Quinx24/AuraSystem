@@ -128,12 +128,12 @@ export default function LoginPage() {
             <div className="relative grid w-full max-w-6xl animate-fade-in overflow-hidden rounded-[36px] border border-white/70 bg-white/90 shadow-2xl shadow-violet-100/70 backdrop-blur-xl lg:grid-cols-[1.05fr_0.95fr]">
 
                 {/* Left */}
-                <div className="flex flex-col justify-between gap-6 bg-gradient-to-br from-white via-[#fffbff] to-[#f7f1ff] px-6 py-8 sm:px-10 md:gap-8 lg:px-14 lg:py-12 xl:gap-10">
+                <div className="flex flex-col gap-6 bg-gradient-to-br from-white via-[#fffbff] to-[#f7f1ff] px-6 py-8 sm:px-10 md:gap-8 lg:px-14 lg:py-12 xl:gap-10">
 
                     {/* Logo */}
                     <div className="flex items-center gap-3">
                         <img
-                            src="/logo.png"
+                            src="/favicon.svg"
                             alt="Aura"
                             className="h-12 w-12 rounded-2xl shadow-sm"
                         />
@@ -166,10 +166,10 @@ export default function LoginPage() {
                         )}
                     </div>
 
-                    <div className="relative mx-auto w-full max-w-sm">
-                        <div className="absolute inset-x-8 bottom-2 h-24 rounded-full bg-violet-200/40 blur-2xl" />
+                    <div className="w-full flex justify-center mt-6 relative">
+                        <div className="absolute bottom-2 left-0 right-0 mx-auto h-24 w-80 rounded-full bg-violet-200/40 blur-2xl" />
 
-                        <div className="relative rounded-[32px] border border-violet-100 bg-white/80 p-5 shadow-xl shadow-violet-100/70">
+                        <div className="relative w-full max-w-sm rounded-[32px] border border-violet-100 bg-white/80 p-5 shadow-xl shadow-violet-100/70">
                             <div className="grid place-items-center rounded-[28px] bg-gradient-to-br from-violet-50 via-white to-pink-50 p-5 md:p-8">
                                 <div className="relative h-44 w-44">
                                     <div className="absolute inset-7 rounded-full bg-violet-100" />

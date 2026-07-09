@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { getJournalEntries } from "../services/journalService";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+import PageIntroduction from "../components/PageIntroduction";
+import { usePageMeta } from "../contexts/PageMetaContext";
 
 import { emotionConfig } from "../utils/emotionUtils";
 
@@ -10,6 +12,13 @@ export default function CalendarTrackerPage() {
     const [currentDate, setCurrentDate] = useState(
         new Date()
     );
+
+    const { setPage } = usePageMeta();
+
+    useEffect(() => {
+        setPage({ title: "Calendar Tracker", breadcrumb: ["Home", "Calendar Tracker"] });
+        return () => setPage({});
+    }, []);
 
     const [entries, setEntries] = useState([]);
 
@@ -172,14 +181,6 @@ export default function CalendarTrackerPage() {
 
         <div className="space-y-8">
 
-            <div>
-                <h1 className="text-3xl font-bold text-slate-900 md:text-4xl xl:text-5xl">
-                    Calendar Tracker
-                </h1>
-                <p className="mt-2 text-base text-gray-500 md:text-lg">
-                    Track your emotional journey day by day
-                </p>
-            </div>
 
             <div className="grid grid-cols-1 gap-6 xl:grid-cols-4">
 

@@ -1,13 +1,18 @@
 import { Mail, Pencil, Shield } from "lucide-react";
-import PageHeader from "../components/PageHeader";
+import PageIntroduction from "../../components/PageIntroduction";
+import { useEffect } from "react";
+import { usePageMeta } from "../../contexts/PageMetaContext";
 
 export default function ProfilePage() {
+    const { setPage } = usePageMeta();
+
+    useEffect(() => {
+        setPage({ title: "Profile", breadcrumb: ["Admin", "Profile"] });
+        return () => setPage({});
+    }, []);
     return (
         <div>
-            <PageHeader
-                title="Profile"
-                description="Your admin account information"
-            />
+            <PageIntroduction />
 
             <div className="mx-auto max-w-lg rounded-2xl border border-slate-100 bg-white p-8 shadow-sm shadow-violet-100/50">
                 <div className="flex flex-col items-center text-center">

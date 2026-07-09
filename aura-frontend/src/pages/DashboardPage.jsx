@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { usePageMeta } from "../contexts/PageMetaContext";
+import PageIntroduction from "../components/PageIntroduction";
 import { BookOpen, Flame, Star, Target } from "lucide-react";
 import TodayMoodCard from "../components/dashboard/TodayMoodCard";
 import MoodSummaryChart from "../components/dashboard/MoodSummaryChart";
@@ -133,20 +135,18 @@ export default function DashboardPage() {
         }
     ];
 
+    const { setPage } = usePageMeta();
+
+    useEffect(() => {
+        setPage({ title: `${getGreeting()}${userName ? `, ${userName}` : ""} 👋`, breadcrumb: ["Home", "Dashboard"] });
+        return () => setPage({});
+    }, [userName]);
+
     return (
 
         <div className="space-y-8">
-            <div className="animate-in fade-in duration-300">
-
-                <h1 className="text-3xl font-bold text-slate-900 md:text-4xl xl:text-5xl">
-                    {getGreeting()}{userName ? `, ${userName}` : ""} 👋
-                </h1>
-
-                <p className="mt-3 text-base text-gray-500 md:text-lg">
-                    Let's take care of your mind today.
-                </p>
-
-            </div>
+            <PageIntroduction />
+            <div className="animate-in fade-in duration-300" />
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
                 {stats.map((stat) => {

@@ -11,7 +11,9 @@ import NoteCard from "../components/journal/NoteCard";
 import RightPanel from "../components/journal/RightPanel";
 import TagModal from "../components/journal/TagModal";
 import TagSection from "../components/journal/TagSection";
+import PageIntroduction from "../components/PageIntroduction";
 import { getAllTags } from "../services/tagService";
+import { usePageMeta } from "../contexts/PageMetaContext";
 
 const MAX_SELECTED_TAGS = 10;
 const PROMPT_LIMIT = 3;
@@ -103,6 +105,18 @@ export default function JournalPage() {
         return () => { isMounted = false; };
     }, []);
 
+    const { setPage } = usePageMeta();
+
+    useEffect(() => {
+        setPage({
+            title: "Emotion Journal",
+            description: "Write down today's thoughts and emotions.",
+            breadcrumb: ["Home", "Emotion Journal"],
+        });
+
+        return () => setPage({});
+    }, []);
+
     useEffect(() => () => {
         if (memoryPhotoPreviewRef.current) URL.revokeObjectURL(memoryPhotoPreviewRef.current);
     }, []);
@@ -162,6 +176,7 @@ export default function JournalPage() {
     };
 
     const handleSaveJournal = async () => {
+        console.log(journalContent);
         if (isSavingRef.current) return;
         if (!journalContent.trim()) {
             toast.error("Journal content cannot be empty.");
@@ -194,20 +209,21 @@ export default function JournalPage() {
     return (
         <>
             <div className="w-full pb-6 md:pb-8 xl:pb-10">
-                <div className="mb-8 flex flex-col gap-4 md:mb-10 md:flex-row md:items-center md:justify-between">
-                    <div className="-mt-2">
-                        <h1 className="text-3xl font-bold text-slate-900 md:text-4xl xl:text-5xl">Emotion Journal</h1>
-                        <p className="mt-3 text-base text-slate-500 md:mt-4 md:text-lg xl:text-xl">Write freely. Reflect deeply. Grow mindfully.</p>
-                    </div>
-
-                    <button
-                        onClick={handleSaveJournal}
-                        disabled={isSaving || isInitialLoading}
-                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-violet-700 px-6 py-3 font-semibold text-white transition-all duration-200 hover:from-violet-700 hover:to-violet-800 disabled:cursor-not-allowed disabled:opacity-70 disabled:shadow-none md:w-auto shadow-md shadow-violet-200"
-                    >
-                        {isSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-                        {isSaving ? "Analyzing Emotion..." : "Save Entry"}
-                    </button>
+                <PageIntroduction
+                    actions={
+                        <button
+                            onClick={handleSaveJournal}
+                            disabled={isSaving || isInitialLoading}
+                            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-violet-700 px-6 py-3 font-semibold text-white transition-all duration-200 hover:from-violet-700 hover:to-violet-800 disabled:cursor-not-allowed disabled:opacity-70 disabled:shadow-none shadow-md shadow-violet-200"
+                        >
+                            {isSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+                            {isSaving ? "Analyzing Emotion..." : "Save Entry"}
+                        </button>
+                    }
+                />
+                <div className="mb-8">
+                    {/* set page meta for header */}
+                    {/* actions are re-set when isSaving/isInitialLoading changes */}
                 </div>
 
                 {isInitialLoading ? (

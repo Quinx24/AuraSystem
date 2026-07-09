@@ -28,7 +28,7 @@ export default function JournalEditor({
                     w-full
                     h-[360px]
                     md:h-[440px]
-                    xl:h-[500px]
+                    xl:h-[514px]
                     resize-none
                     outline-none
                     overflow-y-auto

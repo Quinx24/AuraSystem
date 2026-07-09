@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import AdminSidebar from "../components/AdminSidebar";
-import AdminHeader from "../components/AdminHeader";
+import Header from "../../components/Header";
+import { PageMetaProvider } from "../../contexts/PageMetaContext";
 
 export default function AdminLayout() {
     const [collapsed, setCollapsed] = useState(false);
@@ -17,13 +18,15 @@ export default function AdminLayout() {
             <div
                 className={`${mainMargin} flex min-h-screen flex-col transition-all duration-300`}
             >
-                <AdminHeader />
+                <PageMetaProvider>
+                    <Header showSearch={true} showNotification={true} showUserMenu={true} />
 
-                <main className="flex-1 p-4 md:p-6 xl:p-8">
-                    <div className="mx-auto w-full max-w-[1600px]">
-                        <Outlet />
-                    </div>
-                </main>
+                    <main className="flex-1 p-4 md:p-6 xl:p-8">
+                        <div className="mx-auto w-full max-w-[1600px]">
+                            <Outlet />
+                        </div>
+                    </main>
+                </PageMetaProvider>
             </div>
         </div>
     );
