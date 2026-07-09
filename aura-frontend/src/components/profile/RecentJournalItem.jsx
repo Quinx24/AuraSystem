@@ -1,17 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import { emotionConfig } from "../../utils/emotionUtils";
 
 export default function RecentJournalItem({
-
+    id,
     emotion,
-
+    title,
     date,
-
     time,
-
     content
-
 }) {
-
+    const navigate = useNavigate();
     const config = emotionConfig[emotion];
 
     return (
@@ -71,28 +69,25 @@ export default function RecentJournalItem({
                 {content}
             </p>
 
-            <div className="mt-6 flex justify-between items-center">
-
+            <div className="mt-6 flex justify-end">
                 <button
+                    type="button"
+                    onClick={() => navigate(`/journal-history/${id}`)}
                     className="
+                        inline-flex
+                        items-center
+                        gap-1
                         text-violet-600
+                        font-semibold
+                        transition
+                        duration-200
                         hover:text-violet-700
-                        text-lg
+                        hover:underline
+                        hover:-translate-y-0.5
                     "
                 >
-                    ✏️
+                    Read More →
                 </button>
-
-                <button
-                    className="
-                        text-gray-400
-                        hover:text-gray-600
-                        text-xl
-                    "
-                >
-                    ⋯
-                </button>
-
             </div>
 
         </div>

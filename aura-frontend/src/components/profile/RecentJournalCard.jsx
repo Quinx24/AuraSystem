@@ -144,26 +144,17 @@ export default function RecentJournalCard() {
             >
 
                 {
-
                     journals.map((journal) => (
                         <RecentJournalItem
-
                             key={journal.id}
-
+                            id={journal.id}
                             emotion={journal.emotion}
-
                             title={journal.title}
-
                             date={journal.date}
-
                             time={journal.time}
-
                             content={journal.content}
-
                         />
-
                     ))
-
                 }
 
             </div>

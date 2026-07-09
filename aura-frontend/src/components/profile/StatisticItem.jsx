@@ -23,6 +23,11 @@ export default function StatisticItem({
                 transition-all
                 duration-300
                 hover:shadow-lg
+                flex
+                flex-col
+                items-center
+                justify-center
+                text-center
             "
         >
 
@@ -47,9 +52,20 @@ export default function StatisticItem({
 
             </div>
 
+            <h2
+                className="
+                    mt-6
+                    text-3xl
+                    font-semibold
+                    text-slate-900
+                "
+            >
+                {value}
+            </h2>
+
             <p
                 className="
-                    mt-5
+                    mt-3
                     text-gray-500
                     text-sm
                 "
@@ -58,17 +74,6 @@ export default function StatisticItem({
                 {title}
 
             </p>
-
-            <h2
-                className="
-                    mt-2
-                    text-2xl
-                    font-bold
-                    text-gray-900
-                "
-            >
-                {value}
-            </h2>
 
         </div>
 
