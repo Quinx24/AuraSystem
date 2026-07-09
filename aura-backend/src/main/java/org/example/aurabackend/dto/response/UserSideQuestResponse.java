@@ -14,7 +14,7 @@ public class UserSideQuestResponse {
     private Long id;
 
     private Long sideQuestId;
-    private Long sideQuestId;
+
     private String title;
 
     private String description;
