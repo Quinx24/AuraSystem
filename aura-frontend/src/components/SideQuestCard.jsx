@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
     CheckCircle,
     Clock,
@@ -13,6 +14,7 @@ export default function SideQuestCard({
     onComplete,
     onAdd,
 }) {
+    const [isAdded, setIsAdded] = useState(false);
 
     const config = categoryConfig[quest.category];
 
@@ -203,131 +205,134 @@ export default function SideQuestCard({
                     className="
                         flex
                         shrink-0
-                        flex-row
-                        items-center
-                        justify-between
+                        flex-col
+                        items-end
+                        justify-start
                         gap-3
-                        lg:flex-col
                         lg:items-end
                     "
                 >
-
                     <div
                         className="
                             inline-flex
                             items-center
-                            gap-1.5
+                            gap-1
                             rounded-xl
-                            bg-amber-50
-                            px-3
-                            py-1.5
-                            text-sm
-                            font-bold
+                            bg-amber-100
+                            px-2.5
+                            py-1
+                            text-xs
+                            font-medium
                             text-amber-600
-                            shadow-sm
+                            shadow-none
                         "
                     >
-
                         <Star
-                            size={16}
+                            size={14}
                             fill="currentColor"
                         />
-
                         +{quest.xpReward} XP
-
                     </div>
 
                     {
                         type === "recommended" && (
-
                             <button
-                                onClick={() => onAdd(quest.id)}
-                                className="
-                                    flex
+                                disabled={isAdded}
+                                onClick={async () => {
+                                    if (!onAdd) return;
+                                    await onAdd(quest.id);
+                                    setIsAdded(true);
+                                }}
+                                className={
+                                    `
+                                    inline-flex
                                     items-center
-                                    gap-1.5
-                                    px-3
-                                    py-2
+                                    justify-center
+                                    gap-2
+                                    min-w-[170px]
+                                    px-4
+                                    py-2.5
                                     rounded-xl
-                                    bg-violet-600
-                                    text-white
-                                    text-xs
+                                    text-sm
                                     font-semibold
-                                    shadow-sm
+                                    shadow-md
                                     transition
                                     duration-200
-                                    hover:-translate-y-0.5
-                                    hover:bg-violet-700
-                                    active:translate-y-0
-                                "
+                                    ease-out
+                                    ${isAdded
+                                        ? "bg-gray-100 text-gray-600 cursor-not-allowed hover:bg-gray-100 hover:shadow-none active:translate-y-0"
+                                        : "bg-violet-600 text-white hover:-translate-y-0.5 hover:bg-violet-700 hover:shadow-lg active:translate-y-0"
+                                    }
+                                `}
                             >
-
-                                <PlusCircle size={15} />
-
-                                Add to Side-Quest
-
+                                {isAdded ? (
+                                    <CheckCircle size={16} />
+                                ) : (
+                                    <PlusCircle size={16} />
+                                )}
+                                {isAdded ? "Added to My Quests" : "Add to Side-Quest"}
                             </button>
-
                         )
                     }
 
                     {
                         type === "myQuest" && (
-
                             <button
                                 onClick={() => onComplete(quest.id)}
                                 className="
-                                    flex
+                                    inline-flex
                                     items-center
-                                    gap-1.5
-                                    px-3
-                                    py-2
+                                    justify-center
+                                    gap-2
+                                    min-w-[170px]
+                                    px-4
+                                    py-2.5
                                     rounded-xl
                                     bg-green-600
                                     text-white
-                                    text-xs
+                                    text-sm
                                     font-semibold
-                                    shadow-sm
+                                    shadow-md
                                     transition
                                     duration-200
+                                    ease-out
                                     hover:-translate-y-0.5
                                     hover:bg-green-700
+                                    hover:shadow-lg
                                     active:translate-y-0
                                 "
                             >
-
-                                <CheckCircle size={15} />
-
+                                <CheckCircle size={16} />
                                 Complete
-
                             </button>
-
                         )
                     }
 
                     {
                         type === "completed" && (
-
                             <div
                                 className="
                                     inline-flex
                                     items-center
-                                    gap-1.5
-                                    px-3
-                                    py-2
+                                    justify-center
+                                    gap-2
+                                    min-w-[170px]
+                                    px-4
+                                    py-2.5
                                     rounded-xl
                                     bg-gray-100
                                     text-gray-600
-                                    text-xs
+                                    text-sm
                                     font-semibold
+                                    shadow-md
+                                    transition
+                                    duration-200
+                                    ease-out
                                 "
                             >
-
-                                <CheckCircle size={15} />
+                                <CheckCircle size={16} />
                                 Completed
-
                             </div>
-
                         )
                     }
 
