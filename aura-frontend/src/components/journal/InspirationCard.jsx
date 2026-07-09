@@ -83,12 +83,12 @@ export default function InspirationCard({
                 />
 
                 <h3 className="font-semibold text-slate-900">
-                    Goi y viet Journal
+                    Writing Inspiration
                 </h3>
             </div>
 
             <p className="mt-4 text-sm leading-6 text-slate-500">
-                Chon mot goi y hoac lam moi de nhan cam hung moi.
+                Choose a prompt below or refresh to discover new writing inspiration.
             </p>
 
             <div className="mt-5 space-y-2">
@@ -110,7 +110,7 @@ export default function InspirationCard({
                         "
                     >
                         <Loader2 size={18} className="animate-spin" />
-                        Dang tai goi y...
+                        Loading inspiration...
                     </div>
                 ) : (
                     prompts.map((prompt) => {
@@ -193,7 +193,7 @@ export default function InspirationCard({
                 "
             >
                 <RefreshCw size={16} className={loadingPrompt ? "animate-spin" : ""} />
-                Lam moi goi y
+                Refresh Prompt
             </button>
 
             <div
@@ -216,8 +216,8 @@ export default function InspirationCard({
                 </div>
 
                 <p className="mt-2">
-                    Khong can viet dai, chi can viet that long.
-                    Moi dong chu la mot buoc tien nho de hieu ban than hon.
+                    You don't have to write a lot. Just write honestly.
+                    Every sentence is a small step toward understanding yourself better.
                 </p>
             </div>
         </div>
