@@ -3,9 +3,12 @@ import { login } from "../services/authService";
 import AuthButton from "../components/auth/AuthButton";
 import Divider from "../components/auth/Divider";
 import SocialLogin from "../components/auth/SocialLogin";
+import RoleSwitch from "../components/auth/RoleSwitch";
+import Toast from "../components/auth/Toast";
+import RoleMismatchDialog from "../components/auth/RoleMismatchDialog";
 
 import { useState } from "react";
-import { BookOpen, Heart, Lock, Mail, Sprout } from "lucide-react";
+import { BookOpen, Heart, Lock, Mail, Shield, Sprout } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../services/userService";
 
@@ -13,12 +16,19 @@ export default function LoginPage() {
 
     const navigate = useNavigate();
 
+    const [selectedRole, setSelectedRole] = useState("USER");
+
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     });
 
     const [errors, setErrors] = useState({});
+
+    const [toast, setToast] = useState(null);
+
+    const [showRoleMismatchDialog, setShowRoleMismatchDialog] = useState(false);
+    const [pendingUserRole, setPendingUserRole] = useState(null);
 
     const handleChange = (e) => {
         setFormData({
@@ -64,16 +74,49 @@ export default function LoginPage() {
                 JSON.stringify(user)
             );
 
-            navigate("/dashboard");
+            const userRole = data.role || user.role;
+
+            localStorage.setItem("role", userRole);
+
+            if (selectedRole !== userRole) {
+                setPendingUserRole(userRole);
+                setShowRoleMismatchDialog(true);
+                return;
+            }
+
+            if (userRole === "ADMIN") {
+                navigate("/admin/dashboard");
+            } else {
+                navigate("/dashboard");
+            }
 
         } catch (error) {
 
-            alert(
-                error.response?.data?.message ??
-                "Login failed. Please check your credentials and try again."
-            );
+            setToast({
+                message: error.response?.data?.message ?? "Login failed. Please check your credentials and try again.",
+                type: "error"
+            });
 
         }
+    };
+
+    const handleRoleSwitch = () => {
+        setShowRoleMismatchDialog(false);
+        setSelectedRole(pendingUserRole);
+
+        if (pendingUserRole === "ADMIN") {
+            navigate("/admin/dashboard");
+        } else {
+            navigate("/dashboard");
+        }
+    };
+
+    const handleDialogClose = () => {
+        setShowRoleMismatchDialog(false);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
+        localStorage.removeItem("role");
     };
 
     return (
@@ -106,12 +149,21 @@ export default function LoginPage() {
 
                     <div>
                         <h1 className="mt-6 text-3xl font-bold leading-tight text-[#1B2559] md:text-4xl xl:text-5xl">
-                            Welcome back 👋
+                            {selectedRole === "USER" ? "Welcome back 👋" : "Admin Portal"}
                         </h1>
 
                         <p className="mt-5 max-w-md text-base leading-8 text-gray-500 sm:text-lg">
-                            It's good to see you again. Let's continue your healing journey together.
+                            {selectedRole === "USER"
+                                ? "It's good to see you again. Let's continue your healing journey together."
+                                : "Sign in to access the administration dashboard."}
                         </p>
+
+                        {selectedRole === "ADMIN" && (
+                            <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-violet-100 px-4 py-2 text-sm font-semibold text-violet-700">
+                                <Shield size={16} />
+                                <span>Administrator Mode</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="relative mx-auto w-full max-w-sm">
@@ -145,13 +197,17 @@ export default function LoginPage() {
                     <div className="w-full max-w-md rounded-[32px] border border-gray-100 bg-white p-7 shadow-xl shadow-violet-100/60 sm:p-9">
                         <div className="mb-8 text-center">
                             <h2 className="text-3xl font-bold text-slate-900">
-                                Log in to Aura
+                                {selectedRole === "USER" ? "Log in to Aura" : "Admin Sign In"}
                             </h2>
 
                             <p className="mt-2 text-sm font-medium text-gray-500">
-                                Pick up right where your reflection left off.
+                                {selectedRole === "USER"
+                                    ? "Pick up right where your reflection left off."
+                                    : "Access the administration panel"}
                             </p>
                         </div>
+
+                        <RoleSwitch selectedRole={selectedRole} onRoleChange={setSelectedRole} />
 
                         <form
                             className="space-y-5"
@@ -209,24 +265,28 @@ export default function LoginPage() {
                                 type="submit"
                             />
 
-                            {/* Divider */}
+                            {/* Divider - Only for User */}
 
-                            <Divider />
+                            {selectedRole === "USER" && <Divider />}
 
-                            {/* Social */}
+                            {/* Social - Only for User */}
 
-                            <SocialLogin />
+                            {selectedRole === "USER" && <SocialLogin />}
 
-                            <p className="text-center text-sm text-gray-500">
-                                Don't have an account?
-                                <button
-                                    type="button"
-                                    className="ml-2 font-semibold text-violet-600 transition hover:text-violet-700 hover:underline"
-                                    onClick={() => navigate("/register")}
-                                >
-                                    Sign up
-                                </button>
-                            </p>
+                            {/* Sign up - Only for User */}
+
+                            {selectedRole === "USER" && (
+                                <p className="text-center text-sm text-gray-500">
+                                    Don't have an account?
+                                    <button
+                                        type="button"
+                                        className="ml-2 font-semibold text-violet-600 transition hover:text-violet-700 hover:underline"
+                                        onClick={() => navigate("/register")}
+                                    >
+                                        Sign up
+                                    </button>
+                                </p>
+                            )}
 
                         </form>
 
@@ -235,6 +295,24 @@ export default function LoginPage() {
                 </div>
 
             </div>
+
+            {/* Toast */}
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
+
+            {/* Role Mismatch Dialog */}
+            <RoleMismatchDialog
+                isOpen={showRoleMismatchDialog}
+                onClose={handleDialogClose}
+                onSwitch={handleRoleSwitch}
+                currentRole={selectedRole}
+                accountRole={pendingUserRole}
+            />
         </div>
     );
 }

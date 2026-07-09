@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 
 import AdminRoutes from "./admin/AdminRoutes";
 import MainLayout from "./layouts/MainLayout";
+import RouteGuard from "./components/auth/RouteGuard";
 
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -17,10 +18,15 @@ function App() {
   return (
     <Routes>
 
-      <Route path="/admin/*" element={<AdminRoutes />} />
+      <Route path="/admin/*" element={
+        <RouteGuard requireAdmin={true}>
+          <AdminRoutes />
+        </RouteGuard>
+      } />
 
       {/* Không có Sidebar */}
       <Route path="/" element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage />} />
 
       <Route path="/register" element={<RegisterPage />} />
 

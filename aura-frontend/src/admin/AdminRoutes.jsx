@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLayout from "./layouts/AdminLayout";
-import AdminLoginPage from "./pages/AdminLoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import UsersPage from "./pages/UsersPage";
 import JournalManagementPage from "./pages/JournalManagementPage";
@@ -11,8 +10,6 @@ import ProfilePage from "./pages/ProfilePage";
 export default function AdminRoutes() {
     return (
         <Routes>
-            <Route path="login" element={<AdminLoginPage />} />
-
             <Route element={<AdminLayout />}>
                 <Route index element={<Navigate to="dashboard" replace />} />
                 <Route path="dashboard" element={<DashboardPage />} />

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.aurabackend.enumeration.Role;
 
 @Entity
 @Table(name = "users")
@@ -57,5 +58,10 @@ public class User {
     @Column(nullable = false)
     @Builder.Default
     private Integer xp = 0;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private Role role = Role.USER;
 
 }

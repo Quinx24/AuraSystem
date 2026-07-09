@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import lombok.Builder;
 import lombok.Data;
+import org.example.aurabackend.enumeration.Role;
 
 @Data
 @Builder
@@ -22,4 +23,6 @@ public class UserResponse {
     private Integer level;
 
     private Integer xp;
+
+    private Role role;
 }

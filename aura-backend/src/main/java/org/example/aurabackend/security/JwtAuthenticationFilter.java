@@ -1,7 +1,8 @@
 package org.example.aurabackend.security;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.servlet.ServletException;
 
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @Component
@@ -54,15 +56,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                     .orElse(null);
 
             if (user == null) {
-                filterChain.doFilter(request, response);  
+                filterChain.doFilter(request, response);
                 return;
             }
 
-            UsernamePasswordAuthenticationToken authentication = 
+            String roleFromJwt = jwtService.extractRole(token);
+            String roleFromDb = user.getRole() != null ? user.getRole().name() : "USER";
+
+            String role = roleFromJwt != null ? roleFromJwt : roleFromDb;
+
+            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+
+            UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
                     user,
                     null,
-                    Collections.emptyList()
+                    authorities
                 );
 
             SecurityContextHolder.getContext()

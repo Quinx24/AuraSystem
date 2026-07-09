@@ -58,6 +58,7 @@ public class AuthService {
                 .id(user.getId())
                 .fullName(user.getFullName())
                 .email(user.getEmail())
+                .role(user.getRole() != null ? user.getRole() : org.example.aurabackend.enumeration.Role.USER)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();

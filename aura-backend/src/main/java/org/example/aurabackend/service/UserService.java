@@ -30,6 +30,7 @@ public class UserService {
                 .createdAt(user.getCreatedAt())
                 .level(user.getLevel())
                 .xp(user.getXp())
+                .role(user.getRole() != null ? user.getRole() : org.example.aurabackend.enumeration.Role.USER)
                 .build();
     }
 
@@ -42,6 +43,7 @@ public class UserService {
                 .fullName(request.getFullName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .role(org.example.aurabackend.enumeration.Role.USER)
                 .build();
 
         userRepository.save(user);
