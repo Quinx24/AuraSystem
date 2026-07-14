@@ -1,12 +1,35 @@
-import { Filter, Search } from "lucide-react";
+import {
+    Eye,
+    Filter,
+    Lock,
+    Pencil,
+    Search,
+    Trash2,
+    Unlock,
+    X,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { usePageMeta } from "../../contexts/PageMetaContext";
 import PageIntroduction from "../../components/PageIntroduction";
-import { getUsers } from "../services/userService";
+import {
+    deleteUser,
+    lockUser,
+    unlockUser,
+    updateUser,
+    getUsers,
+} from "../services/userService";
 
 const PAGE_SIZE = 10;
-const tableColumns = ["Name", "Email", "Role", "Status", "Joined"];
+const tableColumns = ["Name", "Email", "Role", "Status", "Joined", "Actions"];
 const skeletonRows = Array.from({ length: 5 });
+
+const emptyEditForm = {
+    fullName: "",
+    email: "",
+    avatarUrl: "",
+    role: "USER",
+    locked: false,
+};
 
 function formatDate(value) {
     if (!value) {
@@ -19,9 +42,9 @@ function formatDate(value) {
         return "N/A";
     }
 
-    return new Intl.DateTimeFormat("en", {
-        month: "short",
+    return new Intl.DateTimeFormat("en-GB", {
         day: "2-digit",
+        month: "short",
         year: "numeric",
     }).format(date);
 }
@@ -36,6 +59,88 @@ function buildVisiblePages(currentPage, totalPages) {
     const end = Math.min(totalPages, start + 2);
 
     return Array.from({ length: end - start + 1 }, (_, index) => start + index);
+}
+
+function getInitials(name, email) {
+    const source = name || email || "A";
+    const parts = source.trim().split(/\s+/).filter(Boolean);
+
+    if (parts.length >= 2) {
+        return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    }
+
+    return source.slice(0, 2).toUpperCase();
+}
+
+function RoleBadge({ role }) {
+    const isAdmin = role === "ADMIN";
+
+    return (
+        <span
+            className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                isAdmin
+                    ? "bg-violet-50 text-violet-600"
+                    : "bg-sky-50 text-sky-600"
+            }`}
+        >
+            {role || "N/A"}
+        </span>
+    );
+}
+
+function StatusBadge({ locked }) {
+    return (
+        <span
+            className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                locked ? "bg-red-50 text-red-500" : "bg-emerald-50 text-emerald-500"
+            }`}
+        >
+            {locked ? "Locked" : "Active"}
+        </span>
+    );
+}
+
+function UserAvatar({ user, size = "h-10 w-10" }) {
+    if (user?.avatarUrl) {
+        return (
+            <img
+                src={user.avatarUrl}
+                alt={user.fullName || "User avatar"}
+                className={`${size} rounded-full object-cover`}
+            />
+        );
+    }
+
+    return (
+        <div
+            className={`${size} flex shrink-0 items-center justify-center rounded-full bg-violet-50 text-xs font-semibold text-violet-600`}
+        >
+            {getInitials(user?.fullName, user?.email)}
+        </div>
+    );
+}
+
+function DialogShell({ title, children, onClose }) {
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 px-4">
+            <div className="w-full max-w-lg rounded-2xl border border-slate-100 bg-white p-6 shadow-xl shadow-violet-100/60">
+                <div className="mb-5 flex items-center justify-between gap-4">
+                    <h3 className="text-base font-semibold text-slate-900">
+                        {title}
+                    </h3>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-50 hover:text-slate-600"
+                        aria-label="Close dialog"
+                    >
+                        <X size={18} />
+                    </button>
+                </div>
+                {children}
+            </div>
+        </div>
+    );
 }
 
 export default function UsersPage() {
@@ -54,6 +159,12 @@ export default function UsersPage() {
     const [currentPage, setCurrentPage] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [dialogMode, setDialogMode] = useState(null);
+    const [editForm, setEditForm] = useState(emptyEditForm);
+    const [rowLoading, setRowLoading] = useState({});
+    const [saving, setSaving] = useState(false);
+    const [refreshKey, setRefreshKey] = useState(0);
 
     useEffect(() => {
         setPage({ title: "Users", breadcrumb: ["Admin", "Users"] });
@@ -133,7 +244,7 @@ export default function UsersPage() {
             isMounted = false;
             controller.abort();
         };
-    }, [currentPage, debouncedSearch, role, locked]);
+    }, [currentPage, debouncedSearch, role, locked, refreshKey]);
 
     const visiblePages = useMemo(
         () => buildVisiblePages(pageInfo.page, pageInfo.totalPages),
@@ -146,6 +257,134 @@ export default function UsersPage() {
         loading ||
         pageInfo.totalPages <= 0 ||
         pageInfo.page >= pageInfo.totalPages - 1;
+
+    function closeDialog() {
+        if (saving) {
+            return;
+        }
+
+        setDialogMode(null);
+        setSelectedUser(null);
+        setEditForm(emptyEditForm);
+    }
+
+    function replaceUser(updatedUser) {
+        setUsers((currentUsers) =>
+            currentUsers.map((user) =>
+                user.id === updatedUser.id ? updatedUser : user
+            )
+        );
+        setSelectedUser((currentUser) =>
+            currentUser?.id === updatedUser.id ? updatedUser : currentUser
+        );
+    }
+
+    function openViewDialog(user) {
+        setSelectedUser(user);
+        setDialogMode("view");
+    }
+
+    function openEditDialog(user) {
+        setSelectedUser(user);
+        setEditForm({
+            fullName: user.fullName || "",
+            email: user.email || "",
+            avatarUrl: user.avatarUrl || "",
+            role: user.role || "USER",
+            locked: Boolean(user.locked),
+        });
+        setDialogMode("edit");
+    }
+
+    function openDeleteDialog(user) {
+        setSelectedUser(user);
+        setDialogMode("delete");
+    }
+
+    async function handleToggleLock(user) {
+        const action = user.locked ? "unlock" : "lock";
+
+        try {
+            setError("");
+            setRowLoading((current) => ({ ...current, [user.id]: action }));
+            const updatedUser = user.locked
+                ? await unlockUser(user.id)
+                : await lockUser(user.id);
+            replaceUser(updatedUser);
+        } catch (err) {
+            setError(
+                err.response?.data?.message ||
+                    err.message ||
+                    `Unable to ${action} user.`
+            );
+        } finally {
+            setRowLoading((current) => {
+                const next = { ...current };
+                delete next[user.id];
+                return next;
+            });
+        }
+    }
+
+    async function handleSaveUser(event) {
+        event.preventDefault();
+
+        if (!selectedUser) {
+            return;
+        }
+
+        try {
+            setSaving(true);
+            setError("");
+            const updatedUser = await updateUser(selectedUser.id, {
+                fullName: editForm.fullName.trim(),
+                email: editForm.email.trim(),
+                avatarUrl: editForm.avatarUrl.trim() || null,
+                role: editForm.role,
+                locked: editForm.locked,
+            });
+            replaceUser(updatedUser);
+            closeDialog();
+        } catch (err) {
+            setError(
+                err.response?.data?.message ||
+                    err.message ||
+                    "Unable to update user."
+            );
+        } finally {
+            setSaving(false);
+        }
+    }
+
+    async function handleDeleteUser() {
+        if (!selectedUser) {
+            return;
+        }
+
+        try {
+            setSaving(true);
+            setError("");
+            await deleteUser(selectedUser.id);
+            setDialogMode(null);
+            setSelectedUser(null);
+            setUsers((currentUsers) =>
+                currentUsers.filter((user) => user.id !== selectedUser.id)
+            );
+            setPageInfo((current) => ({
+                ...current,
+                totalElements: Math.max(current.totalElements - 1, 0),
+            }));
+            setRefreshKey((current) => current + 1);
+        } catch (err) {
+            setError(
+                err.response?.data?.message ||
+                    err.message ||
+                    "Unable to delete user."
+            );
+        } finally {
+            setSaving(false);
+        }
+    }
 
     return (
         <div>
@@ -239,38 +478,90 @@ export default function UsersPage() {
                                     </tr>
                                 ))
                             ) : hasUsers ? (
-                                users.map((user) => (
-                                    <tr
-                                        key={user.id}
-                                        className="border-b border-slate-50 last:border-0"
-                                    >
-                                        <td className="px-6 py-4 font-medium text-slate-800">
-                                            {user.fullName || "N/A"}
-                                        </td>
-                                        <td className="px-6 py-4 text-slate-600">
-                                            {user.email || "N/A"}
-                                        </td>
-                                        <td className="px-6 py-4 text-slate-600">
-                                            {user.role || "N/A"}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span
-                                                className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-                                                    user.locked
-                                                        ? "bg-red-50 text-red-500"
-                                                        : "bg-emerald-50 text-emerald-500"
-                                                }`}
-                                            >
-                                                {user.locked
-                                                    ? "Locked"
-                                                    : "Active"}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-slate-600">
-                                            {formatDate(user.createdAt)}
-                                        </td>
-                                    </tr>
-                                ))
+                                users.map((user) => {
+                                    const userAction = rowLoading[user.id];
+
+                                    return (
+                                        <tr
+                                            key={user.id}
+                                            className="border-b border-slate-50 last:border-0"
+                                        >
+                                            <td className="px-6 py-4">
+                                                <div className="flex min-w-48 items-center gap-3">
+                                                    <UserAvatar user={user} />
+                                                    <span className="font-medium text-slate-800">
+                                                        {user.fullName || "N/A"}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-slate-600">
+                                                {user.email || "N/A"}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <RoleBadge role={user.role} />
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <StatusBadge locked={user.locked} />
+                                            </td>
+                                            <td className="px-6 py-4 text-slate-600">
+                                                {formatDate(user.createdAt)}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            openViewDialog(user)
+                                                        }
+                                                        className="rounded-lg border border-gray-200 bg-white p-2 text-slate-500 transition hover:bg-slate-50 hover:text-violet-600"
+                                                        aria-label="View user"
+                                                    >
+                                                        <Eye size={15} />
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            openEditDialog(user)
+                                                        }
+                                                        className="rounded-lg border border-gray-200 bg-white p-2 text-slate-500 transition hover:bg-slate-50 hover:text-violet-600"
+                                                        aria-label="Edit user"
+                                                    >
+                                                        <Pencil size={15} />
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        disabled={Boolean(userAction)}
+                                                        onClick={() =>
+                                                            handleToggleLock(user)
+                                                        }
+                                                        className="rounded-lg border border-gray-200 bg-white p-2 text-slate-500 transition hover:bg-slate-50 hover:text-violet-600 disabled:cursor-not-allowed disabled:opacity-50"
+                                                        aria-label={
+                                                            user.locked
+                                                                ? "Unlock user"
+                                                                : "Lock user"
+                                                        }
+                                                    >
+                                                        {user.locked ? (
+                                                            <Unlock size={15} />
+                                                        ) : (
+                                                            <Lock size={15} />
+                                                        )}
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            openDeleteDialog(user)
+                                                        }
+                                                        className="rounded-lg border border-gray-200 bg-white p-2 text-slate-500 transition hover:bg-red-50 hover:text-red-500"
+                                                        aria-label="Delete user"
+                                                    >
+                                                        <Trash2 size={15} />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
                             ) : (
                                 <tr>
                                     <td
@@ -331,6 +622,192 @@ export default function UsersPage() {
                     {pageInfo.totalElements} users total
                 </p>
             )}
+
+            {dialogMode === "view" && selectedUser && (
+                <DialogShell title="User Details" onClose={closeDialog}>
+                    <div className="flex items-center gap-4">
+                        <UserAvatar user={selectedUser} size="h-16 w-16" />
+                        <div className="min-w-0">
+                            <h4 className="truncate text-lg font-bold text-slate-900">
+                                {selectedUser.fullName || "N/A"}
+                            </h4>
+                            <p className="truncate text-sm text-slate-500">
+                                {selectedUser.email || "N/A"}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <DetailItem label="Role">
+                            <RoleBadge role={selectedUser.role} />
+                        </DetailItem>
+                        <DetailItem label="Status">
+                            <StatusBadge locked={selectedUser.locked} />
+                        </DetailItem>
+                        <DetailItem label="Level">
+                            {selectedUser.level ?? "N/A"}
+                        </DetailItem>
+                        <DetailItem label="XP">{selectedUser.xp ?? "N/A"}</DetailItem>
+                        <DetailItem label="Created">
+                            {formatDate(selectedUser.createdAt)}
+                        </DetailItem>
+                        <DetailItem label="Updated">
+                            {formatDate(selectedUser.updatedAt)}
+                        </DetailItem>
+                    </div>
+                </DialogShell>
+            )}
+
+            {dialogMode === "edit" && selectedUser && (
+                <DialogShell title="Edit User" onClose={closeDialog}>
+                    <form onSubmit={handleSaveUser} className="space-y-4">
+                        <div>
+                            <label className="mb-1 block text-xs font-semibold text-slate-500">
+                                Full Name
+                            </label>
+                            <input
+                                type="text"
+                                required
+                                value={editForm.fullName}
+                                onChange={(event) =>
+                                    setEditForm((current) => ({
+                                        ...current,
+                                        fullName: event.target.value,
+                                    }))
+                                }
+                                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm transition focus:border-violet-400 focus:outline-none focus:ring-4 focus:ring-violet-100"
+                            />
+                        </div>
+                        <div>
+                            <label className="mb-1 block text-xs font-semibold text-slate-500">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                required
+                                value={editForm.email}
+                                onChange={(event) =>
+                                    setEditForm((current) => ({
+                                        ...current,
+                                        email: event.target.value,
+                                    }))
+                                }
+                                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm transition focus:border-violet-400 focus:outline-none focus:ring-4 focus:ring-violet-100"
+                            />
+                        </div>
+                        <div>
+                            <label className="mb-1 block text-xs font-semibold text-slate-500">
+                                Avatar URL
+                            </label>
+                            <input
+                                type="text"
+                                value={editForm.avatarUrl}
+                                onChange={(event) =>
+                                    setEditForm((current) => ({
+                                        ...current,
+                                        avatarUrl: event.target.value,
+                                    }))
+                                }
+                                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm transition focus:border-violet-400 focus:outline-none focus:ring-4 focus:ring-violet-100"
+                            />
+                        </div>
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                            <div>
+                                <label className="mb-1 block text-xs font-semibold text-slate-500">
+                                    Role
+                                </label>
+                                <select
+                                    value={editForm.role}
+                                    onChange={(event) =>
+                                        setEditForm((current) => ({
+                                            ...current,
+                                            role: event.target.value,
+                                        }))
+                                    }
+                                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm transition focus:border-violet-400 focus:outline-none focus:ring-4 focus:ring-violet-100"
+                                >
+                                    <option value="USER">User</option>
+                                    <option value="ADMIN">Admin</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="mb-1 block text-xs font-semibold text-slate-500">
+                                    Status
+                                </label>
+                                <select
+                                    value={String(editForm.locked)}
+                                    onChange={(event) =>
+                                        setEditForm((current) => ({
+                                            ...current,
+                                            locked: event.target.value === "true",
+                                        }))
+                                    }
+                                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm transition focus:border-violet-400 focus:outline-none focus:ring-4 focus:ring-violet-100"
+                                >
+                                    <option value="false">Active</option>
+                                    <option value="true">Locked</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className="flex justify-end gap-3 pt-2">
+                            <button
+                                type="button"
+                                onClick={closeDialog}
+                                disabled={saving}
+                                className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={saving}
+                                className="rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-violet-100 transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
+                            >
+                                {saving ? "Saving..." : "Save"}
+                            </button>
+                        </div>
+                    </form>
+                </DialogShell>
+            )}
+
+            {dialogMode === "delete" && selectedUser && (
+                <DialogShell title="Delete User" onClose={closeDialog}>
+                    <p className="text-sm text-slate-600">
+                        Are you sure you want to delete{" "}
+                        <span className="font-semibold text-slate-900">
+                            {selectedUser.fullName || selectedUser.email}
+                        </span>
+                        ?
+                    </p>
+                    <div className="mt-6 flex justify-end gap-3">
+                        <button
+                            type="button"
+                            onClick={closeDialog}
+                            disabled={saving}
+                            className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleDeleteUser}
+                            disabled={saving}
+                            className="rounded-xl bg-red-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-red-100 transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                            {saving ? "Deleting..." : "Delete"}
+                        </button>
+                    </div>
+                </DialogShell>
+            )}
+        </div>
+    );
+}
+
+function DetailItem({ label, children }) {
+    return (
+        <div className="rounded-xl bg-slate-50 px-4 py-3">
+            <p className="mb-1 text-xs font-semibold text-slate-400">{label}</p>
+            <div className="text-sm font-medium text-slate-700">{children}</div>
         </div>
     );
 }
