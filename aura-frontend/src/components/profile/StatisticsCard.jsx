@@ -23,14 +23,26 @@ export default function StatisticsCard() {
                 longestStreak: streak.longestStreak,
                 totalCheckIn: streak.totalCheckIn
             }));
-        } catch (error) {
-            console.error(error);
+        } catch {
+            setStatistics(prev => ({
+                ...prev,
+                currentStreak: 0,
+                longestStreak: 0,
+                totalCheckIn: 0
+            }));
         }
     };
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        loadStatistics();
+        let isMounted = true;
+
+        Promise.resolve().then(() => {
+            if (isMounted) loadStatistics();
+        });
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     return (

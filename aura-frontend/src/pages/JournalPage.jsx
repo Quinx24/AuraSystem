@@ -115,7 +115,7 @@ export default function JournalPage() {
         });
 
         return () => setPage({});
-    }, []);
+    }, [setPage]);
 
     useEffect(() => () => {
         if (memoryPhotoPreviewRef.current) URL.revokeObjectURL(memoryPhotoPreviewRef.current);
@@ -176,7 +176,6 @@ export default function JournalPage() {
     };
 
     const handleSaveJournal = async () => {
-        console.log(journalContent);
         if (isSavingRef.current) return;
         if (!journalContent.trim()) {
             toast.error("Journal content cannot be empty.");

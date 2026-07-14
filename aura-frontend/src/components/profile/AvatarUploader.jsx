@@ -11,12 +11,8 @@ export default function AvatarUploader({
 
     const fileInputRef = useRef(null);
 
-    const [preview, setPreview] = useState(avatarUrl);
+    const [preview, setPreview] = useState("");
     const [uploading, setUploading] = useState(false);
-
-    useEffect(() => {
-        setPreview(avatarUrl);
-    }, [avatarUrl]);
 
     useEffect(() => {
         return () => {
@@ -44,11 +40,8 @@ export default function AvatarUploader({
 
             onUploaded(uploadedAvatarUrl);
 
-        } catch (error) {
-
-            console.error(error);
-
-            setPreview(avatarUrl);
+        } catch {
+            setPreview("");
 
         } finally {
 
@@ -58,10 +51,12 @@ export default function AvatarUploader({
 
     };
 
-    const imageUrl = preview
-        ? preview.startsWith("blob:")
-            ? preview
-            : `${import.meta.env.VITE_API_URL}${preview}`
+    const currentAvatar = preview || avatarUrl;
+
+    const imageUrl = currentAvatar
+        ? currentAvatar.startsWith("blob:")
+            ? currentAvatar
+            : `${import.meta.env.VITE_API_URL}${currentAvatar}`
         : "https://i.pravatar.cc/300";
 
     return (
@@ -83,6 +78,7 @@ export default function AvatarUploader({
 
             <button
                 type="button"
+                disabled={uploading}
                 onClick={() => fileInputRef.current?.click()}
                 className="
                     absolute
@@ -97,6 +93,7 @@ export default function AvatarUploader({
                     items-center
                     justify-center
                     text-violet-600
+                    disabled:opacity-60
                 "
             >
                 <FiCamera />

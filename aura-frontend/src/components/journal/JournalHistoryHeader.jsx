@@ -1,17 +1,16 @@
-import { formatDate } from "../../utils/dateUtils";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { usePageMeta } from "../../contexts/PageMetaContext";
 
-export default function JournalHistoryHeader({ createdAt }) {
+export default function JournalHistoryHeader() {
     const navigate = useNavigate();
     const { setPage } = usePageMeta();
 
     useEffect(() => {
         setPage({ title: "Journal History", breadcrumb: ["Home", "Journal History"] });
         return () => setPage({});
-    }, [createdAt]);
+    }, [setPage]);
 
     return (
         <div className="mb-6">

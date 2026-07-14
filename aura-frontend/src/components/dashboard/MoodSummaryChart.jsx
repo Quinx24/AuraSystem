@@ -98,8 +98,6 @@ export default function MoodSummaryChart() {
 
         });
 
-        setEmotionSummary(summary);
-
         const sorted = [...journals].sort(
 
             (a, b) =>
@@ -163,15 +161,33 @@ export default function MoodSummaryChart() {
 
         });
 
-        setChartData(result);
+        return { summary, result };
 
     }, []);
 
     useEffect(() => {
+        let isActive = true;
 
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        loadChart();
+        const runLoad = async () => {
+            try {
+                const { summary, result } = await loadChart();
 
+                if (!isActive) return;
+
+                setEmotionSummary(summary);
+                setChartData(result);
+            } catch {
+                if (!isActive) return;
+                setEmotionSummary({});
+                setChartData([]);
+            }
+        };
+
+        void runLoad();
+
+        return () => {
+            isActive = false;
+        };
     }, [loadChart]);
 
     const hasChartData = chartData.some((item) => item.value !== null);

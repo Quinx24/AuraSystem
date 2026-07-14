@@ -14,27 +14,34 @@ export default function JournalOverview() {
         0
     );
 
-    const loadSummary = async () => {
-        const response = await getJournalEntries(
-            0,
-            100
-        );
-
-        const journals = response.data.result.content;
-
-        const summary = {};
-
-        journals.forEach(journal => {
-            const emotion = journal.primaryEmotion;
-            summary[emotion] = (summary[emotion] || 0) + 1;
-        });
-
-        setEmotionSummary(summary);
-    };
-
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        loadSummary();
+        let isActive = true;
+
+        const loadSummarySafely = async () => {
+            try {
+                const response = await getJournalEntries(0, 100);
+                if (!isActive) return;
+
+                const journals = response.data.result.content;
+                const summary = {};
+
+                journals.forEach((journal) => {
+                    const emotion = journal.primaryEmotion;
+                    summary[emotion] = (summary[emotion] || 0) + 1;
+                });
+
+                setEmotionSummary(summary);
+            } catch {
+                if (!isActive) return;
+                setEmotionSummary({});
+            }
+        };
+
+        void loadSummarySafely();
+
+        return () => {
+            isActive = false;
+        };
     }, []);
 
     return (

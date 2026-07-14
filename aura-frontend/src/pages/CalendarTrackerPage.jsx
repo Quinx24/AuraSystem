@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { getJournalEntries } from "../services/journalService";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
-import PageIntroduction from "../components/PageIntroduction";
 import { usePageMeta } from "../contexts/PageMetaContext";
 
 import { emotionConfig } from "../utils/emotionUtils";
@@ -16,15 +15,15 @@ export default function CalendarTrackerPage() {
     useEffect(() => {
         setPage({ title: "Calendar Tracker", breadcrumb: ["Home", "Calendar Tracker"] });
         return () => setPage({});
-    }, []);
+    }, [setPage]);
 
     useEffect(() => {
         const loadEntries = async () => {
             try {
                 const response = await getJournalEntries();
                 setEntries(response.data.result.content);
-            } catch (error) {
-                console.error(error);
+            } catch {
+                // Error silently ignored - entries will remain empty
             }
         };
 

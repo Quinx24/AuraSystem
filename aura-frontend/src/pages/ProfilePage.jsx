@@ -13,7 +13,7 @@ export default function ProfilePage() {
     useEffect(() => {
         setPage({ title: "Profile", breadcrumb: ["Home", "Profile"] });
         return () => setPage({});
-    }, []);
+    }, [setPage]);
 
     return (
 

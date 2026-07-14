@@ -69,10 +69,7 @@ export default function SideQuestPage() {
             }
 
         }
-        catch (error) {
-
-            console.log(error);
-
+        catch {
             if (latestQuestRequestId.current === requestId) {
                 setQuests([]);
             }
@@ -94,9 +91,7 @@ export default function SideQuestPage() {
 
             setTodayQuest(response.data.result ?? []);
         }
-        catch (error) {
-            console.log(error);
-
+        catch {
             setTodayQuest([]);
         }
     }, []);
@@ -106,12 +101,8 @@ export default function SideQuestPage() {
             const response = await getCompletedQuest();
 
             setCompletedQuest(response.data.result ?? []);
-        } catch (error) {
-            console.log(error);
-
-            console.log(error.response);
-
-            console.log(error.response?.data);
+        } catch {
+            setCompletedQuest([]);
         }
     }, []);
 
@@ -125,10 +116,7 @@ export default function SideQuestPage() {
 
             await loadCompletedQuest();
 
-        } catch (error) {
-
-            console.log(error);
-
+        } catch {
             alert("Complete quest failed.");
 
         }
@@ -145,9 +133,6 @@ export default function SideQuestPage() {
             alert("Side quest added successfully!");
 
         } catch (error) {
-
-            console.log(error);
-
             alert(
                 error.response?.data?.message ??
                 "Failed to add side quest."
@@ -166,23 +151,37 @@ export default function SideQuestPage() {
     useEffect(() => {
         setPage({ title: "Side Quests", breadcrumb: ["Home", "Side Quests"] });
         return () => setPage({});
-    }, []);
+    }, [setPage]);
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        loadTodayQuest();
-        loadCompletedQuest();
+        let isMounted = true;
+
+        Promise.resolve().then(() => {
+            if (!isMounted) return;
+            loadTodayQuest();
+            loadCompletedQuest();
+        });
+
+        return () => {
+            isMounted = false;
+        };
     }, [loadTodayQuest, loadCompletedQuest]);
 
     useEffect(() => {
+        let isMounted = true;
 
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        fetchSideQuests({
-            mood: selectedMood,
-            category: selectedCategory,
-            sort: selectedSort
+        Promise.resolve().then(() => {
+            if (!isMounted) return;
+            fetchSideQuests({
+                mood: selectedMood,
+                category: selectedCategory,
+                sort: selectedSort
+            });
         });
 
+        return () => {
+            isMounted = false;
+        };
     }, [fetchSideQuests, selectedMood, selectedCategory, selectedSort]);
 
     const addedQuestIds = new Set(

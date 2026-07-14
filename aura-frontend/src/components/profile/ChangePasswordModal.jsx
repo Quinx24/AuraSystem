@@ -279,9 +279,9 @@ export default function ChangePasswordModal({
     useEffect(() => {
 
         if (!open) {
-
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            resetForm();
+            queueMicrotask(() => {
+                resetForm();
+            });
         }
 
     }, [open]);

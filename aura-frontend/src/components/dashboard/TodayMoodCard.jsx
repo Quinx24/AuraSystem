@@ -54,14 +54,21 @@ export default function TodayMoodCard() {
             if (journals.length > 0) {
                 setLatestJournalEntry(journals[0]);
             }
-        } catch (error) {
-            console.error("Error fetching journal entries:", error);
+        } catch {
+            setLatestJournalEntry(null);
         }
     };
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        loadLatestJournalEntry();
+        let isMounted = true;
+
+        Promise.resolve().then(() => {
+            if (isMounted) loadLatestJournalEntry();
+        });
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     const emotion = latestJournalEntry?.primaryEmotion;

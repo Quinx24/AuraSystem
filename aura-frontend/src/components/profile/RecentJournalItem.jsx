@@ -4,7 +4,6 @@ import { emotionConfig } from "../../utils/emotionUtils";
 export default function RecentJournalItem({
     id,
     emotion,
-    title,
     date,
     time,
     content

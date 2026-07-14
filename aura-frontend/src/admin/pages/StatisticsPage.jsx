@@ -104,9 +104,7 @@ export default function StatisticsPage() {
     useEffect(() => {
         setPage({ title: "Statistics", breadcrumb: ["Admin", "Statistics"] });
         return () => setPage({});
-        // Page meta follows the existing admin page pattern; setPage is not stable.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [setPage]);
 
     useEffect(() => {
         let isMounted = true;

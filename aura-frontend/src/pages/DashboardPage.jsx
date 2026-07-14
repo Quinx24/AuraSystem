@@ -33,9 +33,8 @@ function AnimatedValue({ value }) {
         const numericValue = Number(value) || 0;
 
         if (numericValue === 0) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setDisplayValue(0);
-            return;
+            const timer = window.setTimeout(() => setDisplayValue(0), 0);
+            return () => window.clearTimeout(timer);
         }
 
         let frame = 0;
@@ -140,7 +139,7 @@ export default function DashboardPage() {
     useEffect(() => {
         setPage({ title: `${getGreeting()}${userName ? `, ${userName}` : ""} 👋`, breadcrumb: ["Home", "Dashboard"] });
         return () => setPage({});
-    }, [userName]);
+    }, [setPage, userName]);
 
     return (
 

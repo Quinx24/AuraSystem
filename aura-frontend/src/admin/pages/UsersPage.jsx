@@ -169,9 +169,7 @@ export default function UsersPage() {
     useEffect(() => {
         setPage({ title: "Users", breadcrumb: ["Admin", "Users"] });
         return () => setPage({});
-        // Page meta follows the existing admin page pattern; setPage is not stable.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [setPage]);
 
     useEffect(() => {
         const timer = setTimeout(() => {

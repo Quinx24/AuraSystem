@@ -18,7 +18,6 @@ export default function SideQuestSuggestion({
 
             setAddedQuests((prev) => [...prev, questId]);
         } catch (error) {
-            console.error(error);
 
             alert(
                 error.response?.data?.message ??

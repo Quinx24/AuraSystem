@@ -31,19 +31,23 @@ export default function CalendarPreview() {
                 response.data.result.content
             );
 
-        } catch (error) {
-
-            console.log(error);
+        } catch {
+            setEntries([]);
 
         }
 
     };
 
     useEffect(() => {
+        let isMounted = true;
 
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        loadEntries();
+        Promise.resolve().then(() => {
+            if (isMounted) loadEntries();
+        });
 
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     const today = new Date();

@@ -1,6 +1,6 @@
 import { Shield, User } from "lucide-react";
 
-export default function RoleMismatchDialog({ isOpen, onClose, onSwitch, currentRole, accountRole }) {
+export default function RoleMismatchDialog({ isOpen, onClose, onSwitch, accountRole }) {
     if (!isOpen) return null;
 
     const isAdminAccount = accountRole === "ADMIN";

@@ -25,9 +25,8 @@ export default function SideQuestPreview() {
                 );
 
             }
-            catch (error) {
-
-                console.log(error);
+            catch {
+                setTodayQuest([]);
 
             }
 

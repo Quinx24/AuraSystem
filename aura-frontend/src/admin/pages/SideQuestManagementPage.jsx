@@ -220,9 +220,7 @@ export default function SideQuestManagementPage() {
         });
 
         return () => setPage({});
-        // Page meta follows the existing admin page pattern; setPage is not stable.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [setPage]);
 
     useEffect(() => {
         const timer = setTimeout(() => {

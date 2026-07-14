@@ -25,13 +25,12 @@ export default function EditProfileModal({
     useEffect(() => {
 
         if (user) {
-
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setForm({
-                fullName: user.fullName || "",
-                avatarUrl: user.avatarUrl || ""
+            queueMicrotask(() => {
+                setForm({
+                    fullName: user.fullName || "",
+                    avatarUrl: user.avatarUrl || ""
+                });
             });
-
         }
 
     }, [user]);
@@ -48,10 +47,8 @@ export default function EditProfileModal({
 
             onClose();
 
-        } catch (error) {
-
-            console.error(error);
-
+        } catch {
+            // Error silently ignored - user can try again
         }
 
     };

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import AdminSidebar from "../components/AdminSidebar";
 import Header from "../../components/Header";
-import { PageMetaProvider } from "../../contexts/PageMetaContext";
+import PageMetaProvider from "../../contexts/PageMetaProvider";
 
 export default function AdminLayout() {
     const [collapsed, setCollapsed] = useState(false);

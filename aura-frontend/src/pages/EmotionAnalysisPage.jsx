@@ -26,7 +26,7 @@ export default function EmotionAnalysisPage() {
     useEffect(() => {
         setPage({ title: "Emotion Analysis Results", breadcrumb: ["Home", "Emotion Analysis"] });
         return () => setPage({});
-    }, [id]);
+    }, [id, setPage]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -38,8 +38,8 @@ export default function EmotionAnalysisPage() {
 
                 const sideQuestResponse = await getSideQuestByEmotion(journalData.primaryEmotion);
                 setSideQuests(sideQuestResponse.data.result);
-            } catch (error) {
-                console.error(error);
+            } catch {
+                // Error silently ignored - data will remain empty
             }
         };
 

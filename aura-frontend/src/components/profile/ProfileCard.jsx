@@ -38,8 +38,13 @@ export default function ProfileCard() {
         try {
             const response = await getCurrentUser();
             setUser(response.data.result);
-        } catch (error) {
-            console.error(error);
+        } catch {
+            setUser({
+                fullName: "",
+                email: "",
+                avatarUrl: null,
+                createdAt: null,
+            });
         }
     };
 
@@ -47,15 +52,28 @@ export default function ProfileCard() {
         try {
             const data = await getLevel();
             setLevel(data);
-        } catch (error) {
-            console.error(error);
+        } catch {
+            setLevel({
+                level: 1,
+                xp: 0,
+                requiredXp: 100,
+                progress: 0,
+            });
         }
     };
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        loadUser();
-        loadLevel();
+        let isMounted = true;
+
+        Promise.resolve().then(() => {
+            if (!isMounted) return;
+            loadUser();
+            loadLevel();
+        });
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     return (
