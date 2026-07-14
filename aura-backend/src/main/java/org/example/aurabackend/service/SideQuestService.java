@@ -48,6 +48,7 @@ public class SideQuestService {
         Collections.shuffle(sideQuests);
 
         return sideQuests.stream()
+                .filter(sideQuest -> !Boolean.FALSE.equals(sideQuest.getPublished()))
                 .limit(3)
                 .map(this::mapToResponse)
                 .toList();
@@ -57,6 +58,7 @@ public class SideQuestService {
 
         return sideQuestRepository.findAll()
                 .stream()
+                .filter(sideQuest -> !Boolean.FALSE.equals(sideQuest.getPublished()))
                 .map(this::mapToResponse)
                 .toList();
     }
@@ -72,6 +74,7 @@ public class SideQuestService {
 
         return sideQuestRepository.findAll(specification, resolveSort(sort))
                 .stream()
+                .filter(sideQuest -> !Boolean.FALSE.equals(sideQuest.getPublished()))
                 .map(this::mapToResponse)
                 .toList();
     }

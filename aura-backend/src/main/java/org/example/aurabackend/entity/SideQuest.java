@@ -1,6 +1,7 @@
 package org.example.aurabackend.entity;
 
 import org.example.aurabackend.enumeration.Emotion;
+import org.example.aurabackend.enumeration.Difficulty;
 import org.example.aurabackend.enumeration.SideQuestCategory;
 
 import jakarta.persistence.Column;
@@ -46,4 +47,13 @@ public class SideQuest {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SideQuestCategory category;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    @Builder.Default
+    private Difficulty difficulty = Difficulty.EASY;
+
+    @Column
+    @Builder.Default
+    private Boolean published = true;
 }

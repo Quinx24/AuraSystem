@@ -64,4 +64,8 @@ public class User {
     @Builder.Default
     private Role role = Role.USER;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean locked = false;
+
 }

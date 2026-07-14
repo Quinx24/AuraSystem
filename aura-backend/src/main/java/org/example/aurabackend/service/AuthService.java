@@ -32,6 +32,10 @@ public class AuthService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_NOT_FOUND));
 
+        if (Boolean.TRUE.equals(user.getLocked())) {
+            throw new AppException(ErrorCode.ACCOUNT_LOCKED);
+        }
+
         if (!passwordEncoder.matches(
                 request.getPassword(),
                 user.getPassword())) {

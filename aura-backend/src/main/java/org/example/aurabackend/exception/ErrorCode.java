@@ -41,7 +41,9 @@ public enum ErrorCode {
 
     NEW_PASSWORD_MUST_BE_DIFFERENT(1017, "New password must be different from current password"),
 
-    INSPIRATION_PROMPT_NOT_FOUND(1018, "Inspiration prompt not found");
+    INSPIRATION_PROMPT_NOT_FOUND(1018, "Inspiration prompt not found"),
+
+    ACCOUNT_LOCKED(1019, "Account is locked");
 
     private final int code; // Mã lỗi, được sử dụng để xác định loại lỗi cụ thể
     private final String message; // Thông điệp lỗi, cung cấp mô tả chi tiết về lỗi để người dùng hoặc nhà phát triển có thể hiểu được vấn đề đã xảy ra

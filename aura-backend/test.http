@@ -74,12 +74,12 @@ GET http://localhost:8080/side-quests/emotion/SAD
 GET http://localhost:8080/side-quests
 
 ### Test for register
-POST https://aurasystem-production-5536.up.railway.app/auth/register
+POST http://localhost:8080/auth/register
 Content-Type: application/json
 
 {
     "fullName": "Hoàng Uyên",
-    "email": "uyen@gmail.com",
+    "email": "Admin@gmail.com",
     "password": "12345678"
 }
 
@@ -88,7 +88,7 @@ POST https://aurasystem-production-5536.up.railway.app/auth/login
 Content-Type: application/json
 
 {
-    "email": "uyen@gmail.com",
+    "email": "Admin@gmail.com",
     "password": "12345678"
 }
 
@@ -130,8 +130,8 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-    "email":"test@gmail.com",
-    "password":"123"
+    "email":"Admin@gmail.com",
+    "password":"12345678"
 }
 
 ### Test for completing a user side quest
@@ -182,3 +182,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhd
 ###
 GET http://localhost:8080/inspiration-prompts/random?limit=5
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTc4MzQ4MTk0NCwiZXhwIjoxNzg0MDg2NzQ0fQ.P8NAM4gf4EDPzHt54Ykpv4Q1ODsk2cCvgaCFK5HOitc
+
+###
+GET http://localhost:8080/admin/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3ODQwMTQxMTcsImV4cCI6MTc4NDAxNzcxN30.dnDhwu-mSBjli2-TYxtzwei3I5lYFl2zdB36-kdxeqA
+Content-Type: application/json

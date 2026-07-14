@@ -29,4 +29,6 @@ public interface UserSideQuestRepository extends JpaRepository<UserSideQuest, Lo
         User user, 
         boolean completed
     );
+
+    long countByCompleted(boolean completed);
 }
