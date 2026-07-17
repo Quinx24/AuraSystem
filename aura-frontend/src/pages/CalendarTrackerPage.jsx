@@ -97,7 +97,7 @@ export default function CalendarTrackerPage() {
                 `}
                 onClick={() => {
                     if (entry) {
-                        navigate(`/emotion-analysis/${entry.id}`);
+                        navigate(`/journal-history/${entry.id}`);
                     }
                 }}
             >
