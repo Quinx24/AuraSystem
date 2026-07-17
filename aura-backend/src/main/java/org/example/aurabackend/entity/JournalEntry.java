@@ -48,6 +48,9 @@ public class JournalEntry {
     @Column(length = 300)
     private String noteToSelf;
 
+    @Column(length = 500)
+    private String memoryPhotoUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(length = 50)
     private Emotion primaryEmotion;

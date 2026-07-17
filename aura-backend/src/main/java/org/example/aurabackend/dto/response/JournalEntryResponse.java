@@ -19,6 +19,8 @@ public class JournalEntryResponse {
 
     private String noteToSelf;
 
+    private String memoryPhoto;
+
     private Emotion primaryEmotion;
 
     private Double confidence;
@@ -30,4 +32,6 @@ public class JournalEntryResponse {
     private Set<String> tags;
 
     private List<JournalEmotionResponse> emotions;
+
+    private List<JournalSideQuestResponse> sideQuests;
 }

@@ -3,6 +3,7 @@ package org.example.aurabackend.entity;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,6 +36,10 @@ public class UserSideQuest {
     @ManyToOne
     @JoinColumn(name = "side_quest_id")
     private SideQuest sideQuest;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "journal_entry_id")
+    private JournalEntry journalEntry;
 
     private Boolean completed;
 

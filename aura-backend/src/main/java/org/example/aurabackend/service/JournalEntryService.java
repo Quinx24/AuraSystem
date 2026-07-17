@@ -6,16 +6,23 @@ import org.example.aurabackend.dto.request.JournalEntryCreationRequest;
 import org.example.aurabackend.dto.response.EmotionResponse;
 import org.example.aurabackend.dto.response.JournalEmotionResponse;
 import org.example.aurabackend.dto.response.JournalEntryResponse;
+import org.example.aurabackend.dto.response.JournalSideQuestResponse;
 import org.springframework.stereotype.Service;
 import org.example.aurabackend.repository.JournalEmotionRepository;
 import org.example.aurabackend.repository.JournalEntryRepository;
+import org.example.aurabackend.repository.SideQuestRepository;
 import org.example.aurabackend.repository.TagRepository;
+import org.example.aurabackend.repository.UserSideQuestRepository;
 
 import lombok.RequiredArgsConstructor;
 
 import org.example.aurabackend.entity.JournalEmotion;
 import org.example.aurabackend.entity.JournalEntry;
+import org.example.aurabackend.entity.SideQuest;
 import org.example.aurabackend.entity.Tag;
+import org.example.aurabackend.entity.UserSideQuest;
+
+import org.example.aurabackend.enumeration.Emotion;
 
 import java.util.List;
 import java.util.Set;
@@ -40,13 +47,18 @@ public class JournalEntryService {
     private final JournalEmotionRepository journalEmotionRepository;
     private final CurrentUserService currentUserService;
     private final StreakService streakService;
+    private final UserSideQuestRepository userSideQuestRepository;
+    private final SideQuestRepository sideQuestRepository;
 
     // Map JournalEntry entity to JournalEntryResponse DTO
     private JournalEntryResponse mapToResponse(JournalEntry entry) {
+        List<UserSideQuest> userSideQuests = userSideQuestRepository.findByJournalEntry(entry);
+
         return JournalEntryResponse.builder()
                 .id(entry.getId())
                 .journalContent(entry.getJournalContent())
                 .noteToSelf(entry.getNoteToSelf())
+                .memoryPhoto(entry.getMemoryPhotoUrl())
                 .primaryEmotion(entry.getPrimaryEmotion())
                 .confidence(entry.getConfidence())
                 .createdAt(entry.getCreatedAt())
@@ -70,6 +82,22 @@ public class JournalEntryService {
                                         .map(e -> JournalEmotionResponse.builder()
                                                 .emotion(e.getEmotion())
                                                 .score(e.getScore())
+                                                .build())
+                                        .toList())
+                .sideQuests(
+                        userSideQuests == null
+                                ? List.of()
+                                : userSideQuests
+                                        .stream()
+                                        .map(uq -> JournalSideQuestResponse.builder()
+                                                .id(uq.getId())
+                                                .sideQuestId(uq.getSideQuest().getId())
+                                                .title(uq.getSideQuest().getTitle())
+                                                .description(uq.getSideQuest().getDescription())
+                                                .xpReward(uq.getSideQuest().getXpReward())
+                                                .category(uq.getSideQuest().getCategory())
+                                                .completed(uq.getCompleted())
+                                                .completedDate(uq.getCompletedDate())
                                                 .build())
                                         .toList())
                 .build();
@@ -111,6 +139,7 @@ public class JournalEntryService {
         JournalEntry newEntry = JournalEntry.builder()
                 .journalContent(request.getJournalContent())
                 .noteToSelf(request.getNoteToSelf())
+                .memoryPhotoUrl(request.getMemoryPhoto())
                 .primaryEmotion(emotion.getEmotion())
                 .confidence(emotion.getConfidence())
                 .tags(tags)
@@ -136,7 +165,40 @@ public class JournalEntryService {
                             .add(journalEmotion);
                 });
 
+        // Assign random side quests based on journal emotion
+        assignSideQuestsToJournal(savedEntry, emotion.getEmotion(), user);
+
         return mapToResponse(savedEntry);
+    }
+
+    private void assignSideQuestsToJournal(JournalEntry journalEntry, Emotion emotion, User user) {
+        List<SideQuest> availableQuests = sideQuestRepository.findByEmotion(emotion);
+
+        // Shuffle and limit to 3 quests
+        java.util.Collections.shuffle(availableQuests);
+        List<SideQuest> selectedQuests = availableQuests.stream()
+                .filter(sideQuest -> !Boolean.FALSE.equals(sideQuest.getPublished()))
+                .limit(3)
+                .toList();
+
+        // Create UserSideQuest records with journal reference
+        for (SideQuest sideQuest : selectedQuests) {
+            // Check if this quest is already assigned to this journal
+            boolean alreadyAssigned = userSideQuestRepository
+                    .existsByUserAndSideQuestAndJournalEntry(user, sideQuest, journalEntry);
+
+            if (!alreadyAssigned) {
+                UserSideQuest userSideQuest = UserSideQuest.builder()
+                        .user(user)
+                        .sideQuest(sideQuest)
+                        .journalEntry(journalEntry)
+                        .completed(false)
+                        .assignedDate(java.time.LocalDate.now())
+                        .build();
+
+                userSideQuestRepository.save(userSideQuest);
+            }
+        }
     }
 
     // Get a journal entry by its ID

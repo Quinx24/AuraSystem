@@ -8,94 +8,55 @@ import EmotionChartCard from "../components/journal/EmotionChartCard";
 import MemoryCard from "../components/journal/MemoryCard";
 import NoteCard from "../components/journal/NoteCard";
 import RelatedCard from "../components/journal/RelatedCard";
+import { getJournalEntryById } from "../services/journalService";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 export default function JournalHistoryPage() {
 
-    const journal = {
+    const { id } = useParams();
+    const [journal, setJournal] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-        id: 1,
-
-        journalContent:
-            `Today was one of the most productive days I've had this week.
-
-I finished implementing the Journal History feature and successfully refactored several reusable components. Although there were still a few bugs to fix, I felt motivated and excited because everything was gradually coming together.
-
-Tomorrow I want to continue improving the Calendar Tracker and connect it with the backend API.`,
-
-        noteToSelf:
-            "Keep coding consistently. Small improvements every day will eventually become something great.",
-
-        primaryEmotion: "HAPPY",
-
-        confidence: 0.91,
-
-        createdAt: "2026-07-07T09:30:00",
-
-        updatedAt: "2026-07-07T10:15:00",
-
-        memoryPhoto: null,
-
-        tags: [
-            "Coding",
-            "Project",
-            "Growth"
-        ],
-
-        emotions: [
-
-            {
-                emotion: "HAPPY",
-                score: 0.91
-            },
-
-            {
-                emotion: "EXCITED",
-                score: 0.73
-            },
-
-            {
-                emotion: "NEUTRAL",
-                score: 0.48
-            },
-
-            {
-                emotion: "STRESS",
-                score: 0.21
-            },
-
-            {
-                emotion: "ANXIETY",
-                score: 0.09
+    useEffect(() => {
+        const fetchJournal = async () => {
+            try {
+                setLoading(true);
+                const response = await getJournalEntryById(id);
+                setJournal(response.data.result);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
             }
+        };
 
-        ]
-
-    };
-
-    const completedQuests = [
-
-        {
-            id: 1,
-            title: "Drink 2L Water",
-            description: "Stay hydrated throughout the day.",
-            completedAt: "08:30"
-        },
-
-        {
-            id: 2,
-            title: "Read 20 Minutes",
-            description: "Continue reading Atomic Habits.",
-            completedAt: "15:20"
-        },
-
-        {
-            id: 3,
-            title: "Go For A Walk",
-            description: "Walk outside for 15 minutes.",
-            completedAt: "18:45"
+        if (id) {
+            fetchJournal();
         }
+    }, [id]);
 
-    ];
+    if (loading) {
+        return <div className="p-8">Loading journal...</div>;
+    }
+
+    if (error) {
+        return <div className="p-8 text-red-500">Error: {error}</div>;
+    }
+
+    if (!journal) {
+        return <div className="p-8">Journal not found</div>;
+    }
+
+    const completedQuests = journal.sideQuests
+        ?.filter(q => q.completed)
+        ?.map(q => ({
+            id: q.id,
+            title: q.title,
+            description: q.description,
+            completedAt: q.completedDate ? new Date(q.completedDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : null
+        })) || [];
 
     const wordCount =
         journal.journalContent.trim().split(/\s+/).length;

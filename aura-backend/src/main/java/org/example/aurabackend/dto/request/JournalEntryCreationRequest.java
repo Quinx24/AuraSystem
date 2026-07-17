@@ -12,5 +12,7 @@ public class JournalEntryCreationRequest {
 
     private String noteToSelf;
 
+    private String memoryPhoto;
+
     private Set<String> tags;
 }

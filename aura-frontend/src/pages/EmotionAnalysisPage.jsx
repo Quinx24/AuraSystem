@@ -1,7 +1,4 @@
 import { useEffect, useState } from "react";
-import {
-    getSideQuestByEmotion
-} from "../services/sideQuestService";
 import { getJournalEntryById } from "../services/journalService";
 import { useParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
@@ -17,8 +14,6 @@ export default function EmotionAnalysisPage() {
 
     const [journal, setJournal] = useState(null);
 
-    const [sideQuests, setSideQuests] = useState([]);
-
     const { id } = useParams();
 
     const { setPage } = usePageMeta();
@@ -32,12 +27,7 @@ export default function EmotionAnalysisPage() {
         const loadData = async () => {
             try {
                 const response = await getJournalEntryById(id);
-
-                const journalData = response.data.result;
-                setJournal(journalData);
-
-                const sideQuestResponse = await getSideQuestByEmotion(journalData.primaryEmotion);
-                setSideQuests(sideQuestResponse.data.result);
+                setJournal(response.data.result);
             } catch {
                 // Error silently ignored - data will remain empty
             }
@@ -118,7 +108,7 @@ export default function EmotionAnalysisPage() {
                     {/* SIDE-QUESTS SUGGESTION  */}
 
                     <SideQuestSuggestion
-                        sideQuests={sideQuests}
+                        sideQuests={journal.sideQuests || []}
                     />
 
                 </div>
