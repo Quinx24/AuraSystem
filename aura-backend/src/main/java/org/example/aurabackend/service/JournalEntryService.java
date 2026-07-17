@@ -235,6 +235,7 @@ public class JournalEntryService {
 
         entry.setJournalContent(request.getJournalContent());
         entry.setNoteToSelf(request.getNoteToSelf());
+        entry.setMemoryPhotoUrl(request.getMemoryPhoto());
 
         EmotionResponse emotion = emotionService.predictEmotion(
                 request.getJournalContent());

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Save, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import { createJournalEntry, getJournalEntries } from "../services/journalService";
+import { useNavigate, useParams } from "react-router-dom";
+import { createJournalEntry, getJournalEntries, getJournalEntryById, updateJournalEntry } from "../services/journalService";
 import { getRandomPrompts } from "../services/inspirationPromptService";
 import { getStreak } from "../services/streakService";
 import JournalEditor from "../components/journal/JournalEditor";
@@ -14,12 +14,15 @@ import TagSection from "../components/journal/TagSection";
 import PageIntroduction from "../components/PageIntroduction";
 import { getAllTags } from "../services/tagService";
 import { usePageMeta } from "../contexts/PageMetaContext";
+import { uploadImage } from "../services/uploadService";
 
 const MAX_SELECTED_TAGS = 10;
 const PROMPT_LIMIT = 3;
 
 export default function JournalPage() {
     const navigate = useNavigate();
+    const { id } = useParams();
+    const isEditMode = Boolean(id);
     const [journalContent, setJournalContent] = useState("");
     const [noteToSelf, setNoteToSelf] = useState("");
     const [showTagModal, setShowTagModal] = useState(false);
@@ -81,8 +84,14 @@ export default function JournalPage() {
     useEffect(() => {
         let isMounted = true;
 
-        Promise.allSettled([getAllTags(), getJournalEntries(), getStreak()])
-            .then(([tagsResult, journalsResult, streakResult]) => {
+        const loadData = async () => {
+            try {
+                const [tagsResult, journalsResult, streakResult] = await Promise.allSettled([
+                    getAllTags(),
+                    getJournalEntries(),
+                    getStreak()
+                ]);
+
                 if (!isMounted) return;
 
                 if (tagsResult.status === "fulfilled") {
@@ -97,13 +106,30 @@ export default function JournalPage() {
                 if (failedRequest) {
                     toast.error(failedRequest.reason?.response?.data?.message ?? "Failed to load journal data.");
                 }
-            })
-            .finally(() => {
+
+                // Load existing journal if in edit mode
+                if (isEditMode && id) {
+                    try {
+                        const journalResponse = await getJournalEntryById(id);
+                        const journalData = journalResponse.data.result;
+                        setJournalContent(journalData.journalContent || "");
+                        setNoteToSelf(journalData.noteToSelf || "");
+                        setSelectedTags(journalData.tags || []);
+                        setMemoryPhotoPreview(journalData.memoryPhoto || null);
+                    } catch (err) {
+                        toast.error(err.response?.data?.message || "Failed to load journal entry.");
+                        navigate("/journal");
+                    }
+                }
+            } finally {
                 if (isMounted) setIsInitialLoading(false);
-            });
+            }
+        };
+
+        loadData();
 
         return () => { isMounted = false; };
-    }, []);
+    }, [id, isEditMode, navigate]);
 
     const { setPage } = usePageMeta();
 
@@ -186,19 +212,43 @@ export default function JournalPage() {
             isSavingRef.current = true;
             setIsSaving(true);
 
-            const response = await createJournalEntry({ journalContent, noteToSelf, tags: selectedTags, memoryPhoto: memoryPhotoPreview });
-            const journalId = response.data?.result?.id;
+            const uploadedMemoryPhoto = memoryPhotoFileRef.current
+                ? await uploadImage(memoryPhotoFileRef.current)
+                : memoryPhotoPreview;
 
-            if (journalId === null || journalId === undefined) {
-                toast.error("Journal saved, but emotion analysis could not be opened.");
-                return;
+            const journalData = {
+                journalContent,
+                noteToSelf,
+                tags: selectedTags,
+                memoryPhoto: uploadedMemoryPhoto,
+            };
+
+            if (isEditMode && id) {
+                // Update existing journal
+                await updateJournalEntry(id, journalData);
+                toast.success("Journal updated successfully.");
+                await getStreak();
+                resetJournalForm();
+                navigate(`/journal-history/${id}`, {
+                    replace: true,
+                    state: { refreshAt: Date.now() },
+                });
+            } else {
+                // Create new journal
+                const response = await createJournalEntry(journalData);
+                const journalId = response.data?.result?.id;
+
+                if (journalId === null || journalId === undefined) {
+                    toast.error("Journal saved, but emotion analysis could not be opened.");
+                    return;
+                }
+
+                await getStreak();
+                resetJournalForm();
+                navigate(`/emotion-analysis/${journalId}`);
             }
-
-            await getStreak();
-            resetJournalForm();
-            navigate(`/emotion-analysis/${journalId}`);
         } catch (error) {
-            toast.error(error.response?.data?.message ?? "Failed to save journal entry. Please try again.");
+            toast.error(error.response?.data?.message ?? (isEditMode ? "Failed to update journal entry." : "Failed to save journal entry. Please try again."));
         } finally {
             isSavingRef.current = false;
             setIsSaving(false);
@@ -216,7 +266,7 @@ export default function JournalPage() {
                             className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-violet-700 px-6 py-3 font-semibold text-white transition-all duration-200 hover:from-violet-700 hover:to-violet-800 disabled:cursor-not-allowed disabled:opacity-70 disabled:shadow-none shadow-md shadow-violet-200"
                         >
                             {isSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-                            {isSaving ? "Analyzing Emotion..." : "Save Entry"}
+                            {isSaving ? (isEditMode ? "Updating..." : "Analyzing Emotion...") : (isEditMode ? "Update Journal" : "Save Entry")}
                         </button>
                     }
                 />

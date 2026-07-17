@@ -58,6 +58,12 @@ function App() {
         />
 
         <Route
+          path="/journal-history/:id/edit"
+          element={<JournalPage />}
+          handle={{ title: "Edit Journal", breadcrumb: ["Home", "Journal History", "Edit"] }}
+        />
+
+        <Route
           path="/calendar"
           element={<CalendarTrackerPage />}
           handle={{ title: "Calendar Tracker", breadcrumb: ["Home", "Calendar Tracker"] }}

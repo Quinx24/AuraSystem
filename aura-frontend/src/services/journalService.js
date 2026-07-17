@@ -16,3 +16,11 @@ export const getJournalEntries = async (
 export const getJournalEntryById = async (entryId) => {
     return axiosInstance.get(`/journal-entries/${entryId}`);
 }
+
+export const updateJournalEntry = async (entryId, entryData) => {
+    return axiosInstance.put(`/journal-entries/${entryId}`, entryData);
+}
+
+export const deleteJournalEntry = async (entryId) => {
+    return axiosInstance.delete(`/journal-entries/${entryId}`);
+}

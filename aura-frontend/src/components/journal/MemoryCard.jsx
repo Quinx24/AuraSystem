@@ -5,6 +5,11 @@ export default function MemoryCard({
     mode = "view",
     onPhotoChange
 }) {
+    const memoryPhotoValue = typeof memoryPhoto === "string" ? memoryPhoto : "";
+    const memoryPhotoSrc = memoryPhotoValue && !memoryPhotoValue.startsWith("blob:") && !memoryPhotoValue.startsWith("http")
+        ? `${import.meta.env.VITE_API_URL}${memoryPhotoValue}`
+        : memoryPhotoValue;
+
     return (
         <div
             className="
@@ -57,9 +62,9 @@ export default function MemoryCard({
                     border-violet-200
                 "
             >
-                {memoryPhoto && memoryPhoto.trim() !== "" ? (
+                {memoryPhotoSrc && memoryPhotoSrc.trim() !== "" ? (
                     <img
-                        src={memoryPhoto}
+                        src={memoryPhotoSrc}
                         alt="Memory"
                         className="h-full w-full max-w-full object-cover"
                     />
