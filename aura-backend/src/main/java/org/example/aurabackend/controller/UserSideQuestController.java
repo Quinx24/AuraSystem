@@ -8,6 +8,7 @@ import org.example.aurabackend.dto.response.UserSideQuestResponse;
 import org.example.aurabackend.entity.User;
 import org.example.aurabackend.service.CurrentUserService;
 import org.example.aurabackend.service.SideQuestService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,16 @@ public class UserSideQuestController {
 
         return ApiResponse.<Void>builder()
                 .message("Side-quest added successfully")
+                .build();
+    }
+
+    @DeleteMapping("/my-quests/{sideQuestId}")
+    public ApiResponse<Void> removeSideQuest(@PathVariable Long sideQuestId) {
+        User user = currentUserService.getCurrentUser();
+        sideQuestService.removeQuest(user, sideQuestId);
+
+        return ApiResponse.<Void>builder()
+                .message("Side-quest removed successfully")
                 .build();
     }
 

@@ -19,6 +19,12 @@ public interface UserSideQuestRepository extends JpaRepository<UserSideQuest, Lo
             SideQuest sideQuest
     );
 
+    boolean existsByUserAndSideQuestAndCompleted(
+            User user,
+            SideQuest sideQuest,
+            boolean completed
+    );
+
     boolean existsByUserAndSideQuestAndJournalEntry(
             User user,
             SideQuest sideQuest,
@@ -36,6 +42,12 @@ public interface UserSideQuestRepository extends JpaRepository<UserSideQuest, Lo
     List<UserSideQuest> findByUserAndCompleted(
         User user, 
         boolean completed
+    );
+
+    Optional<UserSideQuest> findByUserAndSideQuestAndCompleted(
+            User user,
+            SideQuest sideQuest,
+            boolean completed
     );
 
     List<UserSideQuest> findByJournalEntry(JournalEntry journalEntry);

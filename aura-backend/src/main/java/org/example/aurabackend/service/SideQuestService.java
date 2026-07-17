@@ -160,7 +160,7 @@ public class SideQuestService {
                         ErrorCode.SIDE_QUEST_NOT_EXISTED));
 
         boolean existed = userSideQuestRepository
-                .existsByUserAndSideQuest(user, sideQuest);
+                .existsByUserAndSideQuestAndCompleted(user, sideQuest, false);
 
         if (existed) {
             throw new AppException(
@@ -175,6 +175,19 @@ public class SideQuestService {
                 .build();
 
         userSideQuestRepository.save(userSideQuest);
+    }
+
+    public void removeQuest(User user, Long sideQuestId) {
+        SideQuest sideQuest = sideQuestRepository.findById(sideQuestId)
+                .orElseThrow(() -> new AppException(
+                        ErrorCode.SIDE_QUEST_NOT_EXISTED));
+
+        UserSideQuest userSideQuest = userSideQuestRepository
+                .findByUserAndSideQuestAndCompleted(user, sideQuest, false)
+                .orElseThrow(() -> new AppException(
+                        ErrorCode.USER_SIDE_QUEST_NOT_EXISTED));
+
+        userSideQuestRepository.delete(userSideQuest);
     }
 
     public void completeQuest(User user, Long userSideQuestId) {

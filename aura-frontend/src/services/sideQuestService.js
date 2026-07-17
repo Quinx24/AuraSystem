@@ -13,6 +13,10 @@ export const addSideQuest = async (sideQuestId) => {
     );
 };
 
+export const removeSideQuest = async (sideQuestId) => {
+    return axiosInstance.delete(`/user-side-quests/my-quests/${sideQuestId}`);
+};
+
 export const getTodayQuest = async () => {
     return axiosInstance.get("/user-side-quests/today");
 };

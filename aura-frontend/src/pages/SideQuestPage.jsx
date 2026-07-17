@@ -7,7 +7,8 @@ import {
     getTodayQuest,
     completeQuest,
     getCompletedQuest,
-    addSideQuest
+    addSideQuest,
+    removeSideQuest
 } from "../services/sideQuestService";
 import {
     CheckCircle2,
@@ -49,6 +50,8 @@ export default function SideQuestPage() {
     const [selectedCategory, setSelectedCategory] = useState(ALL_FILTER);
 
     const [selectedSort, setSelectedSort] = useState(DEFAULT_SORT);
+
+    const [pendingQuestIds, setPendingQuestIds] = useState(() => new Set());
 
     const latestQuestRequestId = useRef(0);
 
@@ -109,34 +112,61 @@ export default function SideQuestPage() {
     const handleCompleteQuest = async (id) => {
 
         try {
+            setPendingQuestIds((prev) => new Set(prev).add(id));
 
             await completeQuest(id);
 
-            await loadTodayQuest();
-
-            await loadCompletedQuest();
+            await Promise.all([
+                loadTodayQuest(),
+                loadCompletedQuest()
+            ]);
 
         } catch {
             alert("Complete quest failed.");
+
+        } finally {
+            setPendingQuestIds((prev) => {
+                const next = new Set(prev);
+                next.delete(id);
+                return next;
+            });
 
         }
 
     };
 
-    const handleAddSideQuest = async (sideQuestId) => {
+    const handleToggleSideQuest = async (sideQuestId, isInMyQuests) => {
         try {
+            setPendingQuestIds((prev) => new Set(prev).add(sideQuestId));
 
-            await addSideQuest(sideQuestId);
+            if (isInMyQuests) {
+                await removeSideQuest(sideQuestId);
+            } else {
+                await addSideQuest(sideQuestId);
+            }
 
-            await loadTodayQuest();
+            await Promise.all([
+                loadTodayQuest(),
+                loadCompletedQuest()
+            ]);
 
-            alert("Side quest added successfully!");
+            alert(
+                isInMyQuests
+                    ? "Side quest removed from My Quests."
+                    : "Side quest added successfully!"
+            );
 
         } catch (error) {
             alert(
                 error.response?.data?.message ??
-                "Failed to add side quest."
+                "Failed to update side quest."
             );
+        } finally {
+            setPendingQuestIds((prev) => {
+                const next = new Set(prev);
+                next.delete(sideQuestId);
+                return next;
+            });
         }
     };
 
@@ -185,7 +215,7 @@ export default function SideQuestPage() {
     }, [fetchSideQuests, selectedMood, selectedCategory, selectedSort]);
 
     const addedQuestIds = new Set(
-        [...todayQuest, ...completedQuest].map((quest) => quest.sideQuestId)
+        todayQuest.map((quest) => quest.sideQuestId)
     );
 
     const currentQuests =
@@ -524,7 +554,8 @@ export default function SideQuestPage() {
                                         quest={quest}
                                         type="recommended"
                                         isAdded={addedQuestIds.has(quest.id)}
-                                        onAdd={handleAddSideQuest}
+                                        isBusy={pendingQuestIds.has(quest.id)}
+                                        onAdd={handleToggleSideQuest}
                                     />
                                 ))}
 
@@ -534,6 +565,7 @@ export default function SideQuestPage() {
                                         key={quest.id}
                                         quest={quest}
                                         type="myQuest"
+                                        isBusy={pendingQuestIds.has(quest.id)}
                                         onComplete={handleCompleteQuest}
                                     />
                                 ))}

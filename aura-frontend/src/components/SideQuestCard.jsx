@@ -11,6 +11,7 @@ export default function SideQuestCard({
     quest,
     type = "recommended",
     isAdded = false,
+    isBusy = false,
     onComplete,
     onAdd,
 }) {
@@ -236,8 +237,8 @@ export default function SideQuestCard({
                     {
                         type === "recommended" && (
                             <button
-                                disabled={isAdded}
-                                onClick={() => onAdd?.(quest.id)}
+                                disabled={isBusy}
+                                onClick={() => onAdd?.(quest.id, isAdded)}
                                 className={
                                     `
                                     inline-flex
@@ -255,9 +256,10 @@ export default function SideQuestCard({
                                     duration-200
                                     ease-out
                                     ${isAdded
-                                        ? "bg-gray-100 text-gray-600 cursor-not-allowed hover:bg-gray-100 hover:shadow-none active:translate-y-0"
+                                        ? "bg-gray-100 text-gray-600 hover:bg-gray-200 hover:shadow-md active:translate-y-0"
                                         : "bg-violet-600 text-white hover:-translate-y-0.5 hover:bg-violet-700 hover:shadow-lg active:translate-y-0"
                                     }
+                                    ${isBusy ? "cursor-not-allowed opacity-70" : ""}
                                 `}
                             >
                                 {isAdded ? (
@@ -265,7 +267,7 @@ export default function SideQuestCard({
                                 ) : (
                                     <PlusCircle size={16} />
                                 )}
-                                {isAdded ? "Added to My Quests" : "Add to Side-Quest"}
+                                {isAdded ? "Added to My Quests" : "Add to My Quests"}
                             </button>
                         )
                     }
@@ -273,8 +275,9 @@ export default function SideQuestCard({
                     {
                         type === "myQuest" && (
                             <button
+                                disabled={isBusy}
                                 onClick={() => onComplete(quest.id)}
-                                className="
+                                className={`
                                     inline-flex
                                     items-center
                                     justify-center
@@ -295,7 +298,8 @@ export default function SideQuestCard({
                                     hover:bg-green-700
                                     hover:shadow-lg
                                     active:translate-y-0
-                                "
+                                    ${isBusy ? "cursor-not-allowed opacity-70" : ""}
+                                `}
                             >
                                 <CheckCircle size={16} />
                                 Complete
