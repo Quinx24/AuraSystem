@@ -1,6 +1,6 @@
 import { emotionConfig } from "../utils/emotionUtils";
 import { categoryConfig } from "../utils/sideQuestCategoryUtils";
-import { getAllSideQuests } from "../api/sideQuestApi";
+import { getAllSideQuests, getRecommendedSideQuests } from "../api/sideQuestApi";
 import { useCallback, useEffect, useRef, useState } from "react";
 import PageIntroduction from "../components/PageIntroduction";
 import {
@@ -65,16 +65,45 @@ export default function SideQuestPage() {
 
         try {
 
-            const data = await getAllSideQuests(filters);
+            const canUseRecommendations =
+                filters.category === ALL_FILTER &&
+                filters.sort === DEFAULT_SORT;
+
+            const data = canUseRecommendations
+                ? await getRecommendedSideQuests({
+                    emotion: filters.mood,
+                    limit: 3
+                })
+                : await getAllSideQuests(filters);
+
+            const normalizedQuests = canUseRecommendations
+                ? (data ?? []).map((result) => ({
+                    ...result.quest,
+                    recommendation: {
+                        score: result.score,
+                        explanations: result.explanations ?? [],
+                        confidence: result.confidence,
+                        recommendationTime: result.recommendationTime
+                    }
+                }))
+                : data ?? [];
 
             if (latestQuestRequestId.current === requestId) {
-                setQuests(data ?? []);
+                setQuests(normalizedQuests);
             }
 
         }
         catch {
-            if (latestQuestRequestId.current === requestId) {
-                setQuests([]);
+            try {
+                const fallbackData = await getAllSideQuests(filters);
+
+                if (latestQuestRequestId.current === requestId) {
+                    setQuests(fallbackData ?? []);
+                }
+            } catch {
+                if (latestQuestRequestId.current === requestId) {
+                    setQuests([]);
+                }
             }
 
         } finally {
@@ -555,6 +584,8 @@ export default function SideQuestPage() {
                                         type="recommended"
                                         isAdded={addedQuestIds.has(quest.id)}
                                         isBusy={pendingQuestIds.has(quest.id)}
+                                        explanations={quest.recommendation?.explanations}
+                                        confidence={quest.recommendation?.confidence}
                                         onAdd={handleToggleSideQuest}
                                     />
                                 ))}

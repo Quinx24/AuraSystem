@@ -3,8 +3,10 @@ package org.example.aurabackend.controller;
 import java.util.List;
 
 import org.example.aurabackend.dto.response.ApiResponse;
+import org.example.aurabackend.dto.response.RecommendationResult;
 import org.example.aurabackend.dto.response.SideQuestResponse;
 import org.example.aurabackend.enumeration.Emotion;
+import org.example.aurabackend.service.RecommendationService;
 import org.example.aurabackend.service.SideQuestService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class SideQuestController {
 
     private final SideQuestService sideQuestService;
+    private final RecommendationService recommendationService;
 
     @GetMapping("/emotion/{emotion}")
     public ApiResponse<List<SideQuestResponse>> getByEmotion(
@@ -35,6 +38,18 @@ public class SideQuestController {
 
         return ApiResponse.<List<SideQuestResponse>>builder()
                 .result(sideQuestService.getAll(mood, category, sort))
+                .build();
+    }
+
+    @GetMapping("/recommendations")
+    public ApiResponse<List<RecommendationResult>> getRecommendations(
+            @RequestParam(required = false) Emotion emotion,
+            @RequestParam(defaultValue = "3") int limit) {
+
+        int safeLimit = Math.max(1, Math.min(limit, 10));
+
+        return ApiResponse.<List<RecommendationResult>>builder()
+                .result(recommendationService.recommendQuestResults(emotion, safeLimit))
                 .build();
     }
 

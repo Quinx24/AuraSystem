@@ -1,44 +1,54 @@
 package org.example.aurabackend.service;
 
-import org.example.aurabackend.entity.User;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.example.aurabackend.dto.request.JournalEntryCreationRequest;
 import org.example.aurabackend.dto.response.EmotionResponse;
 import org.example.aurabackend.dto.response.JournalEmotionResponse;
 import org.example.aurabackend.dto.response.JournalEntryResponse;
 import org.example.aurabackend.dto.response.JournalSideQuestResponse;
-import org.springframework.stereotype.Service;
-import org.example.aurabackend.repository.JournalEmotionRepository;
-import org.example.aurabackend.repository.JournalEntryRepository;
-import org.example.aurabackend.repository.SideQuestRepository;
-import org.example.aurabackend.repository.TagRepository;
-import org.example.aurabackend.repository.UserSideQuestRepository;
-
-import lombok.RequiredArgsConstructor;
-
 import org.example.aurabackend.entity.JournalEmotion;
 import org.example.aurabackend.entity.JournalEntry;
-import org.example.aurabackend.entity.SideQuest;
 import org.example.aurabackend.entity.Tag;
+import org.example.aurabackend.entity.User;
 import org.example.aurabackend.entity.UserSideQuest;
-
-import org.example.aurabackend.enumeration.Emotion;
+import org.example.aurabackend.event.JournalCreatedEvent;
+import org.example.aurabackend.exception.AppException;
+import org.example.aurabackend.exception.ErrorCode;
+import org.example.aurabackend.repository.JournalEmotionRepository;
+import org.example.aurabackend.repository.JournalEntryRepository;
+import org.example.aurabackend.repository.TagRepository;
+import org.example.aurabackend.repository.UserSideQuestRepository;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.example.aurabackend.exception.AppException;
-import org.example.aurabackend.exception.ErrorCode;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-
-import org.springframework.transaction.annotation.Transactional;
-
+/**
+ * Manages journal entry CRUD and orchestrates the journal-creation pipeline.
+ *
+ * Responsibilities (this class only):
+ *   - Create, read, update, delete journal entries
+ *   - Resolve tags (upsert)
+ *   - Call EmotionService for emotion classification
+ *   - Call StreakService to update the user's streak
+ *   - Call QuestAssignmentService to assign side quests
+ *   - Map entities to response DTOs
+ *
+ * Side quest assignment logic was extracted to QuestAssignmentService
+ * (Milestone 0, Task 4) to satisfy the Single Responsibility Principle and
+ * to prepare for the PersonalisedQuestScorer introduced in Milestone 1.
+ */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class JournalEntryService {
 
     private final JournalEntryRepository journalEntryRepository;
@@ -48,9 +58,16 @@ public class JournalEntryService {
     private final CurrentUserService currentUserService;
     private final StreakService streakService;
     private final UserSideQuestRepository userSideQuestRepository;
-    private final SideQuestRepository sideQuestRepository;
+    private final QuestAssignmentService questAssignmentService;
+    private final ApplicationEventPublisher eventPublisher;
 
-    // Map JournalEntry entity to JournalEntryResponse DTO
+    // ─── Response mapping ────────────────────────────────────────────────────
+
+    /**
+     * Maps a JournalEntry entity to its API response DTO.
+     * Loads linked UserSideQuest records for this entry to populate
+     * the sideQuests[] field in the response.
+     */
     private JournalEntryResponse mapToResponse(JournalEntry entry) {
         List<UserSideQuest> userSideQuests = userSideQuestRepository.findByJournalEntry(entry);
 
@@ -75,10 +92,7 @@ public class JournalEntryService {
                                 ? List.of()
                                 : entry.getJournalEmotions()
                                         .stream()
-                                        .sorted(
-                                                (a, b) -> Double.compare(
-                                                        b.getScore(),
-                                                        a.getScore()))
+                                        .sorted((a, b) -> Double.compare(b.getScore(), a.getScore()))
                                         .map(e -> JournalEmotionResponse.builder()
                                                 .emotion(e.getEmotion())
                                                 .score(e.getScore())
@@ -103,38 +117,25 @@ public class JournalEntryService {
                 .build();
     }
 
-    // Create a new journal entry
+    // ─── Create ──────────────────────────────────────────────────────────────
+
+    /**
+     * Creates a new journal entry and runs the full pipeline:
+     * emotion analysis → tag upsert → save → streak update →
+     * emotion records → quest assignment.
+     *
+     * The entire pipeline runs within a single @Transactional boundary.
+     * Quest assignment is delegated to QuestAssignmentService.
+     */
     @Transactional
     public JournalEntryResponse createJournalEntry(JournalEntryCreationRequest request) {
+        long startedAt = System.nanoTime();
 
         User user = currentUserService.getCurrentUser();
 
-        EmotionResponse emotion = emotionService.predictEmotion(
-                request.getJournalContent());
+        EmotionResponse emotion = emotionService.predictEmotion(request.getJournalContent());
 
-        Set<Tag> tags = request.getTags() == null
-                ? Set.of()
-                : request.getTags()
-                        .stream()
-                        .map(tagName -> {
-
-                            Tag tag = tagRepository.findByName(tagName)
-                                    .orElseGet(() -> Tag.builder()
-                                            .name(tagName)
-                                            .usedCount(0)
-                                            .build());
-
-                            Integer usedCount = tag.getUsedCount();
-
-                            if (usedCount == null) {
-                                usedCount = 0;
-                            }
-
-                            tag.setUsedCount(usedCount + 1);
-
-                            return tagRepository.save(tag);
-                        })
-                        .collect(Collectors.toSet());
+        Set<Tag> tags = resolveTags(request.getTags());
 
         JournalEntry newEntry = JournalEntry.builder()
                 .journalContent(request.getJournalContent())
@@ -150,60 +151,27 @@ public class JournalEntryService {
 
         streakService.updateStreak();
 
-        emotion.getScores()
-                .forEach((emotionType, score) -> {
+        saveEmotionScores(emotion, savedEntry);
 
-                    JournalEmotion journalEmotion = JournalEmotion.builder()
-                            .emotion(emotionType)
-                            .score(score)
-                            .journalEntry(savedEntry)
-                            .build();
+        // Delegate quest selection and persistence to QuestAssignmentService
+        questAssignmentService.assignQuestsForJournal(savedEntry, emotion.getEmotion(), user);
 
-                    journalEmotionRepository.save(journalEmotion);
+        // Publish event for asynchronous extraction pipeline
+        // Event will be processed AFTER transaction commit by @TransactionalEventListener
+        log.info("event=JournalCreated journalEntryId={} userId={} emotion={}",
+                savedEntry.getId(), user.getId(), emotion.getEmotion());
+        eventPublisher.publishEvent(new JournalCreatedEvent(this, savedEntry));
 
-                    savedEntry.getJournalEmotions()
-                            .add(journalEmotion);
-                });
-
-        // Assign random side quests based on journal emotion
-        assignSideQuestsToJournal(savedEntry, emotion.getEmotion(), user);
+        log.info("event=JournalCreationCompleted journalEntryId={} userId={} latencyMs={}",
+                savedEntry.getId(), user.getId(), elapsedMillis(startedAt));
 
         return mapToResponse(savedEntry);
     }
 
-    private void assignSideQuestsToJournal(JournalEntry journalEntry, Emotion emotion, User user) {
-        List<SideQuest> availableQuests = sideQuestRepository.findByEmotion(emotion);
+    // ─── Read ────────────────────────────────────────────────────────────────
 
-        // Shuffle and limit to 3 quests
-        java.util.Collections.shuffle(availableQuests);
-        List<SideQuest> selectedQuests = availableQuests.stream()
-                .filter(sideQuest -> !Boolean.FALSE.equals(sideQuest.getPublished()))
-                .limit(3)
-                .toList();
-
-        // Create UserSideQuest records with journal reference
-        for (SideQuest sideQuest : selectedQuests) {
-            // Check if this quest is already assigned to this journal
-            boolean alreadyAssigned = userSideQuestRepository
-                    .existsByUserAndSideQuestAndJournalEntry(user, sideQuest, journalEntry);
-
-            if (!alreadyAssigned) {
-                UserSideQuest userSideQuest = UserSideQuest.builder()
-                        .user(user)
-                        .sideQuest(sideQuest)
-                        .journalEntry(journalEntry)
-                        .completed(false)
-                        .assignedDate(java.time.LocalDate.now())
-                        .build();
-
-                userSideQuestRepository.save(userSideQuest);
-            }
-        }
-    }
-
-    // Get a journal entry by its ID
+    /** Returns a single journal entry by id, scoped to the authenticated user. */
     public JournalEntryResponse getJournalEntryById(Long id) {
-
         User user = currentUserService.getCurrentUser();
 
         JournalEntry entry = journalEntryRepository.findByIdAndUser(id, user)
@@ -212,22 +180,23 @@ public class JournalEntryService {
         return mapToResponse(entry);
     }
 
-    // Get all journal entries for the current user
+    /** Returns a paginated list of journal entries for the authenticated user. */
     public Page<JournalEntryResponse> getAllEntries(int page, int size) {
-
         User user = currentUserService.getCurrentUser();
-
         Pageable pageable = PageRequest.of(page, size);
-
-        Page<JournalEntry> entries = journalEntryRepository.findByUser(user, pageable);
-
-        return entries.map(this::mapToResponse);
+        return journalEntryRepository.findByUser(user, pageable).map(this::mapToResponse);
     }
 
-    // Update a journal entry by its ID
+    // ─── Update ──────────────────────────────────────────────────────────────
+
+    /**
+     * Updates an existing journal entry.
+     * Re-runs emotion analysis on the new content.
+     * Note: quest assignment is NOT re-run on update — the original quests
+     * assigned at creation time are preserved.
+     */
     @Transactional
     public JournalEntryResponse updateJournalEntry(Long id, JournalEntryCreationRequest request) {
-
         User user = currentUserService.getCurrentUser();
 
         JournalEntry entry = journalEntryRepository.findByIdAndUser(id, user)
@@ -237,61 +206,79 @@ public class JournalEntryService {
         entry.setNoteToSelf(request.getNoteToSelf());
         entry.setMemoryPhotoUrl(request.getMemoryPhoto());
 
-        EmotionResponse emotion = emotionService.predictEmotion(
-                request.getJournalContent());
+        EmotionResponse emotion = emotionService.predictEmotion(request.getJournalContent());
 
         entry.setPrimaryEmotion(emotion.getEmotion());
         entry.setConfidence(emotion.getConfidence());
+        entry.setTags(resolveTags(request.getTags()));
 
-        Set<Tag> tags = request.getTags() == null
-                ? Set.of()
-                : request.getTags()
-                        .stream()
-                        .map(tagName -> {
-                            Tag tag = tagRepository.findByName(tagName)
-                                    .orElseGet(() -> Tag.builder()
-                                            .name(tagName)
-                                            .usedCount(0)
-                                            .build());
-                            return tagRepository.save(tag);
-                        })
-                        .collect(Collectors.toSet());
-
-        entry.setTags(tags);
-
-        journalEmotionRepository.deleteAll(
-                entry.getJournalEmotions());
-
+        journalEmotionRepository.deleteAll(entry.getJournalEmotions());
         entry.getJournalEmotions().clear();
 
         JournalEntry updatedEntry = journalEntryRepository.save(entry);
 
-        emotion.getScores()
-                .forEach((emotionType, score) -> {
-
-                    JournalEmotion journalEmotion = JournalEmotion.builder()
-                            .emotion(emotionType)
-                            .score(score)
-                            .journalEntry(updatedEntry)
-                            .build();
-
-                    journalEmotionRepository.save(journalEmotion);
-
-                    updatedEntry
-                            .getJournalEmotions()
-                            .add(journalEmotion);
-                });
+        saveEmotionScores(emotion, updatedEntry);
 
         return mapToResponse(updatedEntry);
     }
 
-    // Delete a journal entry by its ID
-    public void deleteJournalEntry(Long id) {
+    // ─── Delete ──────────────────────────────────────────────────────────────
 
+    /** Deletes a journal entry owned by the authenticated user. */
+    public void deleteJournalEntry(Long id) {
         User user = currentUserService.getCurrentUser();
 
         JournalEntry entry = journalEntryRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new AppException(ErrorCode.JOURNAL_ENTRY_NOT_FOUND));
+
         journalEntryRepository.delete(entry);
+    }
+
+    // ─── Private helpers ─────────────────────────────────────────────────────
+
+    /**
+     * Resolves tag names to persisted Tag entities.
+     * Creates the tag if it does not yet exist; increments usedCount on each use.
+     */
+    private Set<Tag> resolveTags(Set<String> tagNames) {
+        if (tagNames == null) {
+            return Set.of();
+        }
+
+        return tagNames.stream()
+                .map(tagName -> {
+                    Tag tag = tagRepository.findByName(tagName)
+                            .orElseGet(() -> Tag.builder()
+                                    .name(tagName)
+                                    .usedCount(0)
+                                    .build());
+
+                    int usedCount = tag.getUsedCount() == null ? 0 : tag.getUsedCount();
+                    tag.setUsedCount(usedCount + 1);
+
+                    return tagRepository.save(tag);
+                })
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Persists one JournalEmotion score record per emotion class returned
+     * by the emotion service (up to 7 records for a 7-class model).
+     */
+    private void saveEmotionScores(EmotionResponse emotion, JournalEntry entry) {
+        emotion.getScores().forEach((emotionType, score) -> {
+            JournalEmotion journalEmotion = JournalEmotion.builder()
+                    .emotion(emotionType)
+                    .score(score)
+                    .journalEntry(entry)
+                    .build();
+
+            journalEmotionRepository.save(journalEmotion);
+            entry.getJournalEmotions().add(journalEmotion);
+        });
+    }
+
+    private long elapsedMillis(long startedAt) {
+        return (System.nanoTime() - startedAt) / 1_000_000;
     }
 }

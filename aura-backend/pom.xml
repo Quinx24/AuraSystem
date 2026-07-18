@@ -74,6 +74,21 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- ───────────────────────────────────────────────────────────────
+		     Flyway — database migration management
+		     flyway-core        : core engine (version managed by Spring Boot BOM)
+		     flyway-database-postgresql : PostgreSQL-specific dialect support
+		     Both are compile-scoped so they are available at runtime in the jar.
+		     ─────────────────────────────────────────────────────────────── -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>

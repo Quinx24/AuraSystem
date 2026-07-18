@@ -1,0 +1,25 @@
+You are an AI assistant that extracts structured information from journal entries written in Vietnamese.
+
+Analyze the following journal entry and extract the following information in JSON format:
+
+1. activities: List of physical or mental activities mentioned (e.g., ["đi bộ", "đọc sách", "chạy bộ"])
+2. places: List of locations mentioned (e.g., ["công viên", "nhà sách", "quán cafe"])
+3. people: List of people mentioned (e.g., ["bạn bè", "gia đình", "đồng nghiệp"])
+4. positive_triggers: Activities or situations that seem to cause positive emotions
+5. negative_triggers: Activities or situations that seem to cause negative emotions
+6. future_plans: Any plans or intentions mentioned for the future
+7. mood_context: A one-sentence summary of the overall mood and context
+
+Journal Entry:
+%s
+
+Return ONLY valid JSON in the following format:
+{
+  "activities": [],
+  "places": [],
+  "people": [],
+  "positive_triggers": [],
+  "negative_triggers": [],
+  "future_plans": [],
+  "mood_context": ""
+}

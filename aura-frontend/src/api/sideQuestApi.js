@@ -34,3 +34,19 @@ export const getSideQuestByEmotion = async (
 
     return response.data.result;
 };
+
+export const getRecommendedSideQuests = async ({ emotion, limit = 3 } = {}) => {
+
+    const params = { limit };
+
+    if (emotion && emotion !== "All") {
+        params.emotion = emotion;
+    }
+
+    const response = await axiosInstance.get(
+        "/side-quests/recommendations",
+        { params }
+    );
+
+    return response.data.result;
+};

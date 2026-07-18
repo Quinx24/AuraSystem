@@ -12,6 +12,8 @@ export default function SideQuestCard({
     type = "recommended",
     isAdded = false,
     isBusy = false,
+    explanations = [],
+    confidence,
     onComplete,
     onAdd,
 }) {
@@ -196,6 +198,18 @@ export default function SideQuestCard({
                             </span>
 
                         </div>
+
+                        {type === "recommended" && explanations.length > 0 && (
+                            <div className="mt-3 rounded-2xl bg-violet-50/60 px-3 py-2 text-xs font-medium text-violet-600">
+                                <div>{explanations[0]}</div>
+
+                                {confidence !== undefined && confidence !== null && (
+                                    <div className="mt-1 text-[11px] text-violet-500">
+                                        Confidence {Math.round(confidence * 100)}%
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
                     </div>
 

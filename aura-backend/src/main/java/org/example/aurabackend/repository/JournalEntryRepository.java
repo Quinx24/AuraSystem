@@ -20,7 +20,15 @@ public interface JournalEntryRepository extends JpaRepository<JournalEntry, Long
 
     Optional<JournalEntry> findByIdAndUser(Long id, User user);
 
+    Optional<JournalEntry> findTopByUserOrderByCreatedAtDesc(User user);
+
     boolean existsByIdAndUser(Long id, User user);
 
     long countByCreatedAtBetween(java.time.LocalDateTime start, java.time.LocalDateTime end);
+
+    /**
+     * Counts journal entries for a user.
+     * Used by UserPreferenceProfileService to determine if user has enough data for profile recomputation.
+     */
+    long countByUser(User user);
 }

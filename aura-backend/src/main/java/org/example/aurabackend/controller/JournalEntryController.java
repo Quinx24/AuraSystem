@@ -13,9 +13,11 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.example.aurabackend.service.ExtractionQueryService;
 import org.example.aurabackend.service.JournalEntryService;
 import org.example.aurabackend.dto.request.JournalEntryCreationRequest;
 import org.example.aurabackend.dto.response.ApiResponse;
+import org.example.aurabackend.dto.response.JournalExtractionResponse;
 import org.example.aurabackend.dto.response.JournalEntryResponse;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -31,6 +33,7 @@ import org.springframework.http.HttpStatus;
 public class JournalEntryController {
     
     private final JournalEntryService journalEntryService;
+    private final ExtractionQueryService extractionQueryService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -64,5 +67,23 @@ public class JournalEntryController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteJournalEntry(@PathVariable Long id) {
         journalEntryService.deleteJournalEntry(id);
+    }
+
+    /**
+     * Returns the LLM extraction for a journal entry.
+     *
+     * Returns HTTP 200 with the extraction data if available.
+     * Returns HTTP 200 with {@code result: null} if the extraction has not
+     * yet been processed — this is the expected state immediately after journal
+     * creation since extraction runs asynchronously in Milestone 2.
+     *
+     * The authenticated user must own the journal entry.
+     */
+    @GetMapping("/{id}/extraction")
+    public ApiResponse<JournalExtractionResponse> getExtraction(@PathVariable Long id) {
+        return ApiResponse.success(
+                "Extraction retrieved successfully",
+                extractionQueryService.getExtractionForJournal(id).orElse(null)
+        );
     }
 }
