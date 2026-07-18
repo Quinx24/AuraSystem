@@ -49,6 +49,8 @@ export default function SideQuestSuggestion({
                         quest.id
                     );
 
+                    const explanation = quest.recommendation?.explanations?.[0];
+
                     return (
                         <div
                             key={quest.id}
@@ -95,6 +97,12 @@ export default function SideQuestSuggestion({
                                 <p className="text-sm text-gray-500 font-medium">
                                     {quest.description}
                                 </p>
+
+                                {explanation && (
+                                    <p className="mt-2 text-xs font-medium text-purple-500">
+                                        {explanation}
+                                    </p>
+                                )}
 
                             </div>
 

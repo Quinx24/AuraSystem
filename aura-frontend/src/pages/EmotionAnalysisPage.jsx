@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getJournalEntryById } from "../services/journalService";
+import { getRecommendedSideQuests } from "../api/sideQuestApi";
 import { useParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import PageIntroduction from "../components/PageIntroduction";
@@ -14,6 +15,8 @@ export default function EmotionAnalysisPage() {
 
     const [journal, setJournal] = useState(null);
 
+    const [recommendations, setRecommendations] = useState([]);
+
     const { id } = useParams();
 
     const { setPage } = usePageMeta();
@@ -24,16 +27,53 @@ export default function EmotionAnalysisPage() {
     }, [id, setPage]);
 
     useEffect(() => {
+        let isMounted = true;
+
+        const mapRecommendation = (result) => ({
+            ...result.quest,
+            recommendation: {
+                score: result.score,
+                explanations: result.explanations ?? [],
+                confidence: result.confidence,
+                recommendationTime: result.recommendationTime
+            }
+        });
+
         const loadData = async () => {
             try {
                 const response = await getJournalEntryById(id);
-                setJournal(response.data.result);
+                const loadedJournal = response.data.result;
+
+                if (!isMounted) return;
+
+                setJournal(loadedJournal);
+
+                try {
+                    const recommendationResults = await getRecommendedSideQuests({
+                        emotion: loadedJournal?.primaryEmotion,
+                        limit: 3
+                    });
+
+                    if (!isMounted) return;
+
+                    setRecommendations(
+                        (recommendationResults ?? []).map(mapRecommendation)
+                    );
+                } catch {
+                    if (!isMounted) return;
+
+                    setRecommendations(loadedJournal?.sideQuests ?? []);
+                }
             } catch {
                 // Error silently ignored - data will remain empty
             }
         };
 
         if (id) loadData();
+
+        return () => {
+            isMounted = false;
+        };
     }, [id]);
 
     if (!journal) {
@@ -108,7 +148,11 @@ export default function EmotionAnalysisPage() {
                     {/* SIDE-QUESTS SUGGESTION  */}
 
                     <SideQuestSuggestion
-                        sideQuests={journal.sideQuests || []}
+                        sideQuests={
+                            recommendations.length > 0
+                                ? recommendations
+                                : journal.sideQuests || []
+                        }
                     />
 
                 </div>
