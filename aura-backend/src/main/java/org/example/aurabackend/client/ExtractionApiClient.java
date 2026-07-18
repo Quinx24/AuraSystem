@@ -57,13 +57,14 @@ public class ExtractionApiClient {
             // Build headers
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(geminiApiKey);
 
             HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
 
+            String url = geminiApiUrl + "?key=" + geminiApiKey;
+
             // Make the API call
             ResponseEntity<String> response = restTemplate.exchange(
-                    geminiApiUrl,
+                    url,
                     HttpMethod.POST,
                     request,
                     String.class

@@ -88,7 +88,7 @@ POST https://aurasystem-production-5536.up.railway.app/auth/login
 Content-Type: application/json
 
 {
-    "email": "Admin@gmail.com",
+    "email": "User@gmail.com",
     "password": "12345678"
 }
 
@@ -130,7 +130,7 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-    "email":"Admin@gmail.com",
+    "email":"User@gmail.com",
     "password":"12345678"
 }
 
@@ -187,3 +187,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhd
 GET http://localhost:8080/admin/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3ODQwMTQxMTcsImV4cCI6MTc4NDAxNzcxN30.dnDhwu-mSBjli2-TYxtzwei3I5lYFl2zdB36-kdxeqA
 Content-Type: application/json
+
+###
+GET https://aurasystem-production-5536.up.railway.app/side-quests/recommendations?emotion=HAPPY&limit=3
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJVc2VyQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzg0NDA5NTc2LCJleHAiOjE3ODQ0MTMxNzZ9.TBatzxTjuPlFb-YeG9kmkbfyKsMS8vTEbWIreSICCfZ-9_2rt2DcGjxnskdgAVpkjPVvy3jwltPnQck7chOi7g
