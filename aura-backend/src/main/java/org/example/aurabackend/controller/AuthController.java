@@ -10,6 +10,7 @@ import org.example.aurabackend.dto.response.LoginResponse;
 import org.example.aurabackend.dto.response.RefreshTokenResponse;
 import org.example.aurabackend.service.AuthService;
 import org.example.aurabackend.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,7 +23,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ApiResponse<Void> register(
-            @RequestBody RegisterRequest request) {
+            @Valid @RequestBody RegisterRequest request) {
 
         userService.register(request);
 
@@ -34,7 +35,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ApiResponse<LoginResponse> login(
-            @RequestBody LoginRequest request) {
+            @Valid @RequestBody LoginRequest request) {
         
         LoginResponse response = authService.login(request);
 

@@ -54,17 +54,18 @@ public class ExtractionApiClient {
             // Build request body
             String requestBody = buildRequestBody(prompt);
 
-            // Build headers
+            // Build headers. Pass the API key via the x-goog-api-key header
+            // rather than a URL query parameter so it is not captured in access
+            // logs, proxies, or browser/CDN history.
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("x-goog-api-key", geminiApiKey);
 
             HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
 
-            String url = geminiApiUrl + "?key=" + geminiApiKey;
-
             // Make the API call
             ResponseEntity<String> response = restTemplate.exchange(
-                    url,
+                    geminiApiUrl,
                     HttpMethod.POST,
                     request,
                     String.class

@@ -60,23 +60,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String roleFromJwt = jwtService.extractRole(token);
-        String roleFromDb = user.getRole() != null ? user.getRole().name() : "USER";
+        // Reject locked accounts: they must not obtain an authenticated context.
+        if (Boolean.TRUE.equals(user.getLocked())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-        String role = roleFromJwt != null ? roleFromJwt : roleFromDb;
+        // Trust the role stored in the database (source of truth) rather than the
+        // role embedded in the JWT, so revoked privileges take effect immediately.
+        String role = user.getRole() != null ? user.getRole().name() : "USER";
 
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
 
-        System.out.println("========== JWT FILTER ==========");
-        System.out.println("Request URI : " + request.getRequestURI());
-        System.out.println("Email JWT   : " + email);
-        System.out.println("User DB     : " + user.getEmail());
-        System.out.println("Role JWT    : " + roleFromJwt);
-        System.out.println("Role DB     : " + roleFromDb);
-        System.out.println("Authorities : " + authorities);
-        System.out.println("Locked      : " + user.getLocked());
-        
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 user,
                 null,
